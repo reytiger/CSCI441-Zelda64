@@ -1,5 +1,5 @@
 CODEGEN=-g -O2
-WARNING=-Wall -Wextra -Wno-unused-parameter -fsignaling-nans
+WARNING=-Wall -Wextra -Wno-unused-parameter
 INCPATH=-Iinclude
 CXXFLAGS=-std=c++11 $(INCPATH) $(CODEGEN) $(WARNING)
 
@@ -9,7 +9,7 @@ ifeq ($(OS), Windows_NT)
 
 # Mac builds
 else ifeq ($(shell uname), Darwin)
-	LD_FLAGS=$(LIqBPATH) -framework GLUT -framework OpenGL -framework Cocoa
+	LD_FLAGS=$(LIBPATH) -framework GLUT -framework OpenGL -framework Cocoa
 
 # Linux and all other builds
 else
@@ -22,11 +22,11 @@ endif
 rwildcard=$(wildcard $1$2) $(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2))
 
 BINARY  := guildWars
-SOURCES := $(call rwildcard, source/,*.cpp)
-HEADERS := $(call rwildcard, include/,*.hpp)
-OBJECTS := $(addprefix object/, $(SOURCES:source/%.cpp=%.o))
+SOURCES := $(strip $(call rwildcard, source/,*.cpp))
+HEADERS := $(strip $(call rwildcard, include/,*.hpp))
+OBJECTS := $(strip $(addprefix object/, $(SOURCES:source/%.cpp=%.o)))
 
-all: format $(BINARY)
+all: format depend $(BINARY)
 
 format:
 	-clang-format $(HEADERS) -i
@@ -36,10 +36,13 @@ $(BINARY): $(OBJECTS)
 	$(CXX) -o $@ $(OBJECTS) $(LD_FLAGS)
 
 clean:
-	@rm -vf $(OBJECTS) $(BINARY)
+	@rm -vf $(OBJECTS) $(BINARY) depends.mk
 
 object/%.o: source/%.cpp
 	$(CXX) $(CXXFLAGS) -o $@ -c $<
+
+depend:
+	$(CXX) $(INCPATH) -MM $(SOURCES) > depend.mk
 
 # This is only for debugging and record keeping.
 files:
@@ -59,3 +62,5 @@ files:
 	@echo
 
 .PHONY: clean files format
+
+sinclude depends.mk

@@ -30,5 +30,8 @@
 # Binary names
 guildWars
 
+# Our Makefile's dependency list
+depend.mk
+
 # in-tree CMake build
 build
