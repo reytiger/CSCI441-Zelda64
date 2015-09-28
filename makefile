@@ -26,11 +26,11 @@ SOURCES := $(call rwildcard, source/,*.cpp)
 HEADERS := $(call rwildcard, include/,*.hpp)
 OBJECTS := $(addprefix object/, $(SOURCES:source/%.cpp=%.o))
 
-all: $(BINARY)
+all: format $(BINARY)
 
 format:
-	-clang-format $< $(HEADERS) -i
-	-clang-format $< $(SOURCES) -i
+	-clang-format $(HEADERS) -i
+	-clang-format $(SOURCES) -i
 
 $(BINARY): $(OBJECTS)
 	$(CXX) -o $@ $(OBJECTS) $(LD_FLAGS)
