@@ -16,10 +16,15 @@ else
 	LD_FLAGS=$(LIBPATH) -lglut -lGL -lGLU -lm
 endif
 
-BINARY=guildWars
-SOURCES=$(wildcard source/*/*.cpp)  $(wildcard source/*.cpp)
-HEADERS=$(wildcard include/*/*.hpp) $(wildcard include/*.hpp)
-OBJECTS=$(SOURCES:source/%.cpp=%.o)
+# Thanks, SO!
+# http://stackoverflow.com/a/12959694
+# Make does not offer a recursive wildcard function, so here's one:
+rwildcard=$(wildcard $1$2) $(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2))
+
+BINARY  := guildWars
+SOURCES := $(call rwildcard, source/,*.cpp)
+HEADERS := $(call rwildcard, include/,*.hpp)
+OBJECTS := $(addprefix object/, $(SOURCES:source/%.cpp=%.o))
 
 all: $(BINARY)
 
@@ -33,7 +38,7 @@ $(BINARY): $(OBJECTS)
 clean:
 	@rm -vf $(OBJECTS) $(BINARY)
 
-%.o: source/%.cpp
+object/%.o: source/%.cpp
 	$(CXX) $(CXXFLAGS) -o $@ -c $<
 
 # This is only for debugging and record keeping.
@@ -53,4 +58,4 @@ files:
 	@printf " %s\n" $(OBJECTS)
 	@echo
 
-.PHONY: clean files
+.PHONY: clean files format

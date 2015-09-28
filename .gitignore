@@ -29,3 +29,6 @@
 
 # Binary names
 guildWars
+
+# in-tree CMake build
+build
