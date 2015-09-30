@@ -35,3 +35,7 @@ depend.mk
 
 # in-tree CMake build
 build
+
+# graphviz!
+*.dot
+*.png

@@ -1,3 +1,10 @@
+#pragma once
+#include "Utils.hpp"
+
+#include <stdio.h>
+#include <math.h>
+#include <iostream>
+
 /*
  * Arc Ball Camera, the camera moves around a control point while mantaining
  * a radius around the point.
@@ -5,20 +12,6 @@
  * This camera class assumes an x,z plane and y with the up direction.
  *
 */
-
-#ifdef __APPLE__        // if compiling on Mac OS
-#include <GLUT/glut.h>
-#include <OpenGL/gl.h>
-#include <OpenGL/glu.h>
-#else                   // else compiling on Linux OS
-#include <GL/glut.h>
-#include <GL/gl.h>
-#include <GL/glu.h>
-#endif
-
-#include <stdio.h>
-#include <math.h>
-#include <iostream>
 
 /*************************  DRAW  ARC BALL CAMERA    **************************/
 class ArcBallCamera {

@@ -1,9 +1,9 @@
-CODEGEN := -g -O2
+FLAGS := -std=c++11 -g -O2 -fmax-errors=5
 Wwarnings := -Wall -Wextra
 Wno-warnings := -Wno-unused-parameter -Wno-unused-variable
 # Any directory in 'include' is fair game.
-INCPATH := -Iinclude $(addprefix -I,$(filter include/%/, $(wildcard include/*/)))
-CXXFLAGS += -std=c++11 $(INCPATH) $(CODEGEN) $(Wwarnings) $(Wno-warnings)
+INCPATH := -Iinclude
+CXXFLAGS += $(INCPATH) $(FLAGS) $(Wwarnings) $(Wno-warnings)
 
 # Windows builds
 ifeq ($(OS), Windows_NT)
@@ -38,13 +38,22 @@ $(BINARY): $(OBJECTS)
 	$(CXX) -o $@ $(OBJECTS) $(LD_FLAGS)
 
 clean:
-	@rm -vf $(OBJECTS) $(BINARY) depends.mk
+	@rm -vf $(OBJECTS) $(BINARY) depend.mk
 
 object/%.o: source/%.cpp
+	@mkdir -p $(dir $@)
 	$(CXX) $(CXXFLAGS) -o $@ -c $<
 
 depend:
-	$(CXX) $(INCPATH) -MM $(SOURCES) > depend.mk
+	$(CXX) $(CXXFLAGS) $(INCPATH) -MM $(SOURCES) > depend.mk
+
+# Same as above, but to stdout and as a tree.
+depend-tree:
+	$(CXX) $(CXXFLAGS) $(INCPATH) -MM $(SOURCES) -H 2>&1
+
+dep.png:
+	cinclude2dot \--include /usr/include/c++/4.8,/usr/include,include,\include/$(find include -type f -printf "%f,") \
+	| circo -Tpng -o dep.png
 
 # This is only for debugging and record keeping.
 files:
