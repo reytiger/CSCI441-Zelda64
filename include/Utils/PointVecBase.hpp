@@ -2,6 +2,9 @@
 
 #include <iostream>
 
+#include <cassert>
+#include <cmath>
+
 struct Vec {
 public:
   union {

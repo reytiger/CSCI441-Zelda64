@@ -12,8 +12,8 @@ struct Color {
   void glSet() { glColor3f(r, g, b); }
 };
 
+inline double getRand() { return rand() / (double)RAND_MAX; }
+
 inline Color rand_color() {
-#define r() (rand() / (double)(RAND_MAX))
-  return Color(r(), r(), r());
-#undef r
+  return Color(getRand(), getRand(), getRand());
 }
