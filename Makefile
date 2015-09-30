@@ -1,19 +1,21 @@
-CODEGEN=-g -O2
-WARNING=-Wall -Wextra -Wno-unused-parameter
-INCPATH=-Iinclude
-CXXFLAGS=-std=c++11 $(INCPATH) $(CODEGEN) $(WARNING)
+CODEGEN := -g -O2
+Wwarnings := -Wall -Wextra
+Wno-warnings := -Wno-unused-parameter -Wno-unused-variable
+# Any directory in 'include' is fair game.
+INCPATH := -Iinclude $(addprefix -I,$(filter include/%/, $(wildcard include/*/)))
+CXXFLAGS += -std=c++11 $(INCPATH) $(CODEGEN) $(Wwarnings) $(Wno-warnings)
 
 # Windows builds
 ifeq ($(OS), Windows_NT)
-	LD_FLAGS=$(LIBPATH) -lglut -lopengl32 -lglu32
+	LD_FLAGS += $(LIBPATH) -lglut -lopengl32 -lglu32
 
 # Mac builds
 else ifeq ($(shell uname), Darwin)
-	LD_FLAGS=$(LIBPATH) -framework GLUT -framework OpenGL -framework Cocoa
+	LD_FLAGS += $(LIBPATH) -framework GLUT -framework OpenGL -framework Cocoa
 
 # Linux and all other builds
 else
-	LD_FLAGS=$(LIBPATH) -lglut -lGL -lGLU -lm
+	LD_FLAGS += $(LIBPATH) -lglut -lGL -lGLU -lm
 endif
 
 # Thanks, SO!
@@ -60,6 +62,9 @@ files:
 	@echo Object:
 	@printf " %s\n" $(OBJECTS)
 	@echo
+
+	@echo CXXFLAGS:
+	@printf " %s\n" $(CXXFLAGS)
 
 .PHONY: clean files format
 

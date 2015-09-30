@@ -1,9 +1,9 @@
 
-#ifdef __APPLE__        // if compiling on Mac OS
+#ifdef __APPLE__ // if compiling on Mac OS
 #include <GLUT/glut.h>
 #include <OpenGL/gl.h>
 #include <OpenGL/glu.h>
-#else                   // else compiling on Linux OS
+#else // else compiling on Linux OS
 #include <GL/glut.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
@@ -13,7 +13,7 @@
 #include <math.h>
 #include <iostream>
 
-#include "ArcBall.h"
+#include "ArcBallCamera.hpp"
 
 ///  CONSTRUCTORS  ///
 ArcBallCamera::ArcBallCamera() {
@@ -31,13 +31,13 @@ ArcBallCamera::ArcBallCamera() {
   angle = 0.0;
 }
 
-void setView(float x, float y, float z) {
+void ArcBallCamera::setView(float x, float y, float z) {
   this->viewX = x;
   this->viewY = y;
   this->viewZ = z;
 }
 
-void setXYZ(float x, float y, float z) {
+void ArcBallCamera::setXYZ(float x, float y, float z) {
   this->cameraX = x;
   this->cameraY = y;
   this->cameraZ = z;
@@ -45,9 +45,8 @@ void setXYZ(float x, float y, float z) {
 
 /****************************  ARC BALL CAMER    ******************************/
 void ArcBallCamera::drawCamera() {
-  gluLookAt(cameraX, cameraY, cameraZ, 
-            viewX,   viewY,   viewZ, 
-            0, 1, 0); // up vector is (0,1,0) (positive Y)
+  gluLookAt(cameraX, cameraY, cameraZ, viewX, viewY, viewZ, 0, 1,
+            0); // up vector is (0,1,0) (positive Y)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
