@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8)
-project(GuildWars CXX)
+project(GuildWars)
 
 set(S "${CMAKE_SOURCE_DIR}")
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${S}/cmake")
@@ -21,7 +21,7 @@ include_directories("${S}/include")
 
 if (CMAKE_COMPILER_IS_GNUCXX)
   # Misc flags
-  set(flags "-std=c++11 -fmax-errors=5")
+  set(flags "-std=c++11 -fmax-errors=5 -fdiagnostics-color")
 
   # Warnings to turn ON
   set(Wwarnings "-Wall -Wextra")
