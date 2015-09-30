@@ -1,5 +1,5 @@
 #pragma once
-#include "Utils/Misc.hpp"
+#include "Utils/GL_Defs.hpp"
 
 struct Color {
   float r;
