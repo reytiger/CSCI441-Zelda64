@@ -1,9 +1,10 @@
 #pragma once
 #include "Utils.hpp"
 
-#include <stdio.h>
-#include <math.h>
 #include <iostream>
+
+#include <cmath>
+#include <cstdio>
 
 /*
  * Arc Ball Camera, the camera moves around a control point while mantaining
