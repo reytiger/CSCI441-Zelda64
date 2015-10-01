@@ -1,6 +1,8 @@
 #include "Utils.hpp"
 
+#ifndef _WIN32
 #include "execinfo.h"
+#endif
 
 #define make_case(ERR)                                                         \
   case ERR:                                                                    \
@@ -8,6 +10,7 @@
     break;
 
 void trace_helper(const char *file, int line, const char *func) {
+#ifndef _WIN32
   void *buffer[100] = {};
   size_t size = backtrace(buffer, 100);
 
@@ -19,6 +22,7 @@ void trace_helper(const char *file, int line, const char *func) {
           func);
   backtrace_symbols_fd(buffer + 1, size - 1, 2 /* stderr */);
   fprintf(stderr, "\n");
+#endif
 }
 
 void check_opengl(const char *file, int line) {
@@ -28,13 +32,16 @@ void check_opengl(const char *file, int line) {
   // I think these can stack up.
   while ((err = glGetError()) != GL_NO_ERROR) {
     switch (err) {
-      make_case(GL_INVALID_ENUM) make_case(GL_INVALID_VALUE)
-          make_case(GL_INVALID_OPERATION)
-              make_case(GL_INVALID_FRAMEBUFFER_OPERATION)
-                  make_case(GL_OUT_OF_MEMORY) make_case(GL_STACK_UNDERFLOW)
-                      make_case(GL_STACK_OVERFLOW)
-
-                          case GL_NO_ERROR : return;
+    make_case(GL_INVALID_ENUM);
+    make_case(GL_INVALID_VALUE);
+    make_case(GL_INVALID_OPERATION);
+    #ifndef _WIN32
+    make_case(GL_INVALID_FRAMEBUFFER_OPERATION);
+    #endif
+    make_case(GL_OUT_OF_MEMORY);
+    make_case(GL_STACK_UNDERFLOW);
+    make_case(GL_STACK_OVERFLOW);
+    case GL_NO_ERROR : return;
 
     default:
       // TODO: Print the value.

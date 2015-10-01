@@ -14,3 +14,8 @@
 #include <cerrno>
 #include <cmath>
 #include <cstring>
+
+#ifndef M_PI
+#warning Your cmath is broken - no M_PI is defined.
+#define M_PI 3.141592653589793238462643383279
+#endif
