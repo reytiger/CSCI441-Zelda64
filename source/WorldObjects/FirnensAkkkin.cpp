@@ -7,16 +7,15 @@ using namespace std;
 void FirnensAkkkin::increaseTPos() {
   m_tPos += 0.015;
   if (m_tPos > 1) {
-    currentCurve++;
-    if (currentCurve >= numberOfCurves) {
-      currentCurve = 0;
+    m_currentCurve++;
+    if (m_currentCurve >= m_numberOfCurves) {
+      m_currentCurve = 0;
     }
     m_tPos = 0;
   }
 }
 
-/********************************************  DRAW AKKKIN
- * *************************************/
+/*******************************  DRAW AKKKIN  ********************************/
 void FirnensAkkkin::draw() const {
   glPushMatrix();
   {
@@ -26,10 +25,10 @@ void FirnensAkkkin::draw() const {
     glPushMatrix();
     {
       // check which curver we are on and where on that curve
-      Point p0 = controlPoints.at(currentCurve * 3);
-      Point p1 = controlPoints.at((currentCurve * 3) + 1);
-      Point p2 = controlPoints.at((currentCurve * 3) + 2);
-      Point p3 = controlPoints.at((currentCurve * 3) + 3);
+      Point p0 = controlPoints.at(m_currentCurve * 3);
+      Point p1 = controlPoints.at((m_currentCurve * 3) + 1);
+      Point p2 = controlPoints.at((m_currentCurve * 3) + 2);
+      Point p3 = controlPoints.at((m_currentCurve * 3) + 3);
       Point nextPos = evaluateBezierCurve(p0, p1, p2, p3, m_tPos);
       glTranslatef(nextPos.getX(), nextPos.getY(), nextPos.getZ());
 
@@ -121,12 +120,10 @@ void FirnensAkkkin::drawWing() const {
   glPopMatrix();
 }
 
-/*******************************************  SET UP FOR CURVES
- * ********************************/
-
+/*************************  SET UP FOR CURVES  ********************************/
 ////////////////////////////////////////////////////////////////////////////////
 //  Load our control points from file and store them in a global variable.
-bool FirnensAkkkin::loadControlPoints(string filename) const {
+bool FirnensAkkkin::loadControlPoints(string filename) {
   // TODO #04: read in control points from file.  Make sure the file can be
   // opened and handle it appropriately.
   string str;
@@ -136,7 +133,7 @@ bool FirnensAkkkin::loadControlPoints(string filename) const {
   // get the number of points to build
   getline(file, str);
   numOfPoints = atoi(str.c_str());
-  this->numberOfCurves = numOfPoints / 3;
+  m_numberOfCurves = numOfPoints / 3;
 
   // go through each line. The cotrol file ahs the structure xn, yn, zn
   for (int i = 0; i < numOfPoints; ++i) {
@@ -171,7 +168,7 @@ void FirnensAkkkin::drawCage() const {
 void FirnensAkkkin::drawControlPoints() const {
   // Draw our control points
   float scaleDown = 0.1;
-  for (int i = 0; i < controlPoints.size(); ++i) {
+  for (int i = 0; i < (signed)controlPoints.size(); ++i) {
     glPushMatrix();
     {
       glColor3f(10 / 255.0, 200 / 255.0, 10 / 255.0);
@@ -186,7 +183,7 @@ void FirnensAkkkin::drawControlPoints() const {
 
 void FirnensAkkkin::drawCageLines() const {
   // Draw yellow lines to connect the points
-  for (int i = 0; i < controlPoints.size() - 1; ++i) {
+  for (int i = 0; i < (signed)controlPoints.size() - 1; ++i) {
     glPushMatrix();
     {
       glColor3f(245 / 255.0, 184 / 255.0, 0 / 255.0);
@@ -213,7 +210,7 @@ void FirnensAkkkin::drawBezierCurve() const {
   if (BezierCurve) {
     // Draw the Bezier Curve!
     int resolution = 20;
-    for (int i = 0; i < controlPoints.size() - 1; i += 3) {
+    for (int i = 0; i < (signed)controlPoints.size() - 1; i += 3) {
       // check the 1, 2, 3, and 4th point starting at the current.
       renderBezierCurve(controlPoints.at(i), controlPoints.at(i + 1),
                         controlPoints.at(i + 2), controlPoints.at(i + 3),

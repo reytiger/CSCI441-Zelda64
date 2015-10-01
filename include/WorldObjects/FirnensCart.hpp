@@ -2,12 +2,11 @@
 
 #include "WorldObjects/WorldObjectBase.hpp"
 
-/************************************************  DRAW FIRNENS CART
- * *************************************/
+/*************************  DRAW FIRNENS CART  ********************************/
 class FirnensCart : public WorldObject {
 public:
   // constructors
-  FirnenCart() : WorldObject() { m_wheelAngle = 0.0; }
+  Cart() : WorldObject() { m_wheelAngle = 0.0; }
 
   virtual void draw() const;
 

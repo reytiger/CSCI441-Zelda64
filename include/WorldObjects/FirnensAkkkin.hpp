@@ -8,12 +8,11 @@
 #include "WorldObjects/Point.hpp"
 using namespace std;
 
-/************************************************  DRAW AKKKIN
- * *************************************/
+/*******************************  DRAW AKKKIN  ********************************/
 class FirnensAkkkin : public WorldObject {
 public:
+  //////////////////////////////////////////////////////////////////////////////
   // constructors
-  // ////////////////////////////////////////////////////////////////////////////////
   FirnensAkkkin() : WorldObject() {
     m_wingAngle = 0.0;
     m_tPos = 0.0;
@@ -35,8 +34,8 @@ public:
 
   void increaseTPos();
 
+  //////////////////////////////////////////////////////////////////////////////
   // accessors
-  // ////////////////////////////////////////////////////////////////////////////////
   float getTPos() { return m_tPos; }
   float getWingRot() { return m_wingAngle; }
   float getAngle() { return m_angle; }
@@ -44,12 +43,12 @@ public:
   bool getControlCage() { return ControlCage; }
   bool getBezierCurve() { return BezierCurve; }
 
+  //////////////////////////////////////////////////////////////////////////////
   // modifiers
-  // ////////////////////////////////////////////////////////////////////////////////
 
 private:
   float m_wingAngle, m_tPos, m_angle;
-  int currentCurve, numberOfCurves;
+  int m_currentCurve, m_numberOfCurves;
 
   // parts of Akkkin
   void drawBody() const;
@@ -66,7 +65,7 @@ private:
   void drawBezierCurve() const;
   void renderBezierCurve(Point p0, Point p1, Point p2, Point p3,
                          int resolution) const;
-  bool loadControlPoints(string filename) const;
+  bool loadControlPoints(string filename);
   bool ControlCage, BezierCurve;
   Point evaluateBezierCurve(Point p0, Point p1, Point p2, Point p3,
                             float t) const;
