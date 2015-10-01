@@ -32,6 +32,7 @@ public:
   void setVelocityZ(double dz) { m_vel.z = dz; }
 
   void setRadius(double radius) { m_radius = radius; }
+  void setHeight(double height) { m_height = height; }
 
   void adjustHeading(double dtheta) { m_heading += dtheta; }
 
@@ -39,6 +40,7 @@ public:
   Vec vel() const { return m_vel; }
   double radius() const { return m_radius; }
   double heading() const { return m_heading; }
+  double height() const { return m_height; }
 
   void follow(WorldObject *wo);
   void setUpdateFunc(std::function<void(double, double)> func) {
@@ -63,6 +65,7 @@ protected:
   Vec m_vel;
   double m_heading = 0.0; // About the Z-axis, for now.
   double m_radius = 0.0;
+  double m_height = 0.0;
   bool m_visible = true;
 
   Vec headingToCartesian() { return Vec(cos(m_heading), sin(m_heading)); }

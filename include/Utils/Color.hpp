@@ -14,6 +14,4 @@ struct Color {
 
 inline double getRand() { return rand() / (double)RAND_MAX; }
 
-inline Color rand_color() {
-  return Color(getRand(), getRand(), getRand());
-}
+inline Color rand_color() { return Color(getRand(), getRand(), getRand()); }
