@@ -62,6 +62,7 @@ protected:
   WorldObject *m_follow = nullptr;
   Vec m_old_follow_pos;
   Vec m_pos;
+  Vec m_posUV;
   Vec m_vel;
   double m_heading = 0.0; // About the Z-axis, for now.
   double m_radius = 0.0;
