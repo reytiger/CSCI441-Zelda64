@@ -6,15 +6,15 @@
 class FirnensCart : public WorldObject {
 public:
   // constructors
-  Cart() : WorldObject() { m_wheelAngle = 0.0; }
+  FirnensCart() : WorldObject() { m_wheelAngle = 0.0; }
 
   virtual void draw() const;
 
-  void setAngleWheel(float angle) { this->m_angleWheel = angle; };
+  void setAngleWheel(float angle) { this->m_wheelAngle = angle; };
 
   // accessors
-  float getAngleWheel() { return this->m_angleWheel; }
+  float getAngleWheel() { return this->m_wheelAngle; }
 
 private:
-  float m_angleWheel;
+  float m_wheelAngle;
 };

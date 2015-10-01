@@ -24,7 +24,7 @@ void FirnensCart::draw() const {
                 45 / 255.0); // nice dark brown for the base
       glRotatef(90, 1, 0, 0);
       glTranslatef(0, 0.5, 0);
-      glRotatef(m_angleWheel, 0, 0, 1);
+      glRotatef(m_wheelAngle, 0, 0, 1);
       glPushMatrix();
       {
         glTranslatef(0, 0, 1);
