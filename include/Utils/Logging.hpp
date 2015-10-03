@@ -33,7 +33,7 @@ void log_context(Log loglevel, const char *file, int line, const char *func,
     }
     std::string text = tfm::format(fmt, args...);
     tfm::format(
-        std::cerr, "%s %s:%d:%s():\t%s\n", level, file, line, func, text);
+        std::cerr, "%s %s:%d:%s():\n\t%s\n", level, file, line, func, text);
 }
 
 #define log_with_context(level, fmt, ...)                                      \

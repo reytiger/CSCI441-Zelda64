@@ -16,15 +16,30 @@ void trace_helper(const char *file, int line, const char *func) {
 
     // I'm not really sure when this would happen, so I just give up
     // any chance of a reasonable recovery and shut everything down.
-    assert(size > 0);
+    assert(size > 0 && "backtrace was unexpectedly empty!");
 
-    fprintf(stderr,
-            "----------%s:%d:%s() Stacktrace----------\n",
+    char **symbols_ptr = backtrace_symbols(buffer, size);
+    auto symbols = std::vector<std::string>(symbols_ptr, symbols_ptr + size);
+    free(symbols_ptr);
+
+    assert(symbols.size() > 0 && "symbols was unexpectedly empty!");
+
+    std::string tracelist = tfm::format(
+            "\n\n----------%s:%d:%s() Stacktrace----------\n",
             file,
             line,
             func);
-    backtrace_symbols_fd(buffer + 1, size - 1, 2 /* stderr */);
-    fprintf(stderr, "\n");
+
+    int i = 0;
+    for (const auto &symbol : symbols) {
+        auto line = tfm::format("%3d:\t %s\n", i, symbol);
+        tracelist.append(line);
+        i -= 1;
+    }
+
+    tfm::printf("%s\n", tracelist);
+#else
+    error("Backtracing not supported on windows. Trace initiated from %s:%s in %s().\n", file, line, func);
 #endif
 }
 
@@ -52,19 +67,23 @@ void check_opengl(const char *file, int line) {
             str = "Unknown error";
         }
 
-        fprintf(stderr, "%s:%d: %s\n", file, line, str);
+        error("OpenGL encountered an error.", file, line, str);
         trace();
     }
-
-    exit(1);
 }
 
 void check_errno(const char *file, int line) {
     int err = errno;
+    errno = 0;
+
+    // This is getting spammed and we have no idea why, so we ignore it.
+    if (err == 11) {
+        return;
+    }
     if (err) {
-        std::cerr << file << ":" << line << ": " << strerror(err) << std::endl;
+        error("errno set!");
+        error("%s:%s: %s", file, line, strerror(err));
         trace();
-        exit(-1);
     }
 }
 
