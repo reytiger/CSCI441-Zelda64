@@ -31,8 +31,8 @@ OBJECTS := $(strip $(addprefix object/, $(SOURCES:source/%.cpp=%.o)))
 all: format depend $(BINARY)
 
 format:
-	-@git-clang-format $(HEADERS)
-	-@git-clang-format $(SOURCES)
+	-@clang-format $(HEADERS) -i
+	-@clang-format $(SOURCES) -i
 
 $(BINARY): $(OBJECTS)
 	$(CXX) -o $@ $(OBJECTS) $(LD_FLAGS)
