@@ -5,7 +5,6 @@
 #include <cmath>
 
 struct Vec;
-struct Point3;
 struct VecPolar;
 
 struct Vec {
@@ -22,18 +21,6 @@ struct Vec {
     double dot(const Vec &other) const;
     double norm() const;
     Vec normalize() const;
-};
-
-struct Point3 {
-    double x = 0.0;
-    double y = 0.0;
-    double z = 0.0;
-
-    ~Point3() = default;
-
-    Point3() = default;
-    // Make it easy to fake a 2D point.
-    Point3(double x, double y, double z = 0.0) : x(x), y(y), z(z) {}
 };
 
 struct VecPolar {
@@ -82,15 +69,6 @@ def_op_by_components(Vec, -, Vec, Vec);
 def_op_by_components(Vec, *, Vec, Vec);
 def_op_by_components(Vec, /, Vec, Vec);
 
-// Vec + Point3 -> Point3
-def_op_by_components(Point3, +, Vec, Point3);
-def_op_by_components(Point3, -, Vec, Point3);
-def_op_by_components(Vec, +, Point3, Point3);
-def_op_by_components(Vec, -, Point3, Point3);
-
-// Point3 - Point3 -> Vec;
-def_op_by_components(Point3, -, Point3, Vec);
-
 // Vectors can be scaled.
 def_op_by_scalar(Vec, +, double);
 def_op_by_scalar(Vec, -, double);
@@ -130,12 +108,7 @@ static inline Vec clamp(const Vec &a, const Vec &lo, const Vec &hi) {
                clamp<double>(a.y, lo.y, hi.y),
                clamp<double>(a.z, lo.z, hi.z));
 }
-static inline Point3 clamp(const Point3 &a, const Point3 &lo,
-                           const Point3 &hi) {
-    return Point3(clamp<double>(a.x, lo.x, hi.x),
-                  clamp<double>(a.y, lo.y, hi.y),
-                  clamp<double>(a.z, lo.z, hi.z));
-}
+
 static inline VecPolar clamp(const VecPolar &a, const VecPolar &lo,
                              const VecPolar &hi) {
     return VecPolar(clamp<double>(a.theta, lo.theta, hi.theta),
@@ -158,9 +131,7 @@ static inline T operator-(const T &a) {
 static inline std::ostream &operator<<(std::ostream &os, const Vec &vec) {
     return os << "Vec(" << vec.x << ", " << vec.y << ", " << vec.z << ")";
 }
-static inline std::ostream &operator<<(std::ostream &os, const Point3 &vec) {
-    return os << "Point3(" << vec.x << ", " << vec.y << ", " << vec.z << ")";
-}
+
 static inline std::ostream &operator<<(std::ostream &os, const VecPolar &vec) {
     return os << "VecPolar(" << vec.theta << ", " << vec.phi << ", " << vec.r
               << ")";
