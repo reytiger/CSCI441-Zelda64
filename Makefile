@@ -55,7 +55,7 @@ depend-tree:
 
 dep.png:
 	cinclude2dot \--include /usr/include/c++/4.8,/usr/include,include,\include/$(find include -type f -printf "%f,") \
-	| circo -Tpng -o dep.png
+	| dot -Tpng -o dep.png
 
 # This is only for debugging and record keeping.
 files:
@@ -77,6 +77,6 @@ files:
 	@echo CXXFLAGS:
 	@printf " %s\n" $(CXXFLAGS)
 
-.PHONY: clean files format
+.PHONY: clean files format dep.png
 
 sinclude depends.mk
