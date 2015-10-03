@@ -5,8 +5,8 @@
 void updateScene(double t, double dt);
 
 // World objects
-Camera defaultCamera = Camera(Vec(0.0, 0.0, 0.0),             // Position
-                              Vec(0.20 * M_PI, 1.15 * M_PI)); // Lookat
+FreeCamera defaultCamera = FreeCamera(Vec(0.0, 0.0, 0.0), // Position
+                                      Vec(0.20 * M_PI, 1.15 * M_PI)); // Lookat
 
 enum CameraMode cameraMode;
 
