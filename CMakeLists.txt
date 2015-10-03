@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 2.8)
 project(GuildWars)
 
+option(AUTO_FORMAT "Use clang-format to automatically format code before building" OFF)
+
 set(S "${CMAKE_SOURCE_DIR}")
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${S}/cmake")
 
@@ -32,11 +34,18 @@ if (CMAKE_COMPILER_IS_GNUCXX)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${Wwarnings} ${Wno-warnings} ${flags}")
 endif()
 
+
 add_executable(guildWars ${sources} ${includes})
 
 target_link_libraries(guildWars
                       ${OPENGL_LIBRARIES}
                       ${GLUT_LIBRARIES}
                       ${OPENAL_LIBRARIES}
-                      ${ALUT_LIBRARIES}
-                      )
+                      ${ALUT_LIBRARIES})
+
+if("${AUTO_FORMAT}")
+  add_custom_target(formatting COMMAND clang-format ${sources} ${includes} -i)
+  add_dependencies(guildWars formatting)
+endif()
+
+
