@@ -54,5 +54,5 @@ enum CameraMode {
     FirstPerson,
 };
 
-extern Camera defaultCamera;
+extern FreeCamera defaultCamera;
 extern CameraMode cameraMode;
