@@ -22,6 +22,6 @@ public:
     const float *get_modelview() const;
 
 protected:
-    Vec m_lookat;
+    VecPolar m_lookat;
     Vec m_up;
 };

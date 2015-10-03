@@ -38,17 +38,6 @@ extern std::vector<WorldObject *> drawn;
 
 }; // namespace PrettyGLUT
 
-// Tree settings
-extern double treeGirth;
-
-// Hero settings
-extern double heroBankRate;
-extern double heroWalkSpeed;
-
-// City settings
-constexpr Vec citySize       = Vec(100.0, 100.0, 10.0);
-constexpr int cityResolution = 100;
-
 enum CameraMode {
     ThirdPerson, // kind of
     FirstPerson,

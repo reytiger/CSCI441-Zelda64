@@ -7,14 +7,8 @@ void updateScene(double t, double dt);
 // World objects
 FreeCamera defaultCamera = FreeCamera(Vec(0.0, 2.0, -4.0), // Position
                                       Vec(0.20 * M_PI, 1.15 * M_PI)); // Lookat
+
 enum CameraMode cameraMode;
-
-// Tree settings
-double treeGirth = 0.2;
-
-// Hero settings
-double heroBankRate  = 0.05;
-double heroWalkSpeed = 2.0;
 
 namespace PrettyGLUT {
 
@@ -107,7 +101,7 @@ void mouseCallback(int button, int state, int x, int y) {
     // update the left mouse button states, if applicable
     switch (button) {
     case GLUT_LEFT_BUTTON:
-        mouse     = Vec(x, y);
+        mouse     = Vec(x, y, 0.0);
         leftMouse = state;
         break;
     }
@@ -116,8 +110,9 @@ void mouseCallback(int button, int state, int x, int y) {
 void mouseMotion(int x, int y) {
     if (leftMouse == GLUT_DOWN) {
         const double fudge = 0.002;
-        int dx             = x - mouse.x;
-        int dy             = y - mouse.y;
+
+        int dx = x - mouse.x;
+        int dy = y - mouse.y;
 
         mouse.x = x;
         mouse.y = y;

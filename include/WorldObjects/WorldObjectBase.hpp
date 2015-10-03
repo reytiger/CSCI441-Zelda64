@@ -13,7 +13,7 @@ public:
     virtual ~WorldObject(){};
 
     WorldObject() = default;
-    WorldObject(Vec pos, Vec vel = Vec(0.0, 0.0))
+    WorldObject(Vec pos, Vec vel = Vec())
         : m_update(), m_pos(pos), m_vel(vel) {}
 
     void move(Vec ds) { m_pos += ds; }
@@ -69,5 +69,5 @@ protected:
     double m_height  = 0.0;
     bool m_visible   = true;
 
-    Vec headingToCartesian() { return Vec(cos(m_heading), sin(m_heading)); }
+    // Vec headingToCartesian() { return Vec(cos(m_heading), sin(m_heading)); }
 };

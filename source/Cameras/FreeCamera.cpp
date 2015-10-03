@@ -2,22 +2,22 @@
 
 void FreeCamera::adjustGLU() {
     glChk();
-    Vec lookat = m_pos + m_lookat.toCart();
-    gluLookAt(m_pos.x,
+    Vec lookat = m_pos + m_lookat.cart();
+    gluLookAt(m_pos.x, // Position
               m_pos.y,
-              m_pos.z, // Position
-              lookat.x,
+              m_pos.z,
+              lookat.x, // Look at
               lookat.y,
-              lookat.z, // Look at
-              m_up.x,
+              lookat.z,
+              m_up.x, // Up
               m_up.y,
-              m_up.z); // Up
+              m_up.z);
     glChk();
 }
 
 void FreeCamera::rotate(double dtheta, double dphi) {
-    auto rot = Vec(dtheta, dphi);
-    m_lookat += rot;
+    m_lookat.theta += dtheta;
+    m_lookat.phi += dphi;
     // Because we use positive Z as up, our bounds on PHI change.
     m_lookat.phi
         = clamp(m_lookat.phi, 0.5 * M_PI + 0.0001, 1.5 * M_PI + 0.0001);
@@ -38,11 +38,11 @@ const float *FreeCamera::get_modelview() const {
             mvm[0],
             mvm[1],
             mvm[2],
-            mvm[3], //
+            mvm[3],
             mvm[4],
             mvm[5],
             mvm[6],
-            mvm[7], //
+            mvm[7],
             mvm[8],
             mvm[9],
             mvm[10],
@@ -50,8 +50,7 @@ const float *FreeCamera::get_modelview() const {
             mvm[12],
             mvm[13],
             mvm[14],
-            mvm[15] //
-            );
+            mvm[15]);
     return mvm;
 }
 

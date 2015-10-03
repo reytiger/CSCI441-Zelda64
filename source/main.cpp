@@ -3,6 +3,7 @@
 #include "WorldObjects.hpp"
 
 Incallidus inc;
+BezierCurve curve;
 
 // Global
 WorldSurface *worldSurface;
@@ -32,9 +33,32 @@ void initScene() {
     PrettyGLUT::drawn.push_back(&inc);
     inc.setRadius(0.1);
 
+    PrettyGLUT::drawn.push_back(worldSurface);
     worldSurface = new WorldSurface();
 
-    PrettyGLUT::drawn.push_back(worldSurface);
+    PrettyGLUT::drawn.push_back(&curve);
+    curve.loadFile("./assets/world/bezier-halo.csv");
+
+    defaultCamera.setUpdateFunc([](double t, double dt) {
+        Vec vel;
+
+        const auto heroWalkSpeed = dt * 5.0;
+
+        if (PrettyGLUT::keyPressed['d']) {
+            vel.x += heroWalkSpeed;
+        }
+        if (PrettyGLUT::keyPressed['a']) {
+            vel.x -= heroWalkSpeed;
+        }
+        if (PrettyGLUT::keyPressed['w']) {
+            vel.z += heroWalkSpeed;
+        }
+        if (PrettyGLUT::keyPressed['s']) {
+            vel.z -= heroWalkSpeed;
+        }
+
+        defaultCamera.setVelocity(vel);
+    });
 }
 
 int main(int argc, char **argv) {
