@@ -31,8 +31,8 @@ OBJECTS := $(strip $(addprefix object/, $(SOURCES:source/%.cpp=%.o)))
 all: format depend $(BINARY)
 
 format:
-	-clang-format $(HEADERS) -i
-	-clang-format $(SOURCES) -i
+	-@git-clang-format $(HEADERS)
+	-@git-clang-format $(SOURCES)
 
 $(BINARY): $(OBJECTS)
 	$(CXX) -o $@ $(OBJECTS) $(LD_FLAGS)
@@ -45,7 +45,9 @@ object/%.o: source/%.cpp
 	$(CXX) $(CXXFLAGS) -o $@ -c $<
 
 depend:
-	$(CXX) $(CXXFLAGS) $(INCPATH) -MM $(SOURCES) > depend.mk
+	@echo "Generating depedencies"
+	@$(CXX) $(CXXFLAGS) $(INCPATH) -MM $(SOURCES) > depend.mk
+	@echo "Done generating depedencies"
 
 # Same as above, but to stdout and as a tree.
 depend-tree:
