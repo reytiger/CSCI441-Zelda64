@@ -22,9 +22,9 @@ bool WorldSurface::loadControlPoints(string filename) {
     // get the number of points to build
     getline(file, str);
     numOfPoints      = atoi(str.c_str());
-    m_numberOfCurves = numOfPoints / 3;
+    m_numberOfCurves = numOfPoints / 4;
 
-    std::cout << numOfPoints << std::endl;
+    std::cout << m_numberOfCurves << std::endl;
 
     // go through each line. The cotrol file ahs the structure xn, yn, zn
     for (int i = 0; i < numOfPoints; ++i) {
@@ -38,7 +38,15 @@ bool WorldSurface::loadControlPoints(string filename) {
         float z = atoi(str.c_str());
 
         Point createPoint(x, y, z);
-        controlPoints.push_back(createPoint);
+        m_controlPoints.push_back(createPoint);
+    }
+
+    for (int i = 0; i < m_numberOfCurves; ++i) {
+        std::vector<Point> v;
+        v.push_back(m_controlPoints.at(i * 4));
+        v.push_back(m_controlPoints.at(i * 4 + 1));
+        v.push_back(m_controlPoints.at(i * 4 + 2));
+        v.push_back(m_controlPoints.at(i * 4 + 3));
     }
     return true;
 }
@@ -46,13 +54,13 @@ bool WorldSurface::loadControlPoints(string filename) {
 void WorldSurface::drawControlPoints() {
     // Draw our control points
     float scaleDown = 0.1;
-    for (int i = 0; i < controlPoints.size(); ++i) {
+    for (int i = 0; i < m_controlPoints.size(); ++i) {
         glPushMatrix();
         {
             glColor3f(10 / 255.0, 200 / 255.0, 10 / 255.0);
-            glTranslatef(controlPoints.at(i).getX(),
-                         controlPoints.at(i).getY(),
-                         controlPoints.at(i).getZ());
+            glTranslatef(m_controlPoints.at(i).getX(),
+                         m_controlPoints.at(i).getY(),
+                         m_controlPoints.at(i).getZ());
             glScalef(scaleDown, scaleDown, scaleDown);
             glutSolidSphere(1, 10, 10);
         };

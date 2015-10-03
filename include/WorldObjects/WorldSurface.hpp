@@ -6,6 +6,7 @@
 #include "WorldObjects/WorldObjectBase.hpp"
 
 #include "WorldObjects/Point.hpp"
+#include "WorldObjects/BezierCurve.hpp"
 using namespace std;
 
 class WorldSurface : public WorldObject {
@@ -14,10 +15,10 @@ public:
     // constructors
     WorldSurface() : WorldObject() {
         // WorldSurfaceCPointsFile = "assets/world/WorldSurfaceCPoints.csv";
-        WorldSurfaceCPointsFile = "assets/world/WorldSurfaceCPoints.csv";
+        m_WorldSurfaceCPointsFile = "assets/world/WorldSurfaceCPoints.csv";
         // info("%s", WorldSurfaceCPointsFile);
         glChk();
-        loadControlPoints(WorldSurfaceCPointsFile);
+        loadControlPoints(m_WorldSurfaceCPointsFile);
         glChk();
     };
 
@@ -27,9 +28,12 @@ private:
     int m_numberOfCurves;
 
     // set up for control points
-    string WorldSurfaceCPointsFile;
-    vector<Point> controlPoints;
+    string m_WorldSurfaceCPointsFile;
+    vector<Point> m_controlPoints;
     bool loadControlPoints(string filename);
     // control points
     void drawControlPoints();
+
+    // control curves
+    std::vector<BezierCurve> m_curves;
 };

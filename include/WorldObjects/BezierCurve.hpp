@@ -3,11 +3,14 @@
 
 #include "WorldObjects/WorldObjectBase.hpp"
 
+#include "WorldObjects/Point.hpp"
+
 #include <vector>
 
 class BezierCurve : public WorldObject {
 public:
     BezierCurve() : WorldObject() {}
+    // BezierCurve(const std::vector<Point> &v) : WorldObject(), points(v) {}
 
     virtual void draw() const;
 
