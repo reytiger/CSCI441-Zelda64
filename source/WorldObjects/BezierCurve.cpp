@@ -147,8 +147,6 @@ void BezierCurve::reloadArclengthTables(int resolution) {
     assert(!points.empty());
     assert(resolution > 0);
 
-    double t = 0;
-
     ss.clear();
     ts.clear();
 

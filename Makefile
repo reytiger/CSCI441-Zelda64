@@ -1,6 +1,6 @@
 FLAGS := -std=c++11 -g -O2 -fmax-errors=5
 Wwarnings := -Wall -Wextra
-Wno-warnings := -Wno-unused-parameter -Wno-unused-variable
+Wno-warnings :=
 # Any directory in 'include' is fair game.
 INCPATH := -Iinclude
 CXXFLAGS += $(INCPATH) $(FLAGS) $(Wwarnings) $(Wno-warnings)

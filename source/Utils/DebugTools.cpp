@@ -25,10 +25,7 @@ void trace_helper(const char *file, int line, const char *func) {
     assert(symbols.size() > 0 && "symbols was unexpectedly empty!");
 
     std::string tracelist = tfm::format(
-            "\n\n----------%s:%d:%s() Stacktrace----------\n",
-            file,
-            line,
-            func);
+        "\n\n----------%s:%d:%s() Stacktrace----------\n", file, line, func);
 
     int i = 0;
     for (const auto &symbol : symbols) {
@@ -39,7 +36,11 @@ void trace_helper(const char *file, int line, const char *func) {
 
     tfm::printf("%s\n", tracelist);
 #else
-    error("Backtracing not supported on windows. Trace initiated from %s:%s in %s().\n", file, line, func);
+    error("Backtracing not supported on windows. Trace initiated from %s:%s in "
+          "%s().\n",
+          file,
+          line,
+          func);
 #endif
 }
 
@@ -74,7 +75,7 @@ void check_opengl(const char *file, int line) {
 
 void check_errno(const char *file, int line) {
     int err = errno;
-    errno = 0;
+    errno   = 0;
 
     // This is getting spammed and we have no idea why, so we ignore it.
     if (err == 11) {

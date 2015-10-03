@@ -29,7 +29,7 @@ if (CMAKE_COMPILER_IS_GNUCXX)
   set(Wwarnings "-Wall -Wextra")
 
   # Warnings to turn OFF
-  set(Wno-warnings "-Wno-unused-parameter -Wno-unused-variable")
+  set(Wno-warnings "")
 
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${Wwarnings} ${Wno-warnings} ${flags}")
 endif()
