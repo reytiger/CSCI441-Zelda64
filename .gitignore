@@ -39,3 +39,6 @@ build
 # graphviz!
 *.dot
 *.png
+
+# nsf files, they are on network drives
+.nsf*
