@@ -10,7 +10,7 @@ namespace PrettyGLUT {
 
 // Display settings.
 // For more detailed settings, see initGLUT in PrettyGLUT.cpp.
-constexpr const char *windowTitle = "Hey Listen!";
+constexpr const char *windowTitle = "Skyrim belongs to the Nords!";
 
 constexpr double FPS = 30.0;
 constexpr double FOV = 60.0;

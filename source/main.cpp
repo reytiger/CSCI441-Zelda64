@@ -1,3 +1,4 @@
+#include "PrettyGLUT.hpp"
 
 // This function is expected by PrettyGLUT, because I designed it to get done
 // fast, not smart. We can change this later, but this makes sure it builds.
@@ -5,8 +6,14 @@
 // called.
 void updateScene(double, double) {}
 
-int main(int argc, char **argv) {
-  // TODO: create a simple hero. Tie the arc ball camera to them.
+void initScene() {}
 
+int main(int argc, char **argv) {
+  srand(time(nullptr));
+
+  PrettyGLUT::initGLUT(&argc, argv);
+  PrettyGLUT::printOpenGLInformation();
+  initScene();
+  PrettyGLUT::start();
   return 0;
 }
