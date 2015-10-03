@@ -4,35 +4,35 @@ CallListObject::~CallListObject() { deleteLists(); }
 
 CallListObject::CallListObject(std::function<void(GLuint)> makeit)
     : WorldObject() {
-  m_handle = glGenLists(1);
-  glChk();
-  makeit(m_handle);
-  glChk();
+    m_handle = glGenLists(1);
+    glChk();
+    makeit(m_handle);
+    glChk();
 }
 
 CallListObject &CallListObject::operator=(CallListObject &&other) {
-  deleteLists();
-  this->m_handle = other.m_handle;
-  other.m_handle = 0;
-  return *this;
+    deleteLists();
+    this->m_handle = other.m_handle;
+    other.m_handle = 0;
+    return *this;
 }
 
 void CallListObject::draw() const {
-  if (!m_visible) {
-    return;
-  }
-  glChk();
-  pushMatrixAnd([&]() {
-    glTranslated(m_pos.x, m_pos.y, m_pos.z);
+    if (!m_visible) {
+        return;
+    }
+    glChk();
+    pushMatrixAnd([&]() {
+        glTranslated(m_pos.x, m_pos.y, m_pos.z);
 
-    glCallList(m_handle);
-  });
+        glCallList(m_handle);
+    });
 }
 
 void CallListObject::deleteLists() {
-  if (m_handle) {
-    glDeleteLists(m_handle, 1);
-    glChk();
-    m_handle = 0;
-  }
+    if (m_handle) {
+        glDeleteLists(m_handle, 1);
+        glChk();
+        m_handle = 0;
+    }
 }

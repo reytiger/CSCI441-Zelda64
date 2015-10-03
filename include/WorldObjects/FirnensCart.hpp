@@ -5,16 +5,16 @@
 /*************************  DRAW FIRNENS CART  ********************************/
 class FirnensCart : public WorldObject {
 public:
-  // constructors
-  FirnensCart() : WorldObject() { m_wheelAngle = 0.0; }
+    // constructors
+    FirnensCart() : WorldObject() { m_wheelAngle = 0.0; }
 
-  virtual void draw() const;
+    virtual void draw() const;
 
-  void setAngleWheel(float angle) { this->m_wheelAngle = angle; };
+    void setAngleWheel(float angle) { this->m_wheelAngle = angle; };
 
-  // accessors
-  float getAngleWheel() { return this->m_wheelAngle; }
+    // accessors
+    float getAngleWheel() { return this->m_wheelAngle; }
 
 private:
-  float m_wheelAngle;
+    float m_wheelAngle;
 };

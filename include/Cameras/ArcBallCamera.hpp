@@ -17,57 +17,57 @@
 /*************************  DRAW  ARC BALL CAMERA    **************************/
 class ArcBallCamera {
 public:
-  ///  CONSTRUCTORS  ///
-  ArcBallCamera();
+    ///  CONSTRUCTORS  ///
+    ArcBallCamera();
 
-  void setX(float x) { this->cameraX = x; };
-  void setY(float y) { this->cameraY = y; };
-  void setZ(float z) { this->cameraZ = z; };
-  void setDirX(float dirX) { this->dirX = dirX; };
-  void setDirY(float dirY) { this->dirY = dirY; };
-  void setDirZ(float dirZ) { this->dirZ = dirZ; };
-  void setTheta(float theta) { this->theta = theta; };
-  void setPhi(float phi) { this->phi = phi; };
+    void setX(float x) { this->cameraX = x; };
+    void setY(float y) { this->cameraY = y; };
+    void setZ(float z) { this->cameraZ = z; };
+    void setDirX(float dirX) { this->dirX = dirX; };
+    void setDirY(float dirY) { this->dirY = dirY; };
+    void setDirZ(float dirZ) { this->dirZ = dirZ; };
+    void setTheta(float theta) { this->theta = theta; };
+    void setPhi(float phi) { this->phi = phi; };
 
-  void setU(float u) { this->u = u; };
-  void setV(float v) { this->v = v; };
+    void setU(float u) { this->u = u; };
+    void setV(float v) { this->v = v; };
 
-  void setView(float x, float y, float z);
-  void setScale(float scale) { this->scale = scale; };
-  void setAngle(float angle) { this->angle = angle; };
+    void setView(float x, float y, float z);
+    void setScale(float scale) { this->scale = scale; };
+    void setAngle(float angle) { this->angle = angle; };
 
-  void setXY(float x, float y) {
-    this->cameraX = x;
-    this->cameraY = y;
-  };
-  void setXYZ(float x, float y, float z);
+    void setXY(float x, float y) {
+        this->cameraX = x;
+        this->cameraY = y;
+    };
+    void setXYZ(float x, float y, float z);
 
-  void drawCamera();
+    void drawCamera();
 
-  ///  ACCESSORS  ///
-  float getX() { return this->cameraX; }
-  float getY() { return this->cameraY; }
-  float getZ() { return this->cameraZ; }
-  float getDirX() { return this->dirX; };
-  float getDirY() { return this->dirY; };
-  float getDirZ() { return this->dirZ; };
-  float getTheta() { return this->theta; };
-  float getPhi() { return this->phi; };
+    ///  ACCESSORS  ///
+    float getX() { return this->cameraX; }
+    float getY() { return this->cameraY; }
+    float getZ() { return this->cameraZ; }
+    float getDirX() { return this->dirX; };
+    float getDirY() { return this->dirY; };
+    float getDirZ() { return this->dirZ; };
+    float getTheta() { return this->theta; };
+    float getPhi() { return this->phi; };
 
-  float getScale() { return this->scale; }
-  float getAngle() { return this->angle; }
+    float getScale() { return this->scale; }
+    float getAngle() { return this->angle; }
 
-  float getU() { return u; }
-  float getV() { return v; }
+    float getU() { return u; }
+    float getV() { return v; }
 
-  void print();
+    void print();
 
-  ///  MODIFIERS  ///
-  void recomputeOrientation();
+    ///  MODIFIERS  ///
+    void recomputeOrientation();
 
 private:
-  float cameraX, cameraY, cameraZ, dirX, dirY, dirZ, theta, phi;
-  float u, v;
-  float scale, angle;
-  float viewX, viewY, viewZ; // used for keeping track of the origin
+    float cameraX, cameraY, cameraZ, dirX, dirY, dirZ, theta, phi;
+    float u, v;
+    float scale, angle;
+    float viewX, viewY, viewZ; // used for keeping track of the origin
 };

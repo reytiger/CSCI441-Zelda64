@@ -15,12 +15,12 @@
 #include <functional>
 
 static inline void pushMatrixAnd(std::function<void(void)> body) {
-  glPushMatrix();
-  glChk();
+    glPushMatrix();
+    glChk();
 
-  body();
+    body();
 
-  glChk();
-  glPopMatrix();
-  glChk();
+    glChk();
+    glPopMatrix();
+    glChk();
 }

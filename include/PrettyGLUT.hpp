@@ -18,7 +18,7 @@ constexpr double FOV = 60.0;
 extern int windowWidth;
 extern int windowHeight;
 static inline double aspectRatio() {
-  return (double)windowWidth / windowHeight;
+    return (double)windowWidth / windowHeight;
 }
 
 extern Color colorClear;
@@ -46,12 +46,12 @@ extern double heroBankRate;
 extern double heroWalkSpeed;
 
 // City settings
-constexpr Vec citySize = Vec(100.0, 100.0, 10.0);
+constexpr Vec citySize       = Vec(100.0, 100.0, 10.0);
 constexpr int cityResolution = 100;
 
 enum CameraMode {
-  ThirdPerson, // kind of
-  FirstPerson,
+    ThirdPerson, // kind of
+    FirstPerson,
 };
 
 extern Camera defaultCamera;

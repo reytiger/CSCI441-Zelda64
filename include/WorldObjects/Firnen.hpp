@@ -6,26 +6,26 @@
  * *************************************/
 class Firnen : public WorldObject {
 public:
-  // constructors
-  Firnen() : WorldObject() { m_armRotation = 0.0; }
+    // constructors
+    Firnen() : WorldObject() { m_armRotation = 0.0; }
 
-  virtual void draw() const;
+    virtual void draw() const;
 
-  // constructors
-  void setArmRotation(float armRotation) { m_armRotation = armRotation; };
+    // constructors
+    void setArmRotation(float armRotation) { m_armRotation = armRotation; };
 
-  void drawTorso() const;
-  void drawHead() const;
-  void drawEye() const;
-  void drawBody() const;
-  void drawArm() const;
-  void drawLeg() const;
+    void drawTorso() const;
+    void drawHead() const;
+    void drawEye() const;
+    void drawBody() const;
+    void drawArm() const;
+    void drawLeg() const;
 
-  // accessors
-  float getArmRotation() { return m_armRotation; }
+    // accessors
+    float getArmRotation() { return m_armRotation; }
 
-  // modifiers
+    // modifiers
 
 private:
-  float m_armRotation;
+    float m_armRotation;
 };

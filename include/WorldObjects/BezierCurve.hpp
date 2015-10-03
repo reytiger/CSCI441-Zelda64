@@ -7,23 +7,23 @@
 
 class BezierCurve : public WorldObject {
 public:
-  BezierCurve() : WorldObject() {}
+    BezierCurve() : WorldObject() {}
 
-  virtual void draw() const;
+    virtual void draw() const;
 
-  Vec eval(double t) const;
+    Vec eval(double t) const;
 
-  void loadFile(const std::string &filename);
+    void loadFile(const std::string &filename);
 
-  bool drawCage = true;
-  bool drawPath = true;
+    bool drawCage = true;
+    bool drawPath = true;
 
 private:
-  std::vector<Vec> points;
-  // Table to cache curve points.
-  std::vector<Vec> ss;
-  std::vector<double> ts;
+    std::vector<Vec> points;
+    // Table to cache curve points.
+    std::vector<Vec> ss;
+    std::vector<double> ts;
 
-  void reloadArclengthTables(int resolution);
-  Vec evalCubic(Vec p0, Vec p1, Vec p2, Vec p3, double t) const;
+    void reloadArclengthTables(int resolution);
+    Vec evalCubic(Vec p0, Vec p1, Vec p2, Vec p3, double t) const;
 };
