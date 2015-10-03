@@ -6,6 +6,7 @@
 #include "Utils/GL_Defs.hpp"
 #include "Utils/MathHelpers.hpp"
 #include "Utils/PointVecBase.hpp"
+#include "Utils/Logging.hpp"
 
 // Common includes
 #include <iostream>
