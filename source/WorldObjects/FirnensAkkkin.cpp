@@ -224,8 +224,8 @@ void FirnensAkkkin::drawBezierCurve() const {
 ////////////////////////////////////////////////////////////////////////////////
 // Responsible for drawing a Bezier Curve as defined by four control points.
 //  Breaks the curve into n segments as specified by the resolution.
-void FirnensAkkkin::renderBezierCurve(
-    Point p0, Point p1, Point p2, Point p3, int resolution) const {
+void FirnensAkkkin::renderBezierCurve(Point p0, Point p1, Point p2, Point p3,
+                                      int resolution) const {
     glPushMatrix();
     {
         glColor3f(51 / 255.0, 102 / 255.0, 201 / 255.0);
@@ -257,8 +257,8 @@ void FirnensAkkkin::renderBezierCurve(
 
 ////////////////////////////////////////////////////////////////////////////////
 // Computes a location along a Bezier Curve.
-Point FirnensAkkkin::evaluateBezierCurve(
-    Point p0, Point p1, Point p2, Point p3, float t) const {
+Point FirnensAkkkin::evaluateBezierCurve(Point p0, Point p1, Point p2, Point p3,
+                                         float t) const {
     // equation used from:
     //   https://en.wikipedia.org/wiki/B%C3%A9zier_curve
     // navigate to the Cubic Bézier curves

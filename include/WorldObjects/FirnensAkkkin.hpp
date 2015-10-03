@@ -63,10 +63,10 @@ private:
     void drawCageLines() const;
     // Curve
     void drawBezierCurve() const;
-    void renderBezierCurve(
-        Point p0, Point p1, Point p2, Point p3, int resolution) const;
+    void renderBezierCurve(Point p0, Point p1, Point p2, Point p3,
+                           int resolution) const;
     bool loadControlPoints(string filename);
     bool ControlCage, BezierCurve;
-    Point evaluateBezierCurve(
-        Point p0, Point p1, Point p2, Point p3, float t) const;
+    Point evaluateBezierCurve(Point p0, Point p1, Point p2, Point p3,
+                              float t) const;
 };

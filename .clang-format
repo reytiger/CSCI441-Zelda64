@@ -9,7 +9,7 @@ AlignTrailingComments: true
 AlwaysBreakTemplateDeclarations: true
 BreakBeforeBraces: Attach
 BinPackArguments: false
-BinPackParameters: false
+BinPackParameters: true
 ColumnLimit:     80
 ConstructorInitializerAllOnOneLineOrOnePerLine: true
 ConstructorInitializerIndentWidth: 4
