@@ -122,8 +122,6 @@ void FirnensAkkkin::drawWing() const {
 ////////////////////////////////////////////////////////////////////////////////
 //  Load our control points from file and store them in a global variable.
 bool FirnensAkkkin::loadControlPoints(string filename) {
-    // TODO #04: read in control points from file.  Make sure the file can be
-    // opened and handle it appropriately.
     string str;
     int numOfPoints = 0;
     ifstream file(filename.c_str());
