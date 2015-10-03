@@ -32,16 +32,17 @@ void check_opengl(const char *file, int line) {
   // I think these can stack up.
   while ((err = glGetError()) != GL_NO_ERROR) {
     switch (err) {
-    make_case(GL_INVALID_ENUM);
-    make_case(GL_INVALID_VALUE);
-    make_case(GL_INVALID_OPERATION);
-    #ifndef _WIN32
-    make_case(GL_INVALID_FRAMEBUFFER_OPERATION);
-    #endif
-    make_case(GL_OUT_OF_MEMORY);
-    make_case(GL_STACK_UNDERFLOW);
-    make_case(GL_STACK_OVERFLOW);
-    case GL_NO_ERROR : return;
+      make_case(GL_INVALID_ENUM);
+      make_case(GL_INVALID_VALUE);
+      make_case(GL_INVALID_OPERATION);
+#ifndef _WIN32
+      make_case(GL_INVALID_FRAMEBUFFER_OPERATION);
+#endif
+      make_case(GL_OUT_OF_MEMORY);
+      make_case(GL_STACK_UNDERFLOW);
+      make_case(GL_STACK_OVERFLOW);
+    case GL_NO_ERROR:
+      return;
 
     default:
       // TODO: Print the value.
