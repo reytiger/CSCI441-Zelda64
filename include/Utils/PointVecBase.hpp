@@ -21,6 +21,7 @@ struct Vec {
     double dot(const Vec &other) const;
     double norm() const;
     Vec normalize() const;
+    Vec cross(const Vec &other) const;
 };
 
 struct VecPolar {
@@ -146,4 +147,10 @@ inline double Vec::norm() const { return sqrt(this->dot(*this)); }
 inline Vec Vec::normalize() const {
     assert(norm() != 0);
     return *this / norm();
+}
+
+inline Vec Vec::cross(const Vec &v) const {
+    const Vec &u = *this;
+    return Vec(
+        u.y * v.z - u.z * v.y, u.z * v.x - u.x * v.z, u.x * v.y - u.y * v.x);
 }

@@ -42,19 +42,27 @@ void initScene() {
     defaultCamera.setUpdateFunc([](double t, double dt) {
         Vec vel;
 
-        const auto heroWalkSpeed = dt * 50.0;
+        Vec forward = defaultCamera.lookAt();
+        Vec right   = -defaultCamera.up().cross(forward);
+
+        const auto cameraSpeed = dt * 50.0;
 
         if (PrettyGLUT::keyPressed['d']) {
-            vel.x -= heroWalkSpeed;
+            vel += right;
         }
         if (PrettyGLUT::keyPressed['a']) {
-            vel.x += heroWalkSpeed;
+            vel -= right;
         }
         if (PrettyGLUT::keyPressed['w']) {
-            vel.z += heroWalkSpeed;
+            vel += forward;
         }
         if (PrettyGLUT::keyPressed['s']) {
-            vel.z -= heroWalkSpeed;
+            vel -= forward;
+        }
+
+        // If no keys were pressed, vel == (0, 0) and we can't normalize.
+        if (vel.norm()) {
+            vel = cameraSpeed * vel.normalize();
         }
 
         defaultCamera.setVelocity(vel);

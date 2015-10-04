@@ -111,8 +111,8 @@ void mouseMotion(int x, int y) {
     if (leftMouse == GLUT_DOWN) {
         const double fudge = 0.002;
 
-        int dx = x - mouse.x;
-        int dy = -(y - mouse.y);
+        int dx = mouse.x - x;
+        int dy = mouse.y - y;
 
         mouse.x = x;
         mouse.y = y;

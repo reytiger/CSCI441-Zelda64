@@ -18,7 +18,7 @@ public:
     virtual void rotate(double dtheta, double dphi);
 
     Vec lookAt() const { return m_lookat; }
-
+    Vec up() const { return m_up; }
     // Debugging the ModelView matrix can be helpful.
     const float *get_modelview() const;
 
