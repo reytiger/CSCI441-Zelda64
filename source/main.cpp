@@ -12,14 +12,15 @@ WorldSurface *worldSurface;
 // It takes in t and dt, the time and time since the last updateScene was
 // called.
 void updateScene(double t, double dt) {
-    defaultCamera.update(t, dt);
-    inc.update(t, dt);
+    for (WorldObject *wo : PrettyGLUT::drawn) {
+        wo->update(t, dt);
+    }
 }
 
 void initScene() {
     float lightCol[4]   = {1, 1, 1, 1};
     float ambientCol[4] = {0.0, 0.0, 0.0, 1.0};
-    float lPosition[4] = {10, 10, 10, 1};
+    float lPosition[4] = {0.0, 0.0, 0.0, 1};
     glLightfv(GL_LIGHT0, GL_POSITION, lPosition);
     glLightfv(GL_LIGHT0, GL_DIFFUSE, lightCol);
     glLightfv(GL_LIGHT0, GL_AMBIENT, ambientCol);
@@ -37,16 +38,26 @@ void initScene() {
 
     PrettyGLUT::drawn.push_back(&halo);
     halo.loadFile("./assets/world/bezier-halo.csv");
-    halo.moveToZ(1.0);
+    halo.moveToZ(5.0);
+    halo.setUpdateFunc([](double t, double dt) {
+        auto theta = t;
+        halo.moveTo(Vec(cos(1.1 * theta),
+                        sin(1.3 * theta),
+                        cos(1.5 * theta) * sin(0.9 * theta)));
+    });
 
+    PrettyGLUT::drawn.push_back(&defaultCamera);
     defaultCamera.setUpdateFunc([](double t, double dt) {
         Vec vel;
 
+        Vec up      = defaultCamera.up();
         Vec forward = defaultCamera.lookAt();
-        Vec right   = -defaultCamera.up().cross(forward);
+        Vec right   = forward.cross(up);
 
-        const auto cameraSpeed = dt * 50.0;
+        const auto cameraSpeed = dt * 75.0;
 
+        // Basic WASD controls to move forward and sideways, *as seen by the
+        // camera*.
         if (PrettyGLUT::keyPressed['d']) {
             vel += right;
         }
@@ -58,6 +69,14 @@ void initScene() {
         }
         if (PrettyGLUT::keyPressed['s']) {
             vel -= forward;
+        }
+
+        // Q and E move up and down.
+        if (PrettyGLUT::keyPressed['q']) {
+            vel += up;
+        }
+        if (PrettyGLUT::keyPressed['e']) {
+            vel -= up;
         }
 
         // If no keys were pressed, vel == (0, 0) and we can't normalize.
