@@ -3,13 +3,17 @@
 
 #include "WorldObjects.hpp"
 
+#include <functional>
+
 class FreeCamera : public WorldObject {
 public:
-    FreeCamera() : WorldObject(), m_up(Vec(0.0, 1.0, 0.0)) {}
+    FreeCamera() : WorldObject(), m_up(Vec(0.0, 1.0, 0.0)) { init(); }
     FreeCamera(Vec pos, Vec lookat, Vec up = Vec(0.0, 1.0, 0.0))
         : WorldObject(pos), m_lookat(lookat), m_up(up) {
-        m_radius = 0.05;
+        init();
     }
+
+    void addWASDControls(double speedPerSec, bool *pressed);
 
     virtual void adjustGLU();
 
@@ -25,4 +29,7 @@ public:
 protected:
     VecPolar m_lookat;
     Vec m_up;
+
+    // Set some reasonable defaults.
+    void init() { m_radius = 0.05; }
 };

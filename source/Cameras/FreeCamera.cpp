@@ -42,7 +42,50 @@ const float *FreeCamera::get_modelview() const {
 
 void FreeCamera::draw() const {
     pushMatrixAnd([&]() {
+        glColor3f(0.01 * m_pos.x, 0.01 * m_pos.y, 0.01 * m_pos.z);
         glTranslated(m_pos.x, m_pos.y, m_pos.z);
         glutSolidSphere(m_radius, 10, 10);
+    });
+}
+
+void FreeCamera::addWASDControls(double speedPerSec, bool *pressed) {
+    setUpdateFunc([=](double t, double dt) {
+        Vec vel;
+
+        Vec up      = this->up();
+        Vec forward = this->lookAt();
+        Vec right   = forward.cross(up);
+
+        auto speed = dt * speedPerSec;
+
+        // Basic WASD controls to move forward and sideways, *as seen by the
+        // camera*.
+        if (pressed['d']) {
+            vel += right;
+        }
+        if (pressed['a']) {
+            vel -= right;
+        }
+        if (pressed['w']) {
+            vel += forward;
+        }
+        if (pressed['s']) {
+            vel -= forward;
+        }
+
+        // Q and E move up and down.
+        if (pressed['q']) {
+            vel += up;
+        }
+        if (pressed['e']) {
+            vel -= up;
+        }
+
+        // If no keys were pressed, vel == (0, 0) and we can't normalize.
+        if (vel.norm()) {
+            vel = speed * vel.normalize();
+        }
+
+        this->setVelocity(vel);
     });
 }

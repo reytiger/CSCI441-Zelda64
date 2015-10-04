@@ -1,15 +1,18 @@
 #include "PrettyGLUT.hpp"
 
+#include "Cameras.hpp"
+
+#define switch_cam(cam)                                                        \
+    do {                                                                       \
+        activeCam = &cam;                                                      \
+        info("Switching camera to %s\n", #cam);                                \
+    } while (0)
+
 // We need to know about this. but it's entirely game logic so it's defined in
 // main.cpp.
 void updateScene(double t, double dt);
 
 // World objects
-FreeCamera defaultCamera = FreeCamera(Vec(0.0, 2.0, -4.0), // Position
-                                      Vec(0.20 * M_PI, 1.15 * M_PI)); // Lookat
-
-enum CameraMode cameraMode;
-
 namespace PrettyGLUT {
 
 // Display Settings
@@ -26,6 +29,12 @@ bool keyPressed[256] = {};
 // Things to draw
 std::vector<WorldObject *> drawn = std::vector<WorldObject *>();
 
+// Cameras
+FreeCamera freecam;
+FreeCamera freecam2; // TODO: Make this a first person, or an arcball.
+
+Camera *activeCam = &freecam;
+
 void render() {
     // clear the render buffer
     glDrawBuffer(GL_BACK);
@@ -35,14 +44,18 @@ void render() {
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
-    defaultCamera.adjustGLU();
-    gluLookAt(0.0, 5.0, -10.0, 0, 0, 0, 0, 1, 0);
+    activeCam->adjustGLU();
 
     for (WorldObject *wo : drawn) {
         glChk();
         wo->draw();
         glChk();
     }
+
+    // Draw each camera. If we don't want it rendered, we can toggle its
+    // visibility.
+    freecam.draw();
+    freecam2.draw();
 
     // push the back buffer to the screen
     glutSwapBuffers();
@@ -119,7 +132,7 @@ void mouseMotion(int x, int y) {
 
         // Adjust the rotation angles by a constant factor of the distance
         // the mouse moved.
-        defaultCamera.rotate(fudge * dx, fudge * dy);
+        activeCam->rotate(fudge * dx, fudge * dy);
     }
 }
 
@@ -131,11 +144,11 @@ void normalKeysDown(unsigned char key, int, int) {
         exit(0);
 
     case '1':
-        cameraMode = ThirdPerson;
+        switch_cam(freecam);
         break;
 
     case '2':
-        cameraMode = FirstPerson;
+        switch_cam(freecam2);
         break;
 
     case 'r':

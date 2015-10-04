@@ -34,14 +34,13 @@ void initGLUT(int *argcp, char **argv);
 void start();
 
 // Things to draw
+// Pointers stored here can expect to live the duration of the program.
 extern std::vector<WorldObject *> drawn;
 
+// Cameras
+extern FreeCamera freecam;
+extern FreeCamera freecam2; // TODO: Make this a first person, or an arcball.
+
+extern Camera *activeCam;
+
 }; // namespace PrettyGLUT
-
-enum CameraMode {
-    ThirdPerson, // kind of
-    FirstPerson,
-};
-
-extern FreeCamera defaultCamera;
-extern CameraMode cameraMode;

@@ -15,6 +15,9 @@ void updateScene(double t, double dt) {
     for (WorldObject *wo : PrettyGLUT::drawn) {
         wo->update(t, dt);
     }
+
+    // Even though they're rendered, the cameras are NOT in the drawn list.
+    PrettyGLUT::activeCam->update(t, dt);
 }
 
 void initScene() {
@@ -28,6 +31,17 @@ void initScene() {
     // tell OpenGL not to use the material system; just use whatever we
     // pass with glColor*()
     glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+
+    // Cameras are important. Note, they are hard-coded in the render loop.
+    // Do NOT add a camera to the  PrettyGLUT::drawn, or it'll draw (and update)
+    // twice.
+
+    // Setup controls for PrettyGLUT::freecam.
+    PrettyGLUT::freecam.addWASDControls(100.0, PrettyGLUT::keyPressed);
+    PrettyGLUT::freecam.moveToY(1.0);
+
+    PrettyGLUT::freecam2.addWASDControls(100.0, PrettyGLUT::keyPressed);
+    PrettyGLUT::freecam2.moveToY(1.0);
 
     // Load up Incallidus!
     PrettyGLUT::drawn.push_back(&inc);
@@ -45,48 +59,6 @@ void initScene() {
                         sin(1.3 * theta),
                         cos(1.5 * theta) * sin(0.9 * theta)));
     });
-
-    PrettyGLUT::drawn.push_back(&defaultCamera);
-    defaultCamera.setUpdateFunc([](double t, double dt) {
-        Vec vel;
-
-        Vec up      = defaultCamera.up();
-        Vec forward = defaultCamera.lookAt();
-        Vec right   = forward.cross(up);
-
-        const auto cameraSpeed = dt * 75.0;
-
-        // Basic WASD controls to move forward and sideways, *as seen by the
-        // camera*.
-        if (PrettyGLUT::keyPressed['d']) {
-            vel += right;
-        }
-        if (PrettyGLUT::keyPressed['a']) {
-            vel -= right;
-        }
-        if (PrettyGLUT::keyPressed['w']) {
-            vel += forward;
-        }
-        if (PrettyGLUT::keyPressed['s']) {
-            vel -= forward;
-        }
-
-        // Q and E move up and down.
-        if (PrettyGLUT::keyPressed['q']) {
-            vel += up;
-        }
-        if (PrettyGLUT::keyPressed['e']) {
-            vel -= up;
-        }
-
-        // If no keys were pressed, vel == (0, 0) and we can't normalize.
-        if (vel.norm()) {
-            vel = cameraSpeed * vel.normalize();
-        }
-
-        defaultCamera.setVelocity(vel);
-    });
-    defaultCamera.moveToY(1.0);
 
     PrettyGLUT::drawn.push_back(&roomFloor);
     roomFloor = CallListObject([](GLuint dl) {

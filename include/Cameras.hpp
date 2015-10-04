@@ -5,3 +5,5 @@
 #include "Cameras/FreeCamera.hpp"
 
 #include "WorldObjects.hpp"
+
+typedef FreeCamera Camera;
