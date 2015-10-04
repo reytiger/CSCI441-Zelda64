@@ -39,9 +39,9 @@ struct VecPolar {
 
     // Convert to cartesian, aka Vec.
     Vec cart() const {
-        double x = cos(this->theta) * cos(this->phi);
-        double y = sin(this->theta) * cos(this->phi);
-        double z = sin(this->phi);
+        double x = sin(theta) * cos(phi);
+        double y = sin(phi);
+        double z = cos(theta) * cos(phi);
         return Vec(x, y, z).normalize();
     }
     operator Vec() const { return cart(); }

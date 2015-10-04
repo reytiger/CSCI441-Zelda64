@@ -3,9 +3,8 @@
 #include "WorldObjects.hpp"
 
 Incallidus inc;
-BezierCurve curve;
-
-// Global
+BezierCurve halo;
+CallListObject roomFloor;
 WorldSurface *worldSurface;
 
 // This function is expected by PrettyGLUT, because I designed it to get done
@@ -36,19 +35,20 @@ void initScene() {
     PrettyGLUT::drawn.push_back(worldSurface);
     worldSurface = new WorldSurface();
 
-    PrettyGLUT::drawn.push_back(&curve);
-    curve.loadFile("./assets/world/bezier-halo.csv");
+    PrettyGLUT::drawn.push_back(&halo);
+    halo.loadFile("./assets/world/bezier-halo.csv");
+    halo.moveToZ(1.0);
 
     defaultCamera.setUpdateFunc([](double t, double dt) {
         Vec vel;
 
-        const auto heroWalkSpeed = dt * 5.0;
+        const auto heroWalkSpeed = dt * 50.0;
 
         if (PrettyGLUT::keyPressed['d']) {
-            vel.x += heroWalkSpeed;
+            vel.x -= heroWalkSpeed;
         }
         if (PrettyGLUT::keyPressed['a']) {
-            vel.x -= heroWalkSpeed;
+            vel.x += heroWalkSpeed;
         }
         if (PrettyGLUT::keyPressed['w']) {
             vel.z += heroWalkSpeed;
@@ -58,6 +58,35 @@ void initScene() {
         }
 
         defaultCamera.setVelocity(vel);
+    });
+    defaultCamera.moveToY(1.0);
+
+    PrettyGLUT::drawn.push_back(&roomFloor);
+    roomFloor = CallListObject([](GLuint dl) {
+        glNewList(dl, GL_COMPILE);
+        auto citySize = Vec(100, 100);
+        glColor3d(0.3, 0.6, 0.3);
+
+        for (int i = -10; i <= 100 + 10; i += 1) {
+            glBegin(GL_TRIANGLE_STRIP);
+            for (int k = -10; k <= 100 + 10; k += 1) {
+                Vec off  = citySize / 100;
+                auto pos = Vec(i, k) * off - citySize / 2.0;
+
+                // glColor3d(getRand(), getRand(), getRand());
+                glVertex3d(pos.x, 0.0, pos.y);
+                glVertex3d(pos.x, 0.0, pos.y - off.y);
+                glVertex3d(pos.x - off.x, 0.0, pos.y);
+
+                // glColor3d(getRand(), getRand(), getRand());
+                glVertex3d(pos.x, 0.0, pos.y);
+                glVertex3d(pos.x, 0.0, pos.y + off.y);
+                glVertex3d(pos.x + off.x, 0.0, pos.y);
+            }
+            glEnd();
+        }
+
+        glEndList();
     });
 }
 

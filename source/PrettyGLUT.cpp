@@ -13,8 +13,8 @@ enum CameraMode cameraMode;
 namespace PrettyGLUT {
 
 // Display Settings
-int windowWidth  = 640;
-int windowHeight = 480;
+int windowWidth  = 1280;
+int windowHeight = 1024;
 
 Color colorClear = Color(0.3, 0.2, 0.8);
 
@@ -112,14 +112,14 @@ void mouseMotion(int x, int y) {
         const double fudge = 0.002;
 
         int dx = x - mouse.x;
-        int dy = y - mouse.y;
+        int dy = -(y - mouse.y);
 
         mouse.x = x;
         mouse.y = y;
 
         // Adjust the rotation angles by a constant factor of the distance
         // the mouse moved.
-        defaultCamera.rotate(-fudge * dx, fudge * dy);
+        defaultCamera.rotate(fudge * dx, fudge * dy);
     }
 }
 
@@ -187,6 +187,7 @@ void initGLUT(int *argcp, char **argv) {
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
     glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
     glEnable(GL_COLOR_MATERIAL);
 
     // Smooth looks so much better.

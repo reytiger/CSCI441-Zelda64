@@ -5,7 +5,8 @@
 
 class FreeCamera : public WorldObject {
 public:
-    FreeCamera(Vec pos, Vec lookat, Vec up = Vec(0.0, 0.0, 1.0))
+    FreeCamera() : WorldObject(), m_up(Vec(0.0, 1.0, 0.0)) {}
+    FreeCamera(Vec pos, Vec lookat, Vec up = Vec(0.0, 1.0, 0.0))
         : WorldObject(pos), m_lookat(lookat), m_up(up) {
         m_radius = 0.05;
     }
@@ -13,7 +14,7 @@ public:
     virtual void adjustGLU();
 
     virtual void draw() const;
-    virtual Vec lookAt(Vec polarCoord) { return m_lookat = polarCoord; }
+    virtual Vec lookAt(VecPolar polar) { return m_lookat = polar; }
     virtual void rotate(double dtheta, double dphi);
 
     Vec lookAt() const { return m_lookat; }
