@@ -14,9 +14,9 @@ public:
 
     virtual ~WorldObject(){};
 
-    WorldObject() = default;
+    WorldObject() : m_color(randColor()) {}
     WorldObject(Vec pos, Vec vel = Vec())
-        : m_update(), m_pos(pos), m_vel(vel) {}
+        : m_update(), m_pos(pos), m_vel(vel), m_color(randColor()) {}
 
     void move(Vec ds) { m_pos += ds; }
     void moveX(double dx) { m_pos.x += dx; }
@@ -64,6 +64,7 @@ protected:
     Vec m_pos;
     Vec m_posUV;
     Vec m_vel;
+    Color m_color;
     double m_heading = 0.0; // About the Z-axis, for now.
     double m_radius  = 1.0;
     double m_height  = 0.0;

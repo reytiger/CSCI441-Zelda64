@@ -42,7 +42,7 @@ const float *FreeCamera::get_modelview() const {
 
 void FreeCamera::draw() const {
     pushMatrixAnd([&]() {
-        glColor3f(0.01 * m_pos.x, 0.01 * m_pos.y, 0.01 * m_pos.z);
+        m_color.glSet();
         glTranslated(m_pos.x, m_pos.y, m_pos.z);
         glutSolidSphere(m_radius, 10, 10);
     });
