@@ -111,7 +111,14 @@ void initScene() {
     });
 }
 
-void handleRightClickMenu(int val) {
+void handleMainMenu(int val) {
+    switch (static_cast<MenuOpt>(val)) {
+    case MenuOpt::Quit:
+        exit(0);
+    }
+}
+
+void handleCamerasMenu(int val) {
     switch (static_cast<MenuOpt>(val)) {
     case MenuOpt::SwitchToFreeCam:
         PrettyGLUT::activeCam = &PrettyGLUT::freecam;
@@ -128,25 +135,25 @@ void handleRightClickMenu(int val) {
     case MenuOpt::SwitchToFirstCam:
         info("First person camera is not implemented. Sorry.");
         break;
-
-    case MenuOpt::Quit:
-        exit(0);
     }
 }
 
 void initRightClickMenu() {
-    glutCreateMenu(handleRightClickMenu);
+    int main    = glutCreateMenu(handleMainMenu);
+    int cameras = glutCreateMenu(handleCamerasMenu);
 
-    // The order of these calls determines the order which they appear in.
-
-    // Camera choices.
-    // TODO: Submenu for just cameras?
-    glutAddMenuEntry("Switch to Free Cam", MenuOpt::SwitchToFreeCam);
-    glutAddMenuEntry("Switch to Fast Free Cam", MenuOpt::SwitchToFastFreeCam);
-    glutAddMenuEntry("Switch to ArcBall Cam", MenuOpt::SwitchToArcBallCam);
-    glutAddMenuEntry("Switch to First person Cam", MenuOpt::SwitchToFirstCam);
-
+    glutSetMenu(main);
+    glutAddSubMenu("Switch Camera", cameras);
     glutAddMenuEntry("Quit", MenuOpt::Quit);
+
+    glutSetMenu(cameras);
+    // TODO: Highlight the current camera, somehow?
+    glutAddMenuEntry("ArcBall Cam", MenuOpt::SwitchToArcBallCam);
+    glutAddMenuEntry("Fast Free Cam", MenuOpt::SwitchToFastFreeCam);
+    glutAddMenuEntry("First-Person Cam", MenuOpt::SwitchToFirstCam);
+    glutAddMenuEntry("Free Cam", MenuOpt::SwitchToFreeCam);
+
+    glutSetMenu(main);
 
     glutAttachMenu(GLUT_RIGHT_BUTTON);
 }
