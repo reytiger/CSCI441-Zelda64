@@ -68,16 +68,20 @@ void resize(int w, int h) {
 }
 
 void printOpenGLInformation() {
-    // clang-format off
-  printf("/-----------------------------------------------------------------------\\\n");
-  printf("| OpenGL Information                                                    |\n");
-  printf("|-----------------------------------------------------------------------|\n");
-  printf("|   OpenGL Version:  %50s |\n", glGetString(GL_VERSION));
-  printf("|   OpenGL Renderer: %50s |\n", glGetString(GL_RENDERER));
-  printf("|   OpenGL Vendor:   %50s |\n", glGetString(GL_VENDOR));
-  // printf("|   GLUI Version:    %50.2f |\n", GLUI_VERSION);
-  printf("\\-----------------------------------------------------------------------/\n");
-    // clang-format on
+    info(
+        // We don't want to break this string across lines.
+        // clang-format off
+         "/-----------------------------------------------------------------------\\\n"
+         "| OpenGL Information                                                    |\n"
+         "|-----------------------------------------------------------------------|\n"
+         "|   OpenGL Version:  %50s |\n"
+         "|   OpenGL Renderer: %50s |\n"
+         "|   OpenGL Vendor:   %50s |\n"
+        "\\-----------------------------------------------------------------------/\n",
+        // clang-format on
+        glGetString(GL_VERSION),
+        glGetString(GL_RENDERER),
+        glGetString(GL_VENDOR));
 }
 
 //

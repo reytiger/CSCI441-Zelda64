@@ -14,11 +14,22 @@ enum class Log {
 template <typename... Args>
 void log_context(Log loglevel, const char *file, int line, const char *func,
                  const char *fmt, const Args &... args) {
+    // Insert a newline here so we catch and indent it below.
+    std::string text = "\n" + tfm::format(fmt, args...);
     std::string level;
+
+    // Indent each line with a tab.
+    size_t pos = 0;
+    while ((pos = text.find('\n', pos)) != std::string::npos) {
+        pos += 1; // We want the position *after* the new line.
+        text.insert(pos, "\t");
+    }
+
     switch (loglevel) {
     case Log::Info:
-        level = "[Info] ";
-        break;
+        // Info is special.
+        tfm::printf("[Info] %s(): %s\n", func, text);
+        return;
     case Log::Warning:
         level = "[Warn] ";
         break;
@@ -31,9 +42,8 @@ void log_context(Log loglevel, const char *file, int line, const char *func,
     default:
         assert(0 && "Unknown Logging level!");
     }
-    std::string text = tfm::format(fmt, args...);
-    tfm::format(
-        std::cerr, "%s %s:%d:%s():\n\t%s\n", level, file, line, func, text);
+
+    tfm::format(std::cerr, "%s %s:%d:%s():%s\n", level, file, line, func, text);
 }
 
 #define log_with_context(level, fmt, ...)                                      \
