@@ -53,10 +53,11 @@ void render() {
         glChk();
     }
 
-    // Draw each camera. If we don't want it rendered, we can toggle its
-    // visibility.
+    // Draw each camera out of the drawn vector.
+    // If we don't want it rendered, we can toggle its visibility.
     freecam.draw();
     freecam2.draw();
+    arcballcam.draw();
 
     // push the back buffer to the screen
     glutSwapBuffers();

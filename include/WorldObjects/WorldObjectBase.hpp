@@ -14,9 +14,9 @@ public:
 
     virtual ~WorldObject(){};
 
-    WorldObject() : m_color(randColor()) {}
+    WorldObject() = default;
     WorldObject(Vec pos, Vec vel = Vec())
-        : m_update(), m_pos(pos), m_vel(vel), m_color(randColor()) {}
+        : m_update(), m_pos(pos), m_vel(vel) {}
 
     void move(Vec ds) { m_pos += ds; }
     void moveX(double dx) { m_pos.x += dx; }
@@ -35,6 +35,7 @@ public:
 
     void setRadius(double radius) { m_radius = radius; }
     void setHeight(double height) { m_height = height; }
+    void setColor(const Color &color) { m_color = color; }
 
     void adjustHeading(double dtheta) { m_heading += dtheta; }
 

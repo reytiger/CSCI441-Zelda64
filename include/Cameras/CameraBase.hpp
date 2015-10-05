@@ -11,13 +11,13 @@ public:
     static const double s_minPhi;
     static const double s_maxPhi;
 
-    Camera() : WorldObject(), m_up(Vec(0.0, 1.0, 0.0)) { init(); }
+    Camera() : WorldObject(), m_up(Vec(0.0, 1.0, 0.0)) { m_radius = 0.05; }
     Camera(Vec pos, Vec lookat, Vec up = Vec(0.0, 1.0, 0.0))
         : WorldObject(pos), m_lookat(lookat), m_up(up) {
-        init();
+        m_radius = 0.05;
     }
 
-    virtual void adjustGLU();
+    virtual void adjustGLU() const;
 
     virtual void draw() const;
 
@@ -34,10 +34,4 @@ public:
 protected:
     VecPolar m_lookat;
     Vec m_up;
-
-    // Set some reasonable defaults.
-    void init() {
-        // We want the camera to stay out of the way when it's rendered.
-        m_radius = 0.05;
-    }
 };

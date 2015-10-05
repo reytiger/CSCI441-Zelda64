@@ -3,7 +3,7 @@
 const double Camera::s_minPhi = -0.5 * M_PI + 1e-5;
 const double Camera::s_maxPhi = 0.5 * M_PI - 1e-5;
 
-void Camera::adjustGLU() {
+void Camera::adjustGLU() const {
     glChk();
     Vec lookat = m_pos + m_lookat.cart();
     // clang-format off

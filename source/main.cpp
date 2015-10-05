@@ -16,7 +16,8 @@ void updateScene(double t, double dt) {
         wo->update(t, dt);
     }
 
-    // Even though they're rendered, the cameras are NOT in the drawn list.
+    // Even though they're rendered, the cameras are NOT in the drawn list, so
+    // we have to update them manually, if we want them updated at all.
     PrettyGLUT::activeCam->update(t, dt);
 }
 
@@ -39,12 +40,16 @@ void initScene() {
     // Setup controls for PrettyGLUT::freecam.
     PrettyGLUT::freecam.addWASDControls(100.0, PrettyGLUT::keyPressed);
     PrettyGLUT::freecam.moveToY(1.0);
+    PrettyGLUT::freecam.setColor(randColor());
 
     // Cam2 is much faster.
     PrettyGLUT::freecam2.addWASDControls(500.0, PrettyGLUT::keyPressed);
     PrettyGLUT::freecam2.moveToY(1.0);
+    PrettyGLUT::freecam2.setColor(randColor());
 
-    PrettyGLUT::arcballcam.setRadius(10.0);
+    // Arcballs for DAYZ.
+    PrettyGLUT::arcballcam.setColor(randColor());
+    PrettyGLUT::arcballcam.follow(&PrettyGLUT::freecam);
     // PrettyGLUT::arcballcam.addArcBallControls(???);
 
     // Load up Incallidus!

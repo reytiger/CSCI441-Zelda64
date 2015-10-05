@@ -17,19 +17,11 @@ public:
     ArcBallCamera() : Camera() {}
     ArcBallCamera(VecPolar arc) : Camera(), m_arc(arc) {}
 
-    virtual void adjustGLU();
-    virtual void rotate(double dtheta, double dphi) {
-        m_arc.theta += dtheta;
-        m_arc.phi = clamp(m_arc.phi + dphi, s_minPhi, s_maxPhi);
-        m_arc.r   = m_radius;
-    }
+    virtual void adjustGLU() const;
+    virtual void draw() const;
+    virtual void rotate(double dtheta, double dphi);
 
 private:
-    float cameraX, cameraY, cameraZ, dirX, dirY, dirZ, theta, phi;
-    float u, v;
-    float scale, angle;
-    float viewX, viewY, viewZ; // used for keeping track of the origin
-
     // The camera rotates around m_pos (from WoldObject)
 
     // Where the camera is along its motion arc. This polar vector includes
