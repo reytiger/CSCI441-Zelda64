@@ -96,13 +96,24 @@ void initScene() {
 
                 // glColor3d(getRand(), getRand(), getRand());
                 glVertex3d(pos.x, 0.0, pos.y);
+                glNormal3d(0.0, 1.0, 0.0);
+
                 glVertex3d(pos.x, 0.0, pos.y - off.y);
+                glNormal3d(0.0, 1.0, 0.0);
+
                 glVertex3d(pos.x - off.x, 0.0, pos.y);
+                glNormal3d(0.0, 1.0, 0.0);
+
 
                 // glColor3d(getRand(), getRand(), getRand());
                 glVertex3d(pos.x, 0.0, pos.y);
+                glNormal3d(0.0, 1.0, 0.0);
+
                 glVertex3d(pos.x, 0.0, pos.y + off.y);
+                glNormal3d(0.0, 1.0, 0.0);
+
                 glVertex3d(pos.x + off.x, 0.0, pos.y);
+                glNormal3d(0.0, 1.0, 0.0);
             }
             glEnd();
         }
