@@ -31,7 +31,8 @@ std::vector<WorldObject *> drawn = std::vector<WorldObject *>();
 
 // Cameras
 FreeCamera freecam;
-FreeCamera freecam2; // TODO: Make this a first person.
+FreeCamera fastfreecam;
+// TODO: First person camera
 ArcBallCamera arcballcam;
 
 Camera *activeCam = &freecam;
@@ -56,7 +57,7 @@ void render() {
     // Draw each camera out of the drawn vector.
     // If we don't want it rendered, we can toggle its visibility.
     freecam.draw();
-    freecam2.draw();
+    fastfreecam.draw();
     arcballcam.draw();
 
     // push the back buffer to the screen
@@ -150,7 +151,7 @@ void normalKeysDown(unsigned char key, int, int) {
         break;
 
     case '2':
-        switch_cam(freecam2);
+        switch_cam(fastfreecam);
         break;
 
     case '3':

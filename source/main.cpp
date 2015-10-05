@@ -7,8 +7,21 @@ BezierCurve halo;
 CallListObject roomFloor;
 WorldSurface *worldSurface;
 
-// This function is expected by PrettyGLUT, because I designed it to get done
-// fast, not smart. We can change this later, but this makes sure it builds.
+// Defines the menu options.
+// See handleRightClickMenu() and initRightClickMenu() for details.
+enum MenuOpt {
+    // 0 means something special to GLUT for menus, so don't pass it in.
+    SwitchToFreeCam = 1,
+    SwitchToFastFreeCam,
+    SwitchToArcBallCam,
+    SwitchToFirstCam,
+
+    Quit,
+};
+
+// This function is expected by PrettyGLUT, because I designed it to get
+// done fast, not smart. We can change this later, but this makes sure it
+// builds.
 // It takes in t and dt, the time and time since the last updateScene was
 // called.
 void updateScene(double t, double dt) {
@@ -43,9 +56,9 @@ void initScene() {
     PrettyGLUT::freecam.setColor(randColor());
 
     // Cam2 is much faster.
-    PrettyGLUT::freecam2.addWASDControls(500.0, PrettyGLUT::keyPressed);
-    PrettyGLUT::freecam2.moveToY(1.0);
-    PrettyGLUT::freecam2.setColor(randColor());
+    PrettyGLUT::fastfreecam.addWASDControls(200.0, PrettyGLUT::keyPressed);
+    PrettyGLUT::fastfreecam.moveToY(1.0);
+    PrettyGLUT::fastfreecam.setColor(randColor());
 
     // Arcballs for DAYZ.
     PrettyGLUT::arcballcam.setColor(randColor());
@@ -98,12 +111,57 @@ void initScene() {
     });
 }
 
+void handleRightClickMenu(int val) {
+    switch (static_cast<MenuOpt>(val)) {
+    case MenuOpt::SwitchToFreeCam:
+        PrettyGLUT::activeCam = &PrettyGLUT::freecam;
+        break;
+
+    case MenuOpt::SwitchToFastFreeCam:
+        PrettyGLUT::activeCam = &PrettyGLUT::fastfreecam;
+        break;
+
+    case MenuOpt::SwitchToArcBallCam:
+        PrettyGLUT::activeCam = &PrettyGLUT::arcballcam;
+        break;
+
+    case MenuOpt::SwitchToFirstCam:
+        info("First person camera is not implemented. Sorry.");
+        break;
+
+    case MenuOpt::Quit:
+        exit(0);
+    }
+}
+
+void initRightClickMenu() {
+    glutCreateMenu(handleRightClickMenu);
+
+    // The order of these calls determines the order which they appear in.
+
+    // Camera choices.
+    // TODO: Submenu for just cameras?
+    glutAddMenuEntry("Switch to Free Cam", MenuOpt::SwitchToFreeCam);
+    glutAddMenuEntry("Switch to Fast Free Cam", MenuOpt::SwitchToFastFreeCam);
+    glutAddMenuEntry("Switch to ArcBall Cam", MenuOpt::SwitchToArcBallCam);
+    glutAddMenuEntry("Switch to First person Cam", MenuOpt::SwitchToFirstCam);
+
+    glutAddMenuEntry("Quit", MenuOpt::Quit);
+
+    glutAttachMenu(GLUT_RIGHT_BUTTON);
+}
+
 int main(int argc, char **argv) {
     srand(time(nullptr));
 
     PrettyGLUT::initGLUT(&argc, argv);
+
+    // It looks pretty.
     PrettyGLUT::printOpenGLInformation();
+
+    initRightClickMenu();
     initScene();
+
     PrettyGLUT::start();
     return 0;
 }

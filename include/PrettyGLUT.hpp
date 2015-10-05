@@ -39,7 +39,7 @@ extern std::vector<WorldObject *> drawn;
 
 // Cameras
 extern FreeCamera freecam;
-extern FreeCamera freecam2; // TODO: Make this a first person.
+extern FreeCamera fastfreecam; // TODO: Make this a first person.
 extern ArcBallCamera arcballcam;
 
 extern Camera *activeCam;
