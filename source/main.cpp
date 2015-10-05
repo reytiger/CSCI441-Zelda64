@@ -40,8 +40,12 @@ void initScene() {
     PrettyGLUT::freecam.addWASDControls(100.0, PrettyGLUT::keyPressed);
     PrettyGLUT::freecam.moveToY(1.0);
 
-    PrettyGLUT::freecam2.addWASDControls(100.0, PrettyGLUT::keyPressed);
+    // Cam2 is much faster.
+    PrettyGLUT::freecam2.addWASDControls(500.0, PrettyGLUT::keyPressed);
     PrettyGLUT::freecam2.moveToY(1.0);
+
+    PrettyGLUT::arcballcam.setRadius(10.0);
+    // PrettyGLUT::arcballcam.addArcBallControls(???);
 
     // Load up Incallidus!
     PrettyGLUT::drawn.push_back(&inc);

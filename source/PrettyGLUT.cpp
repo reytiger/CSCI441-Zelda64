@@ -31,7 +31,8 @@ std::vector<WorldObject *> drawn = std::vector<WorldObject *>();
 
 // Cameras
 FreeCamera freecam;
-FreeCamera freecam2; // TODO: Make this a first person, or an arcball.
+FreeCamera freecam2; // TODO: Make this a first person.
+ArcBallCamera arcballcam;
 
 Camera *activeCam = &freecam;
 
@@ -149,6 +150,10 @@ void normalKeysDown(unsigned char key, int, int) {
 
     case '2':
         switch_cam(freecam2);
+        break;
+
+    case '3':
+        switch_cam(arcballcam);
         break;
 
     case 'r':
