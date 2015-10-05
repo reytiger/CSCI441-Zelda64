@@ -3,9 +3,16 @@
 
 using namespace std;
 
+// BezierCurve bezierCurve;
+
 /*************************  DRAW WORLD SURFACE  *******************************/
 void WorldSurface::draw() const {
-    pushMatrixAnd([&]() { drawControlPoints(); });
+    pushMatrixAnd([&]() {
+        drawControlPoints();
+        for (int i = 0; i < m_curvesCPoints.size(); ++i) {
+            m_curvesCPoints.at(i).drawCurve();
+        }
+    });
 }
 
 /*************************  SET UP FOR CURVES  ********************************/
@@ -47,6 +54,8 @@ bool WorldSurface::loadControlPoints(string filename) {
         v.push_back(m_controlPoints.at(i * 4 + 1));
         v.push_back(m_controlPoints.at(i * 4 + 2));
         v.push_back(m_controlPoints.at(i * 4 + 3));
+        BezierCurve *create = new BezierCurve(v);
+        m_curvesCPoints.push_back(*create);
     }
     return true;
 }

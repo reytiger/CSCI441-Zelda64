@@ -35,5 +35,5 @@ private:
     void drawControlPoints();
 
     // control curves
-    std::vector<BezierCurve> m_curves;
+    std::vector<BezierCurve> m_curvesCPoints;
 };

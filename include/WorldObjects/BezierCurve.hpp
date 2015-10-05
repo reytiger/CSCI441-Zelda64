@@ -10,9 +10,10 @@
 class BezierCurve : public WorldObject {
 public:
     BezierCurve() : WorldObject() {}
-    // BezierCurve(const std::vector<Point> &v) : WorldObject(), points(v) {}
+    BezierCurve(const std::vector<Point> &v) : WorldObject(), pointsP(v) {}
 
     virtual void draw() const;
+    virtual void drawCurve() const;
 
     Vec eval(double t) const;
 
@@ -22,11 +23,13 @@ public:
     bool drawPath = true;
 
 private:
-    std::vector<Vec> points;
+    std::vector<Vec> pointsV;
+    std::vector<Point> pointsP;
     // Table to cache curve points.
     std::vector<Vec> ss;
     std::vector<double> ts;
 
     void reloadArclengthTables(int resolution);
     Vec evalCubic(Vec p0, Vec p1, Vec p2, Vec p3, double t) const;
+    Point evalCubicPoint(double t) const;
 };
