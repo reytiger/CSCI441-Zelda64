@@ -22,6 +22,8 @@ public:
         glChk();
     };
 
+    Point eval(double u, double v) const;
+
     virtual void draw() const;
 
 private:

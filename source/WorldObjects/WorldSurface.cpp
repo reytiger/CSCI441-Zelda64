@@ -15,6 +15,23 @@ void WorldSurface::draw() const {
     });
 }
 
+void WorldSurface::drawControlPoints() {
+    // Draw our control points
+    float scaleDown = 0.1;
+    for (int i = 0; i < m_controlPoints.size(); ++i) {
+        glPushMatrix();
+        {
+            glColor3f(10 / 255.0, 200 / 255.0, 10 / 255.0);
+            glTranslatef(m_controlPoints.at(i).getX(),
+                         m_controlPoints.at(i).getY(),
+                         m_controlPoints.at(i).getZ());
+            glScalef(scaleDown, scaleDown, scaleDown);
+            glutSolidSphere(1, 10, 10);
+        };
+        glPopMatrix();
+    }
+}
+
 /*************************  SET UP FOR CURVES  ********************************/
 ////////////////////////////////////////////////////////////////////////////////
 //  Load our control points from file and store them in a global variable.
@@ -60,19 +77,11 @@ bool WorldSurface::loadControlPoints(string filename) {
     return true;
 }
 
-void WorldSurface::drawControlPoints() {
-    // Draw our control points
-    float scaleDown = 0.1;
-    for (int i = 0; i < m_controlPoints.size(); ++i) {
-        glPushMatrix();
-        {
-            glColor3f(10 / 255.0, 200 / 255.0, 10 / 255.0);
-            glTranslatef(m_controlPoints.at(i).getX(),
-                         m_controlPoints.at(i).getY(),
-                         m_controlPoints.at(i).getZ());
-            glScalef(scaleDown, scaleDown, scaleDown);
-            glutSolidSphere(1, 10, 10);
-        };
-        glPopMatrix();
+Point WorldSurface::eval(double u, double v) const {
+    Point target;
+    std::vector<Point> tmp;
+    for (int i = 0; i < m_curvesCPoints.size(); ++i) {
+        tmp.push_back(m_curvesCPoints.at(i).evalCubicPoint(u));
     }
+    return target;
 }

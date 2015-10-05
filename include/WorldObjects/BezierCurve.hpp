@@ -16,6 +16,7 @@ public:
     virtual void drawCurve() const;
 
     Vec eval(double t) const;
+    Point evalCubicPoint(double t) const;
 
     void loadFile(const std::string &filename);
 
@@ -31,5 +32,4 @@ private:
 
     void reloadArclengthTables(int resolution);
     Vec evalCubic(Vec p0, Vec p1, Vec p2, Vec p3, double t) const;
-    Point evalCubicPoint(double t) const;
 };
