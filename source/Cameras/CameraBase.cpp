@@ -5,7 +5,7 @@ const double Camera::s_maxPhi = 0.5 * M_PI - 1e-5;
 
 void Camera::adjustGLU() const {
     glChk();
-    Vec lookat = m_pos + m_lookat.cart();
+    Vec lookat = m_pos + m_arc.cart();
     // clang-format off
     gluLookAt(m_pos.x,  m_pos.y,  m_pos.z,
               lookat.x, lookat.y, lookat.z,
@@ -15,9 +15,9 @@ void Camera::adjustGLU() const {
 }
 
 void Camera::rotate(double dtheta, double dphi) {
-    m_lookat.theta += dtheta;
-    m_lookat.phi += dphi;
-    m_lookat.phi = clamp(m_lookat.phi, s_minPhi, s_maxPhi);
+    m_arc.theta += dtheta;
+    m_arc.phi += dphi;
+    m_arc.phi = clamp(m_arc.phi, s_minPhi, s_maxPhi);
 }
 
 // Debugging the ModelView matrix can be helpful.

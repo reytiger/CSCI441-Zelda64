@@ -25,9 +25,3 @@ void ArcBallCamera::draw() const {
         glutSolidCube(m_radius);
     });
 }
-
-void ArcBallCamera::rotate(double dtheta, double dphi) {
-    m_arc.theta += dtheta;
-    m_arc.phi = clamp(m_arc.phi + dphi, s_minPhi, s_maxPhi);
-    m_arc.r   = m_radius;
-}

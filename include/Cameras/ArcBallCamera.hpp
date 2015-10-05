@@ -15,16 +15,13 @@
 class ArcBallCamera : public Camera {
 public:
     ArcBallCamera() : Camera() {}
-    ArcBallCamera(VecPolar arc) : Camera(), m_arc(arc) {}
+    ArcBallCamera(VecPolar arc) : Camera(Vec(), arc) {}
 
     virtual void adjustGLU() const;
     virtual void draw() const;
-    virtual void rotate(double dtheta, double dphi);
 
 private:
-    // The camera rotates around m_pos (from WoldObject)
+    // The camera rotates around m_pos
 
-    // Where the camera is along its motion arc. This polar vector includes
-    // a radius to allow zooming.
-    VecPolar m_arc;
+    // The viewer's location in the arc is stored in m_arc.
 };

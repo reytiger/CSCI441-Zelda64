@@ -12,8 +12,8 @@ public:
     static const double s_maxPhi;
 
     Camera() : WorldObject(), m_up(Vec(0.0, 1.0, 0.0)) { m_radius = 0.05; }
-    Camera(Vec pos, Vec lookat, Vec up = Vec(0.0, 1.0, 0.0))
-        : WorldObject(pos), m_lookat(lookat), m_up(up) {
+    Camera(Vec pos, Vec arc, Vec up = Vec(0.0, 1.0, 0.0))
+        : WorldObject(pos), m_arc(arc), m_up(up) {
         m_radius = 0.05;
     }
 
@@ -22,16 +22,16 @@ public:
     virtual void draw() const;
 
     // TODO: Rethink the naming of this member.
-    virtual Vec lookAt(VecPolar polar) { return m_lookat = polar; }
+    virtual Vec lookAt(VecPolar polar) { return m_arc = polar; }
     virtual void rotate(double dtheta, double dphi);
 
-    Vec lookAt() const { return m_lookat.cart(); }
+    Vec lookAt() const { return m_arc.cart(); }
     Vec up() const { return m_up; }
 
     // Debugging the ModelView matrix can be helpful.
     const float *get_modelview() const;
 
 protected:
-    VecPolar m_lookat;
+    VecPolar m_arc;
     Vec m_up;
 };
