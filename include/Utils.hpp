@@ -1,5 +1,11 @@
 #pragma once
 
+// Windows doesn't define M_PI in cmath without coaxing.
+// We need M_PI, so coax it.
+#ifdef _WIN32
+#define _USE_MATH_DEFINES
+#endif
+
 // All of the Utils headers.
 #include "Utils/Color.hpp"
 #include "Utils/DebugTools.hpp"
@@ -15,8 +21,3 @@
 #include <cerrno>
 #include <cmath>
 #include <cstring>
-
-#ifndef M_PI
-#pragma message("warning: Your cmath is broken - no M_PI is defined.")
-#define M_PI 3.141592653589793238462643383279
-#endif
