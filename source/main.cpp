@@ -39,15 +39,10 @@ void initScene() {
 
 int main(int argc, char **argv) {
     srand(time(nullptr));
-    glChk();
 
     PrettyGLUT::initGLUT(&argc, argv);
-    glChk();
     PrettyGLUT::printOpenGLInformation();
-    glChk();
     initScene();
-    glChk();
     PrettyGLUT::start();
-    glChk();
     return 0;
 }

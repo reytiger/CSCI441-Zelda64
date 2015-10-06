@@ -151,8 +151,6 @@ void BezierCurve::drawCurve() const {
     // }
     glEnd();
 
-    glChk();
-
     dt = 1.0 / 45;
     glBegin(GL_LINES);
     for (double t = 0; t <= 1.0; t += dt) {

@@ -46,6 +46,7 @@ void WorldSurface::drawControlPoints() {
 }
 
 void WorldSurface::drawGround() {
+    // TODO: it works right now, assums a square world. change so it's dynamic
     pushMatrixAnd([&]() {
         double dt      = 0.25;
         int resolution = 4;
