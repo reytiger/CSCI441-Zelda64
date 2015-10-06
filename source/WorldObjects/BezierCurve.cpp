@@ -201,8 +201,8 @@ void BezierCurve::reloadArclengthTables(int resolution) {
     ss.push_back(pointsV.front());
     ts.push_back(0);
 
-    const double dt  = 1.0 / resolution;
-    const int cubics = (pointsV.size() + 1) / 3;
+    const double dt     = 1.0 / resolution;
+    const size_t cubics = (pointsV.size() + 1) / 3;
     for (size_t i = 0; i + 3 < pointsV.size(); i += 3) {
         for (double t = 0; t <= 1.0 + dt; t += dt) {
             auto pt = evalCubic(

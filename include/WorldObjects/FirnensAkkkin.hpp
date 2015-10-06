@@ -14,11 +14,11 @@ public:
     ////////////////////////////////////////////////////////////////////////////
     // constructors
     FirnensAkkkin() : WorldObject() {
-        m_count                = 0.0;
-        m_wingAngle            = 0.0;
-        m_tPos                 = 0.0;
-        m_angle                = 0.0;
-        m_targetAngleAkkkinDir = 0.0;
+        m_count                = 0;
+        m_wingAngle            = 0.0f;
+        m_tPos                 = 0.0f;
+        m_angle                = 0.0f;
+        m_targetAngleAkkkinDir = 0.0f;
         ControlCage            = true;
         BezierCurve            = true;
         m_akkkinCPointsFile = "assets/world/AkkkinControlPoints.csv";

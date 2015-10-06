@@ -179,7 +179,7 @@ void initRightClickMenu() {
 }
 
 int main(int argc, char **argv) {
-    srand(time(nullptr));
+    srand(static_cast<unsigned int>(time(nullptr)));
 
     PrettyGLUT::initGLUT(&argc, argv);
 

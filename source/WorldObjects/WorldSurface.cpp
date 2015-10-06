@@ -88,13 +88,13 @@ bool WorldSurface::loadControlPoints(string filename) {
     // go through each line. The cotrol file ahs the structure xn, yn, zn
     for (int i = 0; i < numOfPoints; ++i) {
         getline(file, str, ',');
-        float x = atoi(str.c_str());
+        float x = static_cast<float>(atoi(str.c_str()));
 
         getline(file, str, ',');
-        float y = atoi(str.c_str());
+        float y = static_cast<float>(atoi(str.c_str()));
 
         getline(file, str, '\n');
-        float z = atoi(str.c_str());
+        float z = static_cast<float>(atoi(str.c_str()));
 
         Point createPoint(x, y, z);
         m_controlPoints.push_back(createPoint);

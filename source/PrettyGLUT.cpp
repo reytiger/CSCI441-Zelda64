@@ -100,7 +100,7 @@ void printOpenGLInformation() {
 
 // The int is requied, but unused.
 void doFrame(int) {
-    constexpr double delay = 1000.0 / FPS;
+    constexpr auto delay = static_cast<unsigned int>(1000.0 / FPS);
     glutTimerFunc(delay, doFrame, 0);
 
     double now         = now_secs();
@@ -131,10 +131,10 @@ void mouseCallback(int button, int state, int x, int y) {
 
 void mouseMotion(int x, int y) {
     if (leftMouse == GLUT_DOWN) {
-        const double fudge = 0.002;
+        const double fudge = 0.002f;
 
-        int dx = mouse.x - x;
-        int dy = mouse.y - y;
+        int dx = static_cast<int>(mouse.x) - x;
+        int dy = static_cast<int>(mouse.y) - y;
 
         mouse.x = x;
         mouse.y = y;
@@ -167,19 +167,6 @@ void normalKeysDown(unsigned char key, int, int) {
     case '4':
         switch_cam(firstPerson);
         break;
-
-    case 'r':
-        printf("Pressed keys:\n");
-        for (size_t i = 0; i < sizeof(keyPressed) / sizeof(keyPressed[0]);
-             i += 1) {
-            if (keyPressed[i]) {
-                printf("%d ", (int)key);
-                if (isprint(i)) {
-                    printf("('%c') ", (unsigned char)i);
-                }
-            }
-        }
-        printf("\n");
     }
 }
 
