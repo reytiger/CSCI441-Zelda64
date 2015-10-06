@@ -24,7 +24,7 @@ void Track::draw() const {
     // pushMatrixAnd([&]() { drawGround(); });
 }
 
-void Track::drawTrackBlocks() {
+void Track::drawTrackBlocks() const {
     pushMatrixAnd([&]() {
         Vec target = m_halo.eval(0.0001);
         glColor3f(200 / 255.0, 200 / 255.0, 200 / 255.0);

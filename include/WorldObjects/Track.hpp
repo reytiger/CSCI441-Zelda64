@@ -35,7 +35,7 @@ private:
     // control curves
     std::vector<BezierCurve> m_curvesCPoints;
 
-    void drawTrackBlocks();
+    void drawTrackBlocks() const;
 
     double m_zMin;
     double m_zMax;
