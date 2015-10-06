@@ -50,6 +50,10 @@ void initScene() {
     // Do NOT add a camera to the  PrettyGLUT::drawn, or it'll draw (and update)
     // twice.
 
+    // First Person!
+    PrettyGLUT::firstPerson.follow(&inc);
+    PrettyGLUT::firstPerson.setColor(randColor());
+
     // Setup controls for PrettyGLUT::freecam.
     PrettyGLUT::freecam.addWASDControls(100.0, PrettyGLUT::keyPressed);
     PrettyGLUT::freecam.moveToY(1.0);
@@ -62,24 +66,20 @@ void initScene() {
 
     // Arcballs for DAYZ.
     PrettyGLUT::arcballcam.setColor(randColor());
-    PrettyGLUT::arcballcam.follow(&PrettyGLUT::freecam);
-    // PrettyGLUT::arcballcam.addArcBallControls(???);
+    PrettyGLUT::arcballcam.follow(&inc);
 
     // Load up Incallidus!
     PrettyGLUT::drawn.push_back(&inc);
     inc.setRadius(0.1);
+    inc.setUpdateFunc(
+        [=](double t, double) { inc.moveTo(halo.eval(0.1 * t)); });
 
+    // Bezier surface!
     PrettyGLUT::drawn.push_back(&worldSurface);
 
     PrettyGLUT::drawn.push_back(&halo);
+    halo.moveTo(Vec(30.0, 30.0, 30.0));
     halo.loadFile("./assets/world/bezier-halo.csv");
-    halo.moveToZ(5.0);
-    halo.setUpdateFunc([](double t, double dt) {
-        auto theta = t;
-        halo.moveTo(Vec(cos(1.1 * theta),
-                        sin(1.3 * theta),
-                        cos(1.5 * theta) * sin(0.9 * theta)));
-    });
 
     PrettyGLUT::drawn.push_back(&roomFloor);
     roomFloor = CallListObject([](GLuint dl) {
@@ -143,7 +143,7 @@ void handleCamerasMenu(int val) {
         break;
 
     case MenuOpt::SwitchToFirstCam:
-        info("First person camera is not implemented. Sorry.");
+        PrettyGLUT::activeCam = &PrettyGLUT::firstPerson;
         break;
     }
 }

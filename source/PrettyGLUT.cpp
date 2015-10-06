@@ -30,10 +30,10 @@ bool keyPressed[256] = {};
 std::vector<WorldObject *> drawn = std::vector<WorldObject *>();
 
 // Cameras
+ArcBallCamera arcballcam;
 FreeCamera freecam;
 FreeCamera fastfreecam;
-// TODO: First person camera
-ArcBallCamera arcballcam;
+FreeCamera firstPerson;
 
 Camera *activeCam = &freecam;
 
@@ -108,6 +108,12 @@ void doFrame(int) {
     double dt          = now - then;
     then               = now;
 
+    // Print the FPS once every 5 seconds.
+    static double last_fps_update = now;
+    if (now - last_fps_update > 5.0) {
+        last_fps_update = now;
+        info("FPS: %s", 1.0 / dt);
+    }
     updateScene(now, dt);
 
     glutPostRedisplay();
@@ -156,6 +162,10 @@ void normalKeysDown(unsigned char key, int, int) {
 
     case '3':
         switch_cam(arcballcam);
+        break;
+
+    case '4':
+        switch_cam(firstPerson);
         break;
 
     case 'r':

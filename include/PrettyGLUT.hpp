@@ -12,7 +12,7 @@ namespace PrettyGLUT {
 // For more detailed settings, see initGLUT in PrettyGLUT.cpp.
 constexpr const char *windowTitle = "Skyrim belongs to the Nords!";
 
-constexpr double FPS = 30.0;
+constexpr double FPS = 60.0;
 constexpr double FOV = 60.0;
 
 extern int windowWidth;
@@ -38,9 +38,10 @@ void start();
 extern std::vector<WorldObject *> drawn;
 
 // Cameras
+extern ArcBallCamera arcballcam;
+extern FreeCamera firstPerson;
 extern FreeCamera freecam;
 extern FreeCamera fastfreecam; // TODO: Make this a first person.
-extern ArcBallCamera arcballcam;
 
 extern Camera *activeCam;
 
