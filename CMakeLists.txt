@@ -7,7 +7,7 @@ set(S "${CMAKE_SOURCE_DIR}")
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${S}/cmake")
 
 find_package(OpenGL)
-find_package(GLUT)
+include(FindFreeGLUT)
 
 find_package(OpenAL)
 include(FindALUT)
@@ -19,6 +19,7 @@ include(FindALUT)
 file(GLOB_RECURSE sources "${S}/source/*.cpp")
 file(GLOB_RECURSE includes "${S}/include/*.hpp")
 
+include_directories("${FREEGLUT_INCLUDE_DIR}")
 include_directories("${S}/include")
 
 if (CMAKE_COMPILER_IS_GNUCXX)
@@ -39,7 +40,7 @@ add_executable(guildWars ${sources} ${includes})
 
 target_link_libraries(guildWars
                       ${OPENGL_LIBRARIES}
-                      ${GLUT_LIBRARIES}
+                      ${FREEGLUT_LIBRARIES}
                       ${OPENAL_LIBRARIES}
                       ${ALUT_LIBRARIES})
 
