@@ -11,7 +11,7 @@ using namespace std;
 /*******************************  DRAW AKKKIN  ********************************/
 class FirnensAkkkin : public WorldObject {
 public:
-    //////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////
     // constructors
     FirnensAkkkin() : WorldObject() {
         m_wingAngle       = 0.0;
@@ -19,7 +19,7 @@ public:
         m_angle           = 0.0;
         ControlCage       = true;
         BezierCurve       = true;
-        AkkkinCPointsFile = "AkkkinControlPoints.csv";
+        AkkkinCPointsFile = "assests/world/AkkkinControlPoints.csv";
         loadControlPoints(AkkkinCPointsFile);
     };
 
@@ -34,7 +34,7 @@ public:
 
     void increaseTPos();
 
-    //////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////
     // accessors
     float getTPos() { return m_tPos; }
     float getWingRot() { return m_wingAngle; }
@@ -43,7 +43,7 @@ public:
     bool getControlCage() { return ControlCage; }
     bool getBezierCurve() { return BezierCurve; }
 
-    //////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////
     // modifiers
 
 private:

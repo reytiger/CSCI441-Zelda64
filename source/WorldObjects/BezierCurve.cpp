@@ -61,21 +61,21 @@ void BezierCurve::loadFile(const std::string &filename) {
         double z = strtod(str.c_str(), nullptr);
         check();
 
-        points.emplace_back(x, y, z);
+        pointsV.emplace_back(x, y, z);
     }
 
 #undef check
 
-    if (expected_count != points.size()) {
+    if (expected_count != pointsV.size()) {
         // The standard way to print type size_t is to use %zu, but Windows
         // doesn't support it. Instead, we cast to a double. (Which is portable
         // and
         // hard to break.)
-        printf("Read in %.0f control points from \"%s\", but expected %d.\n",
-               (double)points.size(),
+        printf("Read in %.0f control pointsV from \"%s\", but expected %d.\n",
+               (double)pointsV.size(),
                filename.c_str(),
                expected_count);
-        for (Vec pt : points) {
+        for (Vec pt : pointsV) {
             printf("%f, %f, %f\n", pt.x, pt.y, pt.z);
         }
     }
@@ -86,10 +86,10 @@ void BezierCurve::loadFile(const std::string &filename) {
 void BezierCurve::draw() const {
     glLineWidth(5.0f);
     if (drawCage) {
-        // Draw the points
+        // Draw the pointsV
         glDisable(GL_LIGHTING);
         glColor3d(0.0, 1.0, 0.0);
-        for (Vec point : points) {
+        for (Vec point : pointsV) {
             pushMatrixAnd([=]() {
 
                 glTranslated(
@@ -101,12 +101,12 @@ void BezierCurve::draw() const {
         }
 
         // And then the connections.
-        for (size_t i = 1; i < points.size(); i += 1) {
+        for (size_t i = 1; i < pointsV.size(); i += 1) {
             glColor3d(1.0, 1.0, 0.0);
             pushMatrixAnd([this, i]() {
                 glBegin(GL_LINES);
-                auto a = points[i - 1] + m_pos;
-                auto b = points[i] + m_pos;
+                auto a = pointsV[i - 1] + m_pos;
+                auto b = pointsV[i] + m_pos;
                 glVertex3d(a.x, a.y, a.z);
                 glVertex3d(b.x, b.y, b.z);
                 glEnd();
@@ -127,7 +127,38 @@ void BezierCurve::draw() const {
         }
         glEnd();
         glEnable(GL_LIGHTING);
+
+        dt = 1.0 / 45;
+        glBegin(GL_LINES);
+        for (double t = 0; t < 1.0; t += dt) {
+            auto point = evalCubicPoint(t);
+            glVertex3d(point.getX(), point.getY(), point.getZ());
+        }
+        glEnd();
+        glEnable(GL_LIGHTING);
     }
+}
+
+void BezierCurve::drawCurve() const {
+    glDisable(GL_LIGHTING);
+    glColor3d(0.0, 0.0, 1.0);
+    double dt = 1.0 / 45;
+    glBegin(GL_LINES);
+    // TODO: draw the vec as well.
+    // for (double t = 0; t <= 1.0; t += dt) {
+    //     auto point = eval(t);
+    //     glVertex3d(point.x, point.y, point.z);
+    // }
+    glEnd();
+
+    dt = 1.0 / 45;
+    glBegin(GL_LINES);
+    for (double t = 0; t <= 1.0; t += dt) {
+        auto point = evalCubicPoint(t);
+        glVertex3d(point.getX(), point.getY(), point.getZ());
+    }
+    glEnd();
+    glEnable(GL_LIGHTING);
 }
 
 Vec BezierCurve::eval(double t) const {
@@ -143,24 +174,63 @@ Vec BezierCurve::eval(double t) const {
     return lerp(ratio, ss[i], ss[i - 1]) + m_pos;
 }
 
+Point BezierCurve::evalCubicPoint(double t) const {
+    // equation used from:
+    //   https://en.wikipedia.org/wiki/B%C3%A9zier_curve
+    // navigate to the Cubic Bézier curves
+    Point target = (((float)pow((1 - t), 3) * pointsP[0])
+                    + (3 * (float)pow((1 - t), 2) * t * pointsP[1])
+                    + (3 * (float)(1 - t) * pow(t, 2) * pointsP[2])
+                    + (pow(t, 3) * pointsP[3]));
+
+    return target;
+}
+
 void BezierCurve::reloadArclengthTables(int resolution) {
-    assert(!points.empty());
+    assert(!pointsV.empty());
     assert(resolution > 0);
 
     ss.clear();
     ts.clear();
 
-    ss.push_back(points.front());
+    ss.push_back(pointsV.front());
     ts.push_back(0);
 
     const double dt  = 1.0 / resolution;
-    const int cubics = (points.size() + 1) / 3;
-    for (size_t i = 0; i + 3 < points.size(); i += 3) {
+    const int cubics = (pointsV.size() + 1) / 3;
+    for (size_t i = 0; i + 3 < pointsV.size(); i += 3) {
         for (double t = 0; t <= 1.0 + dt; t += dt) {
             auto pt = evalCubic(
-                points[i], points[i + 1], points[i + 2], points[i + 3], t);
+                pointsV[i], pointsV[i + 1], pointsV[i + 2], pointsV[i + 3], t);
             ss.push_back(pt);
             ts.push_back((t + i / 3) / cubics);
         }
     }
+}
+
+void BezierCurve::evalMaxMin() {
+    double xMin = pointsP.at(0).getX();
+    double xMax = pointsP.at(0).getX();
+    for (int i = 0; i < pointsP.size(); ++i) {
+        if (pointsP.at(i).getX() < xMin) {
+            xMin = pointsP.at(i).getX();
+        }
+        if (pointsP.at(i).getX() > xMax) {
+            xMax = pointsP.at(i).getX();
+        }
+    }
+    double zMin = pointsP.at(0).getZ();
+    double zMax = pointsP.at(0).getZ();
+    for (int i = 0; i < pointsP.size(); ++i) {
+        if (pointsP.at(i).getZ() < zMin) {
+            zMin = pointsP.at(i).getZ();
+        }
+        if (pointsP.at(i).getZ() > zMax) {
+            zMax = pointsP.at(i).getZ();
+        }
+    }
+    m_xMin = xMin;
+    m_xMax = xMax;
+    m_zMin = zMin;
+    m_zMax = zMax;
 }

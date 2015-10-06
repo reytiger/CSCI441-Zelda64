@@ -1,6 +1,11 @@
 #include "PrettyGLUT.hpp"
 
+#include "WorldObjects.hpp"
+
 Incallidus inc;
+
+// Global
+WorldSurface *worldSurface;
 
 // This function is expected by PrettyGLUT, because I designed it to get done
 // fast, not smart. We can change this later, but this makes sure it builds.
@@ -25,7 +30,11 @@ void initScene() {
 
     // Load up Incallidus!
     PrettyGLUT::drawn.push_back(&inc);
-    inc.setRadius(10.0);
+    inc.setRadius(0.1);
+
+    worldSurface = new WorldSurface();
+
+    PrettyGLUT::drawn.push_back(worldSurface);
 }
 
 int main(int argc, char **argv) {

@@ -5,3 +5,4 @@
 #include "WorldObjects/Incallidus.hpp"
 #include "WorldObjects/IncallidusPet.hpp"
 #include "WorldObjects/WorldObjectBase.hpp"
+#include "WorldObjects/WorldSurface.hpp"

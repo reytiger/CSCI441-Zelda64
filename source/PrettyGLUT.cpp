@@ -5,9 +5,8 @@
 void updateScene(double t, double dt);
 
 // World objects
-FreeCamera defaultCamera = FreeCamera(Vec(0.0, 0.0, 0.0), // Position
+FreeCamera defaultCamera = FreeCamera(Vec(0.0, 2.0, -4.0), // Position
                                       Vec(0.20 * M_PI, 1.15 * M_PI)); // Lookat
-
 enum CameraMode cameraMode;
 
 // Tree settings
@@ -43,6 +42,7 @@ void render() {
     glLoadIdentity();
 
     defaultCamera.adjustGLU();
+    gluLookAt(0.0, 5.0, -10.0, 0, 0, 0, 0, 1, 0);
 
     for (WorldObject *wo : drawn) {
         glChk();
