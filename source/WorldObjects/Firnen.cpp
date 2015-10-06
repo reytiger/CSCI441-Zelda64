@@ -1,10 +1,17 @@
 
 #include "WorldObjects/Firnen.hpp"
+#include "WorldObjects/FirnensAkkkin.hpp"
 
-// Firnen::Firnen() { m_armRotation = 0.0; }
+FirnensAkkkin akkkin;
 
-/************************************************  DRAW FIRNEN
- * *************************************/
+void Firnen::updateAnimation() {
+    akkkin.updateAnimation();
+    m_armRotation = sin(m_count * 0.1);
+    m_height      = sin(m_count * 0.1);
+    m_count++;
+}
+
+/********************************  DRAW FIRNEN ********************************/
 // the objects are a simple circle.
 void Firnen::draw() const {
     if (!m_visible) {
@@ -12,6 +19,15 @@ void Firnen::draw() const {
     }
     glPushMatrix();
     {
+        glRotatef(-90, 1, 0, 0);
+        glPushMatrix();
+        {
+            glTranslatef(0, 0, 4);
+            akkkin.draw();
+        };
+        glPopMatrix();
+
+
         glScalef(0.7, 0.7, 0.7); // make him smaller
         glPushMatrix();
         {

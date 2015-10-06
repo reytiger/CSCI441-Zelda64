@@ -1,5 +1,8 @@
 
 #include "WorldObjects/FirnensCart.hpp"
+#include "WorldObjects/Firnen.hpp"
+
+Firnen test;
 
 /************************************************  DRAW FIRNENS CART
  * *************************************/
@@ -7,6 +10,11 @@
 void FirnensCart::draw() const {
     glPushMatrix();
     {
+        glRotatef(-90, 1, 0, 0);
+        // glPushMatrix();
+        // { PrettyGLUT::drawn.push_back(&firnen); };
+        // glPopMatrix();
+
         glColor3f(40 / 255.0,
                   40 / 255.0,
                   40 / 255.0); // nice dark brown for the base

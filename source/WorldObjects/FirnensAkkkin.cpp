@@ -5,7 +5,7 @@
 using namespace std;
 
 void FirnensAkkkin::increaseTPos() {
-    m_tPos += 0.015;
+    m_tPos += 0.012;
     if (m_tPos > 1) {
         m_currentCurve++;
         if (m_currentCurve >= m_numberOfCurves) {
@@ -13,6 +13,28 @@ void FirnensAkkkin::increaseTPos() {
         }
         m_tPos = 0;
     }
+}
+
+void FirnensAkkkin::updateAnimation() {
+    m_wingAngle = sin(m_count * 0.06);
+    increaseTPos();
+
+    // akkkin randomly tilts and slowly moves to angle for a few seconds
+    setWingRot(sin(m_count * 0.1));
+    if (m_count % 200 == 0) {
+        m_targetAngleAkkkinDir = getRand() * 60;
+        if (getRand() > 0.5)
+            m_targetAngleAkkkinDir *= -1;
+    }
+    float stepSize = 0.25;
+    if (m_targetAngleAkkkinDir < getAngle()) {
+        stepSize *= -1;
+    } else if (m_targetAngleAkkkinDir == getAngle()) {
+        stepSize = 0;
+    }
+    setAngle(getAngle() + stepSize);
+
+    m_count++;
 }
 
 /*******************************  DRAW AKKKIN  ********************************/
@@ -125,6 +147,9 @@ bool FirnensAkkkin::loadControlPoints(string filename) {
     string str;
     int numOfPoints = 0;
     ifstream file(filename.c_str());
+
+    info("%s", filename);
+    assert(file && "The file didn't load. :(");
 
     // get the number of points to build
     getline(file, str);

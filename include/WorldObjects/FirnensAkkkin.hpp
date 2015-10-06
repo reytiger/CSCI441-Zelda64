@@ -14,13 +14,17 @@ public:
     ////////////////////////////////////////////////////////////////////////////
     // constructors
     FirnensAkkkin() : WorldObject() {
-        m_wingAngle       = 0.0;
-        m_tPos            = 0.0;
-        m_angle           = 0.0;
-        ControlCage       = true;
-        BezierCurve       = true;
-        AkkkinCPointsFile = "assests/world/AkkkinControlPoints.csv";
-        loadControlPoints(AkkkinCPointsFile);
+        m_count                = 0.0;
+        m_wingAngle            = 0.0;
+        m_tPos                 = 0.0;
+        m_angle                = 0.0;
+        m_targetAngleAkkkinDir = 0.0;
+        ControlCage            = true;
+        BezierCurve            = true;
+        m_akkkinCPointsFile = "assets/world/AkkkinControlPoints.csv";
+        glChk();
+        loadControlPoints(m_akkkinCPointsFile);
+        glChk();
     };
 
     void drawAkkkin();
@@ -45,17 +49,20 @@ public:
 
     ////////////////////////////////////////////////////////////////////////////
     // modifiers
+    void updateAnimation();
 
 private:
     float m_wingAngle, m_tPos, m_angle;
+    float m_targetAngleAkkkinDir;
     int m_currentCurve, m_numberOfCurves;
+    int m_count;
 
     // parts of Akkkin
     void drawBody() const;
     void drawWing() const;
 
     // set up for control points
-    string AkkkinCPointsFile;
+    string m_akkkinCPointsFile;
     vector<Point> controlPoints;
     // Cage
     void drawCage() const;

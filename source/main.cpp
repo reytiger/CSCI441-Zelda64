@@ -3,6 +3,8 @@
 #include "WorldObjects.hpp"
 
 Incallidus inc;
+Firnen firnen;
+FirnensCart firnenCart;
 BezierCurve halo;
 CallListObject roomFloor;
 WorldSurface worldSurface;
@@ -73,6 +75,11 @@ void initScene() {
     inc.setRadius(0.1);
     inc.setUpdateFunc(
         [=](double t, double) { inc.moveTo(halo.eval(0.1 * t)); });
+
+    // Load up Firnen!
+    PrettyGLUT::drawn.push_back(&firnen);
+    firnen.setUpdateFunc([=](double t, double) { firnen.updateAnimation(); });
+    PrettyGLUT::drawn.push_back(&firnenCart);
 
     // Bezier surface!
     PrettyGLUT::drawn.push_back(&worldSurface);
