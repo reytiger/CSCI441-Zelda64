@@ -5,7 +5,8 @@
 Incallidus inc;
 Firnen firnen;
 FirnensCart firnenCart;
-BezierCurve halo;
+// BezierCurve halo;
+Track halo;
 CallListObject roomFloor;
 WorldSurface worldSurface;
 
@@ -73,8 +74,9 @@ void initScene() {
     // Load up Incallidus!
     PrettyGLUT::drawn.push_back(&inc);
     inc.setRadius(0.1);
-    inc.setUpdateFunc(
-        [=](double t, double) { inc.moveTo(halo.eval(0.1 * t)); });
+    // TODO: Update to the track
+    // inc.setUpdateFunc(
+    //     [=](double t, double) { inc.moveTo(halo.eval(0.1 * t)); });
 
     // Load up Firnen!
     PrettyGLUT::drawn.push_back(&firnen);
@@ -84,9 +86,10 @@ void initScene() {
     // Bezier surface!
     PrettyGLUT::drawn.push_back(&worldSurface);
 
+    // Track for our heros to race on!
     PrettyGLUT::drawn.push_back(&halo);
-    halo.moveTo(Vec(30.0, 30.0, 30.0));
-    halo.loadFile("./assets/world/bezier-halo.csv");
+    // halo.moveTo(Vec(30.0, 30.0, 30.0));
+    // halo.loadFile("./assets/world/bezier-halo.csv");
 
     PrettyGLUT::drawn.push_back(&roomFloor);
     roomFloor = CallListObject([](GLuint dl) {
