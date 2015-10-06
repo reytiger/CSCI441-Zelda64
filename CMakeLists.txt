@@ -33,6 +33,12 @@ if (CMAKE_COMPILER_IS_GNUCXX)
   set(Wno-warnings "")
 
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${Wwarnings} ${Wno-warnings} ${flags}")
+# This *might* catch Clang, but pretend it only catches MSVC for now.
+else()
+  # MSVC provides safe versions of a ton of functions, and then warns if you don't
+  # use them.
+  # We're not using them, so disable the warnings.
+  add_definitions("-D_CRT_SECURE_NO_WARNINGS")
 endif()
 
 
