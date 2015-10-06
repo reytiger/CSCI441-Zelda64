@@ -19,7 +19,7 @@ namespace PrettyGLUT {
 int windowWidth  = 1280;
 int windowHeight = 1024;
 
-Color colorClear = Color(0.3, 0.2, 0.8);
+Color colorClear = Color(0.3f, 0.2f, 0.8f);
 
 // Input states
 Vec mouse            = Vec();

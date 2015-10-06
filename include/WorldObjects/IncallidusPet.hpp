@@ -17,13 +17,13 @@ public:
             glRotated(180.0 / M_PI * m_heading, 0.0, 0.0, 1.0);
             glScaled(m_radius, m_radius, m_radius);
 
-            glColor3f(1.0 - color.x, 0.5, 0.5);
+            glColor3d(1.0 - color.x, 0.5, 0.5);
             drawBody();
 
-            glColor3f(0.5, 1.0 - color.y, 0.5);
+            glColor3d(0.5, 1.0 - color.y, 0.5);
             drawFrontNose();
 
-            glColor3f(0.5, 0.5, 1.0 - color.z);
+            glColor3d(0.5, 0.5, 1.0 - color.z);
             drawBackNose();
         });
     }

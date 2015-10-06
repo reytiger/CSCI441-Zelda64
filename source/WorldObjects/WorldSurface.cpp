@@ -17,9 +17,9 @@ void WorldSurface::draw() const {
         Point test = eval(-1, -1.8);
         glPushMatrix();
         {
-            glColor3f(200 / 255.0, 10 / 255.0, 10 / 255.0);
-            glTranslatef(test.getX(), test.getY(), test.getZ());
-            glScalef(0.2, 0.2, 0.2);
+            glColor3d(200 / 255.0, 10 / 255.0, 10 / 255.0);
+            glTranslated(test.getX(), test.getY(), test.getZ());
+            glScaled(0.2, 0.2, 0.2);
             glutSolidSphere(1, 10, 10);
         };
         glPopMatrix();
@@ -30,15 +30,15 @@ void WorldSurface::draw() const {
 
 void WorldSurface::drawControlPoints() const {
     // Draw our control points
-    float scaleDown = 0.1;
+    float scaleDown = 0.1f;
     for (int i = 0; i < m_controlPoints.size(); ++i) {
         glPushMatrix();
         {
-            glColor3f(10 / 255.0, 200 / 255.0, 10 / 255.0);
-            glTranslatef(m_controlPoints.at(i).getX(),
+            glColor3d(10 / 255.0, 200 / 255.0, 10 / 255.0);
+            glTranslated(m_controlPoints.at(i).getX(),
                          m_controlPoints.at(i).getY(),
                          m_controlPoints.at(i).getZ());
-            glScalef(scaleDown, scaleDown, scaleDown);
+            glScaled(scaleDown, scaleDown, scaleDown);
             glutSolidSphere(1, 10, 10);
         };
         glPopMatrix();
@@ -57,10 +57,10 @@ void WorldSurface::drawGround() const {
                 Point location = eval(x, z);
                 glPushMatrix();
                 {
-                    glColor3f(200 / 255.0, 200 / 255.0, 200 / 255.0);
-                    glTranslatef(
+                    glColor3d(200 / 255.0, 200 / 255.0, 200 / 255.0);
+                    glTranslated(
                         location.getX(), location.getY(), location.getZ());
-                    glScalef(0.06, 0.06, 0.06);
+                    glScaled(0.06, 0.06, 0.06);
                     glutSolidSphere(1, 10, 10);
                 };
                 glPopMatrix();

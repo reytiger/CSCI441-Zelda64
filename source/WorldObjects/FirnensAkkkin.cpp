@@ -5,7 +5,7 @@
 using namespace std;
 
 void FirnensAkkkin::increaseTPos() {
-    m_tPos += 0.012;
+    m_tPos += 0.012f;
     if (m_tPos > 1) {
         m_currentCurve++;
         if (m_currentCurve >= m_numberOfCurves) {
@@ -16,14 +16,14 @@ void FirnensAkkkin::increaseTPos() {
 }
 
 void FirnensAkkkin::updateAnimation() {
-    m_wingAngle = sin(m_count * 0.06);
+    m_wingAngle = sinf(m_count * 0.06f);
     increaseTPos();
 
     // akkkin randomly tilts and slowly moves to angle for a few seconds
-    setWingRot(sin(m_count * 0.1));
+    setWingRot(sinf(m_count * 0.1f));
     if (m_count % 200 == 0) {
-        m_targetAngleAkkkinDir = getRand() * 60;
-        if (getRand() > 0.5)
+        m_targetAngleAkkkinDir = getRandf() * 60.0f;
+        if (getRandf() > 0.5f)
             m_targetAngleAkkkinDir *= -1;
     }
     float stepSize = 0.25;
@@ -54,7 +54,7 @@ void FirnensAkkkin::draw() const {
             Point nextPos = evaluateBezierCurve(p0, p1, p2, p3, m_tPos);
             glTranslatef(nextPos.getX(), nextPos.getY(), nextPos.getZ());
 
-            glRotatef(m_angle, 1, 0, 0);
+            glRotated(m_angle, 1, 0, 0);
 
             drawBody();
         };
@@ -65,28 +65,28 @@ void FirnensAkkkin::draw() const {
 
 void FirnensAkkkin::drawBody() const {
     pushMatrixAnd([=]() {
-        float scaleDown = 0.2;
-        glColor3f(200 / 255.0, 10 / 255.0, 10 / 255.0);
+        float scaleDown = 0.2f;
+        glColor3d(200 / 255.0, 10 / 255.0, 10 / 255.0);
 
-        glScalef(scaleDown, scaleDown, scaleDown);
+        glScaled(scaleDown, scaleDown, scaleDown);
         glutSolidSphere(1, 20, 20);
 
         // right wing
         glPushMatrix();
         {
             glTranslatef(0.5, 0, 0.5);
-            glRotatef(90, 1, 0, 0);
-            glRotatef(m_wingAngle * 30, 1, 0, 0);
+            glRotated(90, 1, 0, 0);
+            glRotated(m_wingAngle * 30, 1, 0, 0);
             drawWing();
         };
         glPopMatrix();
         // left wing
         glPushMatrix();
         {
-            glScalef(1, -1, 1);
+            glScaled(1, -1, 1);
             glTranslatef(0.5, 0, 0.5);
-            glRotatef(90, 1, 0, 0);
-            glRotatef(m_wingAngle * 30, 1, 0, 0);
+            glRotated(90, 1, 0, 0);
+            glRotated(m_wingAngle * 30, 1, 0, 0);
             drawWing();
         };
         glPopMatrix();
@@ -99,42 +99,42 @@ void FirnensAkkkin::drawWing() const {
         GLUquadricObj *quadratic;
         quadratic = gluNewQuadric();
 
-        glColor3f(20 / 255.0, 20 / 255.0, 20 / 255.0);
-        glRotatef(-30, 1, 0, 0);
+        glColor3d(20 / 255.0, 20 / 255.0, 20 / 255.0);
+        glRotated(-30, 1, 0, 0);
         gluCylinder(quadratic, 0.1, 0.1, 2, 10, 2); // bot
 
-        glRotatef(15, 1, 0, 0);
+        glRotated(15, 1, 0, 0);
         glTranslatef(0, 0.5, 1.75);
         gluCylinder(quadratic, 0.1, 0.1, 2, 10, 2); // middle
         // Draw fingers
         glPushMatrix();
         {
-            glColor3f(196 / 255.0, 196 / 255.0, 196 / 255.0);
-            glRotatef(-45, 0, 1, 0);
-            glRotatef(20, 1, 0, 0);
-            glScalef(1, 0.4, 1);
+            glColor3d(196 / 255.0, 196 / 255.0, 196 / 255.0);
+            glRotated(-45, 0, 1, 0);
+            glRotated(20, 1, 0, 0);
+            glScaled(1, 0.4, 1);
             gluCylinder(quadratic, 0.3, 0.1, 1.5, 10, 2); // fether
-            glRotatef(-50, 0, 1, 0);
+            glRotated(-50, 0, 1, 0);
             gluCylinder(quadratic, 0.3, 0.1, 2, 10, 2); // fether
         };
         glPopMatrix();
 
-        glRotatef(15, 1, 0, 0);
+        glRotated(15, 1, 0, 0);
         glTranslatef(0, 0.5, 1.75);
         // Draw fingers
         glPushMatrix();
         {
-            glColor3f(196 / 255.0, 196 / 255.0, 196 / 255.0);
-            glRotatef(-45, 0, 1, 0);
-            glRotatef(20, 1, 0, 0);
-            glScalef(1, 0.4, 1);
+            glColor3d(196 / 255.0, 196 / 255.0, 196 / 255.0);
+            glRotated(-45, 0, 1, 0);
+            glRotated(20, 1, 0, 0);
+            glScaled(1, 0.4, 1);
             gluCylinder(quadratic, 0.1, 0.1, 1, 10, 2); // fether
-            glRotatef(-50, 0, 1, 0);
+            glRotated(-50, 0, 1, 0);
             gluCylinder(quadratic, 0.1, 0.1, 1.5, 10, 2); // fether
         };
         glPopMatrix();
-        glColor3f(20 / 255.0, 20 / 255.0, 20 / 255.0);
-        glRotatef(10, 0, 1, 0);
+        glColor3d(20 / 255.0, 20 / 255.0, 20 / 255.0);
+        glRotated(10, 0, 1, 0);
         gluCylinder(quadratic, 0.1, 0.1, 1, 10, 2); // top
     };
     glPopMatrix();
@@ -188,15 +188,15 @@ void FirnensAkkkin::drawCage() const {
 
 void FirnensAkkkin::drawControlPoints() const {
     // Draw our control points
-    float scaleDown = 0.1;
+    float scaleDown = 0.1f;
     for (int i = 0; i < (signed)controlPoints.size(); ++i) {
         glPushMatrix();
         {
-            glColor3f(10 / 255.0, 200 / 255.0, 10 / 255.0);
+            glColor3d(10 / 255.0, 200 / 255.0, 10 / 255.0);
             glTranslatef(controlPoints.at(i).getX(),
                          controlPoints.at(i).getY(),
                          controlPoints.at(i).getZ());
-            glScalef(scaleDown, scaleDown, scaleDown);
+            glScaled(scaleDown, scaleDown, scaleDown);
             glutSolidSphere(1, 10, 10);
         };
         glPopMatrix();
@@ -208,7 +208,7 @@ void FirnensAkkkin::drawCageLines() const {
     for (int i = 0; i < (signed)controlPoints.size() - 1; ++i) {
         glPushMatrix();
         {
-            glColor3f(245 / 255.0, 184 / 255.0, 0 / 255.0);
+            glColor3d(245 / 255.0, 184 / 255.0, 0 / 255.0);
             glLineWidth(3.0f);
             glDisable(GL_LIGHTING);
             glBegin(GL_LINES);
@@ -251,7 +251,7 @@ void FirnensAkkkin::renderBezierCurve(Point p0, Point p1, Point p2, Point p3,
                                       int resolution) const {
     glPushMatrix();
     {
-        glColor3f(51 / 255.0, 102 / 255.0, 201 / 255.0);
+        glColor3d(51 / 255.0, 102 / 255.0, 201 / 255.0);
         glDisable(GL_LIGHTING);
         glLineWidth(3.5f);
         glBegin(GL_LINES);

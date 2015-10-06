@@ -6,7 +6,7 @@ FirnensAkkkin akkkin;
 
 void Firnen::updateAnimation() {
     akkkin.updateAnimation();
-    m_armRotation = sin(m_count * 0.1);
+    m_armRotation = sinf(m_count * 0.1f);
     m_height      = sin(m_count * 0.1);
     m_count++;
 }
@@ -19,30 +19,30 @@ void Firnen::draw() const {
     }
     glPushMatrix();
     {
-        glRotatef(-90, 1, 0, 0);
+        glRotated(-90, 1, 0, 0);
         glPushMatrix();
         {
-            glTranslatef(0, 0, 4);
+            glTranslated(0, 0, 4);
             akkkin.draw();
         };
         glPopMatrix();
 
 
-        glScalef(0.7, 0.7, 0.7); // make him smaller
+        glScaled(0.7, 0.7, 0.7); // make him smaller
         glPushMatrix();
         {
-            glTranslatef(0, 1, 0.5);
+            glTranslated(0, 1, 0.5);
             // drawLeg();
         };
         glPopMatrix();
         glPushMatrix();
         {
-            glScalef(1, -1, 1);
-            glTranslatef(0, 1, 0.5);
+            glScaled(1, -1, 1);
+            glTranslated(0, 1, 0.5);
             // drawLeg();
         };
         glPopMatrix();
-        glScalef(1, 1, 1 - (m_height * 0.1));
+        glScaled(1, 1, 1 - (m_height * 0.1));
         drawTorso();
         // glutSolidCone( 1, height, 5, 2 );
     };
@@ -52,29 +52,29 @@ void Firnen::draw() const {
 void Firnen::drawTorso() const {
     glPushMatrix();
     {
-        glTranslatef(0, 0, 2);
+        glTranslated(0, 0, 2);
         // body first
         drawBody();
         // left arm
         glPushMatrix();
         {
-            glTranslatef(0, 1, 0.5);
-            glRotatef(m_armRotation * 20, 0, 1, 0);
+            glTranslated(0, 1, 0.5);
+            glRotated(m_armRotation * 20, 0, 1, 0);
             drawArm();
         };
         glPopMatrix();
         // right arm
         glPushMatrix();
         {
-            glScalef(1, -1, 1);
-            glTranslatef(0, 1, 0.5);
-            glRotatef(-m_armRotation * 20, 0, 1, 0);
+            glScaled(1, -1, 1);
+            glTranslated(0, 1, 0.5);
+            glRotated(-m_armRotation * 20, 0, 1, 0);
             drawArm();
         };
         glPopMatrix();
         // draw the head
-        glTranslatef(0, 0, 1.25);
-        glScalef(0.8, 0.8, 0.8);
+        glTranslated(0, 0, 1.25);
+        glScaled(0.8, 0.8, 0.8);
         drawHead();
     };
     glPopMatrix();
@@ -83,17 +83,17 @@ void Firnen::drawTorso() const {
 void Firnen::drawArm() const {
     glPushMatrix();
     {
-        glColor3f(219 / 255.0, 150 / 255.0, 105 / 255.0); //
+        glColor3d(219 / 255.0, 150 / 255.0, 105 / 255.0); //
         GLUquadricObj *quadratic;
         quadratic = gluNewQuadric();
-        glRotatef(35, 1, 0, 0);
+        glRotated(35, 1, 0, 0);
         gluCylinder(quadratic, 0.2, 0.15, 0.5, 20, 2); // top arm
-        glTranslatef(0, 0, -0.6);
+        glTranslated(0, 0, -0.6);
         gluCylinder(quadratic, 0.15, 0.2, 0.6, 20, 2); // top arm
-        glRotatef(-40, 0, 1, 0);
-        glTranslatef(0, 0, -0.4);
+        glRotated(-40, 0, 1, 0);
+        glTranslated(0, 0, -0.4);
         gluCylinder(quadratic, 0.2, 0.15, 0.5, 20, 2); // lower arm
-        glTranslatef(0, 0, -0.5);
+        glTranslated(0, 0, -0.5);
         gluCylinder(quadratic, 0.15, 0.2, 0.5, 20, 2); // lower arm
     };
     glPopMatrix();
@@ -102,8 +102,8 @@ void Firnen::drawArm() const {
 void Firnen::drawBody() const {
     glPushMatrix();
     {
-        glColor3f(153 / 255.0, 153 / 255.0, 45 / 255.0); // nice green tunic
-        glScalef(1, 1.2, 1.5);
+        glColor3d(153 / 255.0, 153 / 255.0, 45 / 255.0); // nice green tunic
+        glScaled(1, 1.2, 1.5);
         glutSolidSphere(1, 10, 10);
     };
     glPopMatrix();
@@ -113,7 +113,7 @@ void Firnen::drawHead() const {
     // 0, 0 should be the base of the neck
     glPushMatrix();
     {
-        glColor3f(219 / 255.0, 150 / 255.0, 105 / 255.0); //
+        glColor3d(219 / 255.0, 150 / 255.0, 105 / 255.0); //
         glPushMatrix();
         {
             GLUquadricObj *quadratic;
@@ -123,19 +123,19 @@ void Firnen::drawHead() const {
         glPopMatrix();
         glPushMatrix();
         {
-            glTranslatef(0, 0, 1);
+            glTranslated(0, 0, 1);
             glutSolidSphere(0.9, 10, 10);
             glPushMatrix();
             {
-                glTranslatef(0.65, 0.22, 0);
-                glRotatef(-80, 0, 0, 1);
+                glTranslated(0.65, 0.22, 0);
+                glRotated(-80, 0, 0, 1);
                 drawEye();
             };
             glPopMatrix();
             glPushMatrix();
             {
-                glTranslatef(0.65, -0.22, 0);
-                glRotatef(-90, 0, 0, 1);
+                glTranslated(0.65, -0.22, 0);
+                glRotated(-90, 0, 0, 1);
                 drawEye();
             };
             glPopMatrix();
@@ -151,8 +151,8 @@ void Firnen::drawEye() const {
         glColor3f(0 / 255.0, 0 / 255.0, 0 / 255.0); // black
         glutSolidSphere(0.3, 10, 10);
         glColor3f(255 / 255.0, 255 / 255.0, 255 / 255.0); // white
-        glTranslatef(0.1, 0.25, 0.05);
-        glScalef(1, 1, 1.3);
+        glTranslated(0.1, 0.25, 0.05);
+        glScaled(1, 1, 1.3);
         glutSolidSphere(0.1, 10, 10);
     };
     glPopMatrix();
@@ -162,17 +162,17 @@ void Firnen::drawLeg() const {
     // TODO: update the legs
     glPushMatrix();
     {
-        glColor3f(128 / 255.0, 64 / 255.0, 0 / 255.0); //
+        glColor3d(128 / 255.0, 64 / 255.0, 0 / 255.0); //
         GLUquadricObj *quadratic;
         quadratic = gluNewQuadric();
-        glRotatef(30, 1, 0, 0);
+        glRotated(30, 1, 0, 0);
         gluCylinder(quadratic, 0.2, 0.7, 1, 20, 2); // top arm
-        glTranslatef(0, 0, -0.6);
+        glTranslated(0, 0, -0.6);
         gluCylinder(quadratic, 0.15, 0.2, 0.6, 20, 2); // top arm
-        glRotatef(-40, 0, 1, 0);
-        glTranslatef(0, 0, -0.4);
+        glRotated(-40, 0, 1, 0);
+        glTranslated(0, 0, -0.4);
         gluCylinder(quadratic, 0.2, 0.15, 0.5, 20, 2); // lower arm
-        glTranslatef(0, 0, -0.5);
+        glTranslated(0, 0, -0.5);
         gluCylinder(quadratic, 0.15, 0.2, 0.5, 20, 2); // lower arm
     };
     glPopMatrix();

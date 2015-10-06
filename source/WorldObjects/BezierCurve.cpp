@@ -174,18 +174,20 @@ Vec BezierCurve::eval(double t) const {
     return lerp(ratio, ss[i], ss[i - 1]) + m_pos;
 }
 
-Point BezierCurve::evalCubicPoint(double t) const {
+Point BezierCurve::evalCubicPoint(double tt) const {
     if (pointsP.size() < 4) {
         return Point();
     }
     // equation used from:
     //   https://en.wikipedia.org/wiki/B%C3%A9zier_curve
     // navigate to the Cubic Bézier curves
-    Point target = (((float)pow((1 - t), 3) * pointsP.at(0))
-                    + (3 * (float)pow((1 - t), 2) * t * pointsP.at(1))
-                    + (3 * (float)(1 - t) * pow(t, 2) * pointsP.at(2))
-                    + (pow(t, 3) * pointsP.at(3)));
-
+    float t      = static_cast<float>(tt);
+    auto b0      = (1 - t) * (1 - t) * (1 - t);
+    auto b1      = 3 * (1 - t) * (1 - t) * t;
+    auto b2      = 3 * (1 - t) * t * t;
+    auto b3      = t * t * t;
+    Point target = b0 * pointsP.at(0) + b1 * pointsP.at(1) + b2 * pointsP.at(2)
+                   + b3 * pointsP.at(3);
     return target;
 }
 

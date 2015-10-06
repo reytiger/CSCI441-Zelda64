@@ -13,9 +13,9 @@ void Track::draw() const {
     //     Point test = eval(-1, -1.8);
     //     glPushMatrix();
     //     {
-    //         glColor3f(200 / 255.0, 10 / 255.0, 10 / 255.0);
-    //         glTranslatef(test.getX(), test.getY(), test.getZ());
-    //         glScalef(0.2, 0.2, 0.2);
+    //         glColor3d(200 / 255.0, 10 / 255.0, 10 / 255.0);
+    //         glTranslated(test.getX(), test.getY(), test.getZ());
+    //         glScaled(0.2, 0.2, 0.2);
     //         glutSolidSphere(1, 10, 10);
     //     };
     //     glPopMatrix();
@@ -27,9 +27,9 @@ void Track::draw() const {
 void Track::drawTrackBlocks() const {
     pushMatrixAnd([&]() {
         Vec target = m_halo.eval(0.0001);
-        glColor3f(200 / 255.0, 200 / 255.0, 200 / 255.0);
-        glTranslatef(target.x, target.y, target.z);
-        glTranslatef(0, 1, 0);
+        glColor3d(200 / 255.0, 200 / 255.0, 200 / 255.0);
+        glTranslated(target.x, target.y, target.z);
+        glTranslated(0, 1, 0);
         glutSolidCube(1);
     });
 }

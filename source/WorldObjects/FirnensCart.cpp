@@ -10,40 +10,40 @@ Firnen test;
 void FirnensCart::draw() const {
     glPushMatrix();
     {
-        glRotatef(-90, 1, 0, 0);
+        glRotated(-90, 1, 0, 0);
         // glPushMatrix();
         // { PrettyGLUT::drawn.push_back(&firnen); };
         // glPopMatrix();
 
-        glColor3f(40 / 255.0,
+        glColor3d(40 / 255.0,
                   40 / 255.0,
                   40 / 255.0); // nice dark brown for the base
         // draw the body
         glPushMatrix();
         {
-            glTranslatef(-0.5, 0, 0.75);
-            glScalef(3, 2, 0.75);
+            glTranslated(-0.5, 0, 0.75);
+            glScaled(3, 2, 0.75);
             glutSolidCube(1);
         };
         glPopMatrix();
         // draw the wheels
         glPushMatrix();
         {
-            glColor3f(134 / 255.0,
+            glColor3d(134 / 255.0,
                       89 / 255.0,
                       45 / 255.0); // nice dark brown for the base
-            glRotatef(90, 1, 0, 0);
-            glTranslatef(0, 0.5, 0);
-            glRotatef(m_wheelAngle, 0, 0, 1);
+            glRotated(90, 1, 0, 0);
+            glTranslated(0, 0.5, 0);
+            glRotated(m_wheelAngle, 0, 0, 1);
             glPushMatrix();
             {
-                glTranslatef(0, 0, 1);
+                glTranslated(0, 0, 1);
                 glutSolidTorus(0.2, 0.5, 4, 8);
             };
             glPopMatrix();
             glPushMatrix();
             {
-                glTranslatef(0, 0, -1);
+                glTranslated(0, 0, -1);
                 glutSolidTorus(0.2, 0.5, 4, 8);
             };
             glPopMatrix();
