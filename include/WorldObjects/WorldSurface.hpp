@@ -29,13 +29,17 @@ public:
 private:
     int m_numberOfCurves;
 
+    void drawGround();
+
     // set up for control points
     string m_WorldSurfaceCPointsFile;
     vector<Point> m_controlPoints;
     bool loadControlPoints(string filename);
     // control points
     void drawControlPoints();
-
     // control curves
     std::vector<BezierCurve> m_curvesCPoints;
+
+    double m_zMin;
+    double m_zMax;
 };

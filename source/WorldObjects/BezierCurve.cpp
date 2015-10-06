@@ -209,3 +209,30 @@ void BezierCurve::reloadArclengthTables(int resolution) {
         }
     }
 }
+
+void BezierCurve::evalMaxMin() {
+    double xMin = pointsP.at(0).getX();
+    double xMax = pointsP.at(0).getX();
+    for (int i = 0; i < pointsP.size(); ++i) {
+        if (pointsP.at(i).getX() < xMin) {
+            xMin = pointsP.at(i).getX();
+        }
+        if (pointsP.at(i).getX() > xMax) {
+            xMax = pointsP.at(i).getX();
+        }
+    }
+    double zMin = pointsP.at(0).getZ();
+    double zMax = pointsP.at(0).getZ();
+    for (int i = 0; i < pointsP.size(); ++i) {
+        if (pointsP.at(i).getZ() < zMin) {
+            zMin = pointsP.at(i).getZ();
+        }
+        if (pointsP.at(i).getZ() > zMax) {
+            zMax = pointsP.at(i).getZ();
+        }
+    }
+    m_xMin = xMin;
+    m_xMax = xMax;
+    m_zMin = zMin;
+    m_zMax = zMax;
+}
