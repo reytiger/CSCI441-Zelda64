@@ -5,7 +5,7 @@
 Incallidus inc;
 BezierCurve halo;
 CallListObject roomFloor;
-WorldSurface *worldSurface;
+WorldSurface worldSurface;
 
 // Defines the menu options.
 // See handleRightClickMenu() and initRightClickMenu() for details.
@@ -69,8 +69,7 @@ void initScene() {
     PrettyGLUT::drawn.push_back(&inc);
     inc.setRadius(0.1);
 
-    PrettyGLUT::drawn.push_back(worldSurface);
-    worldSurface = new WorldSurface();
+    PrettyGLUT::drawn.push_back(&worldSurface);
 
     PrettyGLUT::drawn.push_back(&halo);
     halo.loadFile("./assets/world/bezier-halo.csv");

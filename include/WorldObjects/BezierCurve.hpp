@@ -26,10 +26,10 @@ public:
     bool drawCage = true;
     bool drawPath = true;
 
-    double getXmin() { return m_xMin; }
-    double getXmax() { return m_xMax; }
-    double getZmin() { return m_zMin; }
-    double getZmax() { return m_zMax; }
+    double getXmin() const { return m_xMin; }
+    double getXmax() const { return m_xMax; }
+    double getZmin() const { return m_zMin; }
+    double getZmax() const { return m_zMax; }
 
 private:
     std::vector<Vec> pointsV;

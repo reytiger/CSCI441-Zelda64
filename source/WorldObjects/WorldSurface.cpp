@@ -28,7 +28,7 @@ void WorldSurface::draw() const {
     pushMatrixAnd([&]() { drawGround(); });
 }
 
-void WorldSurface::drawControlPoints() {
+void WorldSurface::drawControlPoints() const {
     // Draw our control points
     float scaleDown = 0.1;
     for (int i = 0; i < m_controlPoints.size(); ++i) {
@@ -45,7 +45,7 @@ void WorldSurface::drawControlPoints() {
     }
 }
 
-void WorldSurface::drawGround() {
+void WorldSurface::drawGround() const {
     // TODO: it works right now, assums a square world. change so it's dynamic
     pushMatrixAnd([&]() {
         double dt      = 0.25;
@@ -78,14 +78,12 @@ bool WorldSurface::loadControlPoints(string filename) {
     ifstream file(filename.c_str());
 
     info("%s", filename);
-    assert(file);
+    assert(file && "The file didn't load. :(");
 
     // get the number of points to build
     getline(file, str);
     numOfPoints      = atoi(str.c_str());
     m_numberOfCurves = numOfPoints / 4;
-
-    std::cout << m_numberOfCurves << std::endl;
 
     // go through each line. The cotrol file ahs the structure xn, yn, zn
     for (int i = 0; i < numOfPoints; ++i) {
@@ -113,14 +111,14 @@ bool WorldSurface::loadControlPoints(string filename) {
         v.push_back(m_controlPoints.at(i * 4 + 1));
         v.push_back(m_controlPoints.at(i * 4 + 2));
         v.push_back(m_controlPoints.at(i * 4 + 3));
-        BezierCurve *create = new BezierCurve(v);
-        create->evalMaxMin();
-        m_curvesCPoints.push_back(*create);
-        if (create->getZmin() < m_zMin) {
-            m_zMin = create->getZmin();
+        BezierCurve create = BezierCurve(v);
+        create.evalMaxMin();
+        m_curvesCPoints.push_back(create);
+        if (create.getZmin() < m_zMin) {
+            m_zMin = create.getZmin();
         }
-        if (create->getZmax() > m_zMax) {
-            m_zMax = create->getZmax();
+        if (create.getZmax() > m_zMax) {
+            m_zMax = create.getZmax();
         }
     }
     return true;
@@ -137,8 +135,7 @@ Point WorldSurface::eval(double u, double v) const {
     }
 
     // now get the z position.
-    BezierCurve *uCurve = new BezierCurve(tmp);
-    double _v
-        = (v - uCurve->getZmin()) / (uCurve->getZmax() - uCurve->getZmin());
-    return uCurve->evalCubicPoint(_v);
+    BezierCurve uCurve = BezierCurve(tmp);
+    double _v = (v - uCurve.getZmin()) / (uCurve.getZmax() - uCurve.getZmin());
+    return uCurve.evalCubicPoint(_v);
 }
