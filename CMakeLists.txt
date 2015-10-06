@@ -16,8 +16,33 @@ include(FindALUT)
 # You can
 #       (1) update this file's timestamp, or
 #       (2) re-run 'cmake' manually
-file(GLOB_RECURSE sources "${S}/source/*.cpp")
-file(GLOB_RECURSE includes "${S}/include/*.hpp")
+# We do it this way instead of recurisve globs to preserve the file structure in 
+# projects like Visual Studio.
+file(GLOB sources              "${S}/source/*.cpp")
+file(GLOB sources_cameras      "${S}/source/Cameras/*.cpp")
+file(GLOB sources_utils        "${S}/source/Utils/*.cpp")
+file(GLOB sources_worldobjects "${S}/source/WorldObjects/*.cpp")
+
+file(GLOB includes              "${S}/include/*.hpp")
+file(GLOB includes_cameras      "${S}/include/Cameras/*.hpp")
+file(GLOB includes_utils        "${S}/include/Utils/*.hpp")
+file(GLOB includes_worldobjects "${S}/include/WorldObjects/*.hpp")
+
+list(APPEND sources ${sources_cameras})
+list(APPEND sources ${sources_utils})
+list(APPEND sources ${sources_worldobjects})
+
+list(APPEND includes ${includes_cameras})
+list(APPEND includes ${includes_utils})
+list(APPEND includes ${includes_worldobjects})
+
+source_group("Header Files\\Cameras"      FILES ${includes_cameras})
+source_group("Header Files\\Utils"        FILES ${includes_utils})
+source_group("Header Files\\WorldObjects" FILES ${includes_worldobjects})
+
+source_group("Source Files\\Cameras"      FILES ${sources_cameras})
+source_group("Source Files\\Utils"        FILES ${sources_utils})
+source_group("Source Files\\WorldObjects" FILES ${sources_worldobjects})
 
 include_directories("${FREEGLUT_INCLUDE_DIR}")
 include_directories("${S}/include")
