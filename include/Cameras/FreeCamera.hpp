@@ -3,25 +3,14 @@
 
 #include "WorldObjects.hpp"
 
-class FreeCamera : public WorldObject {
+#include <functional>
+
+class FreeCamera : public Camera {
 public:
-    FreeCamera(Vec pos, Vec lookat, Vec up = Vec(0.0, 0.0, 1.0))
-        : WorldObject(pos), m_lookat(lookat), m_up(up) {
-        m_radius = 0.05;
-    }
+    FreeCamera() : Camera() {}
+    FreeCamera(Vec pos, Vec arc, Vec up = Vec(0.0, 1.0, 0.0))
+        : Camera(pos, arc, up) {}
 
-    virtual void adjustGLU();
-
-    virtual void draw() const;
-    virtual Vec lookAt(Vec polarCoord) { return m_lookat = polarCoord; }
-    virtual void rotate(double dtheta, double dphi);
-
-    Vec lookAt() const { return m_lookat; }
-
-    // Debugging the ModelView matrix can be helpful.
-    const float *get_modelview() const;
-
-protected:
-    Vec m_lookat;
-    Vec m_up;
+    // Gives the camera predictable WASD controls, with Q-up and E-down too.
+    void addWASDControls(double speedPerSec, bool *pressed);
 };

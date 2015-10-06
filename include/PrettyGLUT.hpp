@@ -34,25 +34,14 @@ void initGLUT(int *argcp, char **argv);
 void start();
 
 // Things to draw
+// Pointers stored here can expect to live the duration of the program.
 extern std::vector<WorldObject *> drawn;
 
+// Cameras
+extern FreeCamera freecam;
+extern FreeCamera fastfreecam; // TODO: Make this a first person.
+extern ArcBallCamera arcballcam;
+
+extern Camera *activeCam;
+
 }; // namespace PrettyGLUT
-
-// Tree settings
-extern double treeGirth;
-
-// Hero settings
-extern double heroBankRate;
-extern double heroWalkSpeed;
-
-// City settings
-constexpr Vec citySize       = Vec(100.0, 100.0, 10.0);
-constexpr int cityResolution = 100;
-
-enum CameraMode {
-    ThirdPerson, // kind of
-    FirstPerson,
-};
-
-extern FreeCamera defaultCamera;
-extern CameraMode cameraMode;

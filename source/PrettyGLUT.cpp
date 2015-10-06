@@ -1,26 +1,23 @@
 #include "PrettyGLUT.hpp"
 
+#include "Cameras.hpp"
+
+#define switch_cam(cam)                                                        \
+    do {                                                                       \
+        activeCam = &cam;                                                      \
+        info("Switching camera to %s\n", #cam);                                \
+    } while (0)
+
 // We need to know about this. but it's entirely game logic so it's defined in
 // main.cpp.
 void updateScene(double t, double dt);
 
 // World objects
-FreeCamera defaultCamera = FreeCamera(Vec(0.0, 2.0, -4.0), // Position
-                                      Vec(0.20 * M_PI, 1.15 * M_PI)); // Lookat
-enum CameraMode cameraMode;
-
-// Tree settings
-double treeGirth = 0.2;
-
-// Hero settings
-double heroBankRate  = 0.05;
-double heroWalkSpeed = 2.0;
-
 namespace PrettyGLUT {
 
 // Display Settings
-int windowWidth  = 640;
-int windowHeight = 480;
+int windowWidth  = 1280;
+int windowHeight = 1024;
 
 Color colorClear = Color(0.3, 0.2, 0.8);
 
@@ -32,6 +29,14 @@ bool keyPressed[256] = {};
 // Things to draw
 std::vector<WorldObject *> drawn = std::vector<WorldObject *>();
 
+// Cameras
+FreeCamera freecam;
+FreeCamera fastfreecam;
+// TODO: First person camera
+ArcBallCamera arcballcam;
+
+Camera *activeCam = &freecam;
+
 void render() {
     // clear the render buffer
     glDrawBuffer(GL_BACK);
@@ -41,14 +46,19 @@ void render() {
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
-    defaultCamera.adjustGLU();
-    gluLookAt(0.0, 5.0, -10.0, 0, 0, 0, 0, 1, 0);
+    activeCam->adjustGLU();
 
     for (WorldObject *wo : drawn) {
         glChk();
         wo->draw();
         glChk();
     }
+
+    // Draw each camera out of the drawn vector.
+    // If we don't want it rendered, we can toggle its visibility.
+    freecam.draw();
+    fastfreecam.draw();
+    arcballcam.draw();
 
     // push the back buffer to the screen
     glutSwapBuffers();
@@ -107,7 +117,7 @@ void mouseCallback(int button, int state, int x, int y) {
     // update the left mouse button states, if applicable
     switch (button) {
     case GLUT_LEFT_BUTTON:
-        mouse     = Vec(x, y);
+        mouse     = Vec(x, y, 0.0);
         leftMouse = state;
         break;
     }
@@ -116,15 +126,16 @@ void mouseCallback(int button, int state, int x, int y) {
 void mouseMotion(int x, int y) {
     if (leftMouse == GLUT_DOWN) {
         const double fudge = 0.002;
-        int dx             = x - mouse.x;
-        int dy             = y - mouse.y;
+
+        int dx = mouse.x - x;
+        int dy = mouse.y - y;
 
         mouse.x = x;
         mouse.y = y;
 
         // Adjust the rotation angles by a constant factor of the distance
         // the mouse moved.
-        defaultCamera.rotate(-fudge * dx, fudge * dy);
+        activeCam->rotate(fudge * dx, fudge * dy);
     }
 }
 
@@ -136,11 +147,15 @@ void normalKeysDown(unsigned char key, int, int) {
         exit(0);
 
     case '1':
-        cameraMode = ThirdPerson;
+        switch_cam(freecam);
         break;
 
     case '2':
-        cameraMode = FirstPerson;
+        switch_cam(fastfreecam);
+        break;
+
+    case '3':
+        switch_cam(arcballcam);
         break;
 
     case 'r':
@@ -192,6 +207,7 @@ void initGLUT(int *argcp, char **argv) {
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
     glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
     glEnable(GL_COLOR_MATERIAL);
 
     // Smooth looks so much better.

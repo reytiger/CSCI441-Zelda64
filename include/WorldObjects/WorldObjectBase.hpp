@@ -5,6 +5,8 @@
 
 class WorldObject {
 public:
+    typedef std::function<void(double, double)> UpdateFunc;
+
     static constexpr double POS_PER_DT = 1.0;
 
     virtual void draw() const = 0;
@@ -13,7 +15,7 @@ public:
     virtual ~WorldObject(){};
 
     WorldObject() = default;
-    WorldObject(Vec pos, Vec vel = Vec(0.0, 0.0))
+    WorldObject(Vec pos, Vec vel = Vec())
         : m_update(), m_pos(pos), m_vel(vel) {}
 
     void move(Vec ds) { m_pos += ds; }
@@ -33,6 +35,7 @@ public:
 
     void setRadius(double radius) { m_radius = radius; }
     void setHeight(double height) { m_height = height; }
+    void setColor(const Color &color) { m_color = color; }
 
     void adjustHeading(double dtheta) { m_heading += dtheta; }
 
@@ -43,9 +46,7 @@ public:
     double height() const { return m_height; }
 
     void follow(WorldObject *wo);
-    void setUpdateFunc(std::function<void(double, double)> func) {
-        m_update = func;
-    }
+    void setUpdateFunc(UpdateFunc func) { m_update = func; }
 
     bool visible() { return m_visible; }
     void toggleVisible() { m_visible = !m_visible; }
@@ -58,16 +59,17 @@ public:
     }
 
 protected:
-    std::function<void(double, double)> m_update;
+    UpdateFunc m_update;
     WorldObject *m_follow = nullptr;
     Vec m_old_follow_pos;
     Vec m_pos;
     Vec m_posUV;
     Vec m_vel;
+    Color m_color;
     double m_heading = 0.0; // About the Z-axis, for now.
-    double m_radius  = 0.0;
+    double m_radius  = 1.0;
     double m_height  = 0.0;
     bool m_visible   = true;
 
-    Vec headingToCartesian() { return Vec(cos(m_heading), sin(m_heading)); }
+    // Vec headingToCartesian() { return Vec(cos(m_heading), sin(m_heading)); }
 };
