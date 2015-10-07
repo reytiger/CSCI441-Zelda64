@@ -15,6 +15,8 @@ void updateScene(double t, double dt);
 // World objects
 namespace PrettyGLUT {
 
+double live_fps = 0.0;
+
 // Display Settings
 int windowWidth  = 1280;
 int windowHeight = 1024;
@@ -100,19 +102,31 @@ void printOpenGLInformation() {
 
 // The int is requied, but unused.
 void doFrame(int) {
-    constexpr auto delay = static_cast<unsigned int>(1000.0 / FPS);
+    static constexpr unsigned int delay
+        = static_cast<unsigned int>(1000.0 / FPS);
+    static double then            = now_secs();
+    static double last_fps_update = now_secs();
+    static int frames             = 0;
+
+    // Register the next update ASAP. We want this timing to be as consistent
+    // as we can get it to be.
     glutTimerFunc(delay, doFrame, 0);
+    frames += 1;
 
-    double now         = now_secs();
-    static double then = now;
-    double dt          = now - then;
-    then               = now;
+    double now = now_secs();
+    double dt  = now - then;
+    then       = now;
 
-    // Print the FPS once every 5 seconds.
-    static double last_fps_update = now;
-    if (now - last_fps_update > 5.0) {
+    // Keep a live, running average FPS counter.
+    if (now - last_fps_update > 3.0) {
+        live_fps = frames / (now - last_fps_update);
+
+        // We really only need two figures, but everyone likes seeing decimals.
+        info("Average FPS: %0.1f\n", live_fps);
+
+        // Reset everything.
         last_fps_update = now;
-        info("FPS: %s", 1.0 / dt);
+        frames          = 0;
     }
     updateScene(now, dt);
 

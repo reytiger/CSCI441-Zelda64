@@ -8,6 +8,8 @@
 
 namespace PrettyGLUT {
 
+extern double live_fps;
+
 // Display settings.
 // For more detailed settings, see initGLUT in PrettyGLUT.cpp.
 constexpr const char *windowTitle = "Skyrim belongs to the Nords!";
