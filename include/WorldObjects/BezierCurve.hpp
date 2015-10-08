@@ -31,6 +31,11 @@ public:
     double getZmin() const { return m_zMin; }
     double getZmax() const { return m_zMax; }
 
+    void setVec(std::vector<Vec> v) { pointsV = v; }
+    std::vector<Vec> getVec() const { return pointsV; }
+
+    void recomputeCurve(int resolution);
+
 private:
     std::vector<Vec> pointsV;
     std::vector<Point> pointsP;
@@ -38,7 +43,6 @@ private:
     std::vector<Vec> ss;
     std::vector<double> ts;
 
-    void reloadArclengthTables(int resolution);
     Vec evalCubic(Vec p0, Vec p1, Vec p2, Vec p3, double t) const;
 
     double m_xMin;

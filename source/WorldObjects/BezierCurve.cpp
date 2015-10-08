@@ -80,7 +80,7 @@ void BezierCurve::loadFile(const std::string &filename) {
         }
     }
 
-    reloadArclengthTables(100);
+    recomputeCurve(100);
 }
 
 void BezierCurve::draw() const {
@@ -191,7 +191,7 @@ Point BezierCurve::evalCubicPoint(double tt) const {
     return target;
 }
 
-void BezierCurve::reloadArclengthTables(int resolution) {
+void BezierCurve::recomputeCurve(int resolution) {
     assert(!pointsV.empty());
     assert(resolution > 0);
 

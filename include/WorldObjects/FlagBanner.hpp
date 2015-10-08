@@ -16,7 +16,7 @@ public:
     FlagBanner() : WorldObject(){};
 
     void init();
-    void updateAnimation(double t, double dt) const;
+    void updateAnimation(double t, double dt);
 
     Point eval(double u, double v);
 

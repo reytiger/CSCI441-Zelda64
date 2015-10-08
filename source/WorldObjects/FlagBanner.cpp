@@ -35,7 +35,20 @@ void FlagBanner::drawPole() const {
     });
 }
 
-void FlagBanner::updateAnimation(double t, double dt) const {}
+void FlagBanner::updateAnimation(double t, double dt) {
+    // TODO: create a more relistic movement
+    std::vector<Vec> currentVec = m_WindsCurve.getVec();
+    // point 1
+    Vec newCPoint = currentVec.at(1);
+    newCPoint.z = sin(currentVec.at(1).z + t * 2);
+    currentVec.at(1) = newCPoint;
+    // point 2
+    newCPoint   = currentVec.at(2);
+    newCPoint.z = cos(currentVec.at(2).z + t * 2);
+    currentVec.at(2) = newCPoint;
+    m_WindsCurve.setVec(currentVec);
+    m_WindsCurve.recomputeCurve(100);
+}
 
 /*************************  SET UP FOR CURVES  ********************************/
 ////////////////////////////////////////////////////////////////////////////////
