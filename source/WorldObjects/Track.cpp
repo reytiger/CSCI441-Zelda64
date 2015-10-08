@@ -32,26 +32,32 @@ void Track::drawTrackBlocks() const {
         glDisable(GL_CULL_FACE);
         glBegin(GL_TRIANGLES);
         {
-
             for (double i = 0; i < 1 + stepSize; i += stepSize) {
-
                 Vec current = m_halo.eval(i);
                 Vec target = m_halo.eval(i + stepSize);
-                glColor3d(0.9, 0.9, 0.9);
-                // glTranslated(target.x, target.y, target.z);
-                // glTranslated(0, 1, 0);
+                randColor().glSet();
+
+                // glRotatef(evalAngle(i), 0, 1, 0);
+                // glColor3d(0.9, 0.9, 0.9);
 
                 glNormal3d(0.0, 1.0, 0.0);
                 glVertex3d(current.x, current.y, current.z);
+
                 glNormal3d(0.0, 1.0, 0.0);
                 glVertex3d(current.x + 1, current.y, current.z);
+
                 glNormal3d(0.0, 1.0, 0.0);
                 glVertex3d(target.x, target.y, target.z);
 
-                // glNormal3d(0.0, 1.0, 0.0);
-                // glVertex3d()
+                // 2nd triangle
+                glNormal3d(0.0, 1.0, 0.0);
+                glVertex3d(target.x, target.y, target.z);
 
-                // glutSolidCube(1);
+                glNormal3d(0.0, 1.0, 0.0);
+                glVertex3d(current.x + 1, current.y, current.z);
+
+                glNormal3d(0.0, 1.0, 0.0);
+                glVertex3d(target.x + 1, target.y, target.z);
             }
         };
         glEnd();
@@ -75,3 +81,5 @@ void Track::init() {
         glEndList();
     });
 }
+
+double Track::evalAngle(double t) { return t * 360; }
