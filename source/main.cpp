@@ -9,6 +9,7 @@ FirnensCart firnenCart;
 Track halo;
 CallListObject roomFloor;
 WorldSurface worldSurface;
+FlagBanner flagBanner;
 
 // Defines the menu options.
 // See handleRightClickMenu() and initRightClickMenu() for details.
@@ -85,6 +86,12 @@ void initScene() {
 
     // Bezier surface!
     PrettyGLUT::drawn.push_back(&worldSurface);
+
+    // Objects on the world surface.
+    PrettyGLUT::drawn.push_back(&flagBanner);
+    flagBanner.init();
+    flagBanner.setUpdateFunc(
+        [=](double t, double dt) { flagBanner.updateAnimation(t, dt); });
 
     // Track for our heros to race on!
     PrettyGLUT::drawn.push_back(&halo);
