@@ -30,7 +30,7 @@ void Track::drawTrackBlocks() const {
     double stepSize = 0.01;
     pushMatrixAnd([&]() {
         glDisable(GL_CULL_FACE);
-        glBegin(GL_TRIANGLE_STRIP);
+        glBegin(GL_TRIANGLES);
         {
 
             for (double i = 0; i < 1 + stepSize; i += stepSize) {
@@ -48,7 +48,8 @@ void Track::drawTrackBlocks() const {
                 glNormal3d(0.0, 1.0, 0.0);
                 glVertex3d(target.x, target.y, target.z);
 
-
+                // glNormal3d(0.0, 1.0, 0.0);
+                // glVertex3d()
 
                 // glutSolidCube(1);
             }

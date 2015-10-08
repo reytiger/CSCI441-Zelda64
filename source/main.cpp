@@ -100,31 +100,30 @@ void initScene() {
         glColor3d(0.3, 0.6, 0.3);
 
         for (int i = -10; i <= 100 + 10; i += 1) {
-            glBegin(GL_TRIANGLE_STRIP);
+            glBegin(GL_TRIANGLES);
             for (int k = -10; k <= 100 + 10; k += 1) {
                 Vec off  = citySize / 100;
                 auto pos = Vec(i, k) * off - citySize / 2.0;
 
                 randColor().glSet();
+                glNormal3d(0.0, 1.0, 0.0);
                 glVertex3d(pos.x, 0.0, pos.y);
+
                 glNormal3d(0.0, 1.0, 0.0);
+                glVertex3d(pos.x, 0.0, pos.y - off.y);
 
-                glVertex3d(pos.x, 1.0, pos.y - off.y);
                 glNormal3d(0.0, 1.0, 0.0);
+                glVertex3d(pos.x - off.x, 0.0, pos.y);
 
-                glVertex3d(pos.x - off.x, 1.0, pos.y);
+                // 2D triangle
                 glNormal3d(0.0, 1.0, 0.0);
-
-
-                randColor().glSet();
                 glVertex3d(pos.x, 0.0, pos.y);
-                glNormal3d(0.0, 1.0, 0.0);
 
+                glNormal3d(0.0, 1.0, 0.0);
                 glVertex3d(pos.x, 0.0, pos.y + off.y);
-                glNormal3d(0.0, 1.0, 0.0);
 
-                glVertex3d(pos.x + off.x, 0.0, pos.y);
                 glNormal3d(0.0, 1.0, 0.0);
+                glVertex3d(pos.x + off.x, 0.0, pos.y);
             }
             glEnd();
         }
