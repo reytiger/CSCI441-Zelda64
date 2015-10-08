@@ -6,7 +6,7 @@ Incallidus inc;
 Firnen firnen;
 FirnensCart firnenCart;
 // BezierCurve halo;
-Track halo;
+Track track;
 CallListObject roomFloor;
 WorldSurface worldSurface;
 
@@ -76,20 +76,22 @@ void initScene() {
     inc.setRadius(0.1);
     // TODO: Update to the track
     // inc.setUpdateFunc(
-    //     [=](double t, double) { inc.moveTo(halo.eval(0.1 * t)); });
+    //     [=](double t, double) { inc.moveTo(track.eval(0.1 * t)); });
 
     // Load up Firnen!
     PrettyGLUT::drawn.push_back(&firnen);
-    firnen.setUpdateFunc([=](double t, double) { firnen.updateAnimation(); });
+    firnen.setUpdateFunc(
+        [=](double t, double dt) { firnen.updateAnimation(t, dt); });
     PrettyGLUT::drawn.push_back(&firnenCart);
 
     // Bezier surface!
-    PrettyGLUT::drawn.push_back(&worldSurface);
+    // PrettyGLUT::drawn.push_back(&worldSurface);
 
     // Track for our heros to race on!
-    PrettyGLUT::drawn.push_back(&halo);
-    // halo.moveTo(Vec(30.0, 30.0, 30.0));
-    // halo.loadFile("./assets/world/bezier-halo.csv");
+    PrettyGLUT::drawn.push_back(&track);
+    track.init();
+    // track.moveTo(Vec(30.0, 30.0, 30.0));
+    // track.loadFile("./assets/world/bezier-track.csv");
 
     PrettyGLUT::drawn.push_back(&roomFloor);
     roomFloor = CallListObject([](GLuint dl) {
@@ -103,18 +105,18 @@ void initScene() {
                 Vec off  = citySize / 100;
                 auto pos = Vec(i, k) * off - citySize / 2.0;
 
-                // glColor3d(getRand(), getRand(), getRand());
+                randColor().glSet();
                 glVertex3d(pos.x, 0.0, pos.y);
                 glNormal3d(0.0, 1.0, 0.0);
 
-                glVertex3d(pos.x, 0.0, pos.y - off.y);
+                glVertex3d(pos.x, 1.0, pos.y - off.y);
                 glNormal3d(0.0, 1.0, 0.0);
 
-                glVertex3d(pos.x - off.x, 0.0, pos.y);
+                glVertex3d(pos.x - off.x, 1.0, pos.y);
                 glNormal3d(0.0, 1.0, 0.0);
 
 
-                // glColor3d(getRand(), getRand(), getRand());
+                randColor().glSet();
                 glVertex3d(pos.x, 0.0, pos.y);
                 glNormal3d(0.0, 1.0, 0.0);
 

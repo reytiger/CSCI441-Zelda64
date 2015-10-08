@@ -28,7 +28,7 @@ public:
     float getArmRotation() { return m_armRotation; }
 
     // modifiers
-    void updateAnimation();
+    void updateAnimation(double t, double dt);
     int m_count;
 
 private:
