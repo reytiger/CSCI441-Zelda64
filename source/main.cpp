@@ -73,10 +73,10 @@ void initScene() {
 
     // Load up Incallidus!
     PrettyGLUT::drawn.push_back(&inc);
-    inc.setRadius(0.1);
+    inc.setRadius(0.5);
     // TODO: Update to the track
-    // inc.setUpdateFunc(
-    //     [=](double t, double) { inc.moveTo(track.eval(0.1 * t)); });
+    inc.setUpdateFunc(
+        [=](double t, double) { inc.moveTo(track.eval(0.05 * t)); });
 
     // Load up Firnen!
     PrettyGLUT::drawn.push_back(&firnen);
@@ -115,7 +115,7 @@ void initScene() {
                 glNormal3d(0.0, 1.0, 0.0);
                 glVertex3d(pos.x - off.x, 0.0, pos.y);
 
-                // 2D triangle
+                // 2nd triangle
                 glNormal3d(0.0, 1.0, 0.0);
                 glVertex3d(pos.x, 0.0, pos.y);
 

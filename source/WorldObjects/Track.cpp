@@ -4,6 +4,12 @@
 
 using namespace std;
 
+Vec Track::eval(double t) {
+    info("%f", t);
+    Vec current = m_halo.eval(t);
+    return current;
+}
+
 /*************************  DRAW WORLD SURFACE  *******************************/
 void Track::draw() const {
     pushMatrixAnd([&]() {
@@ -82,4 +88,4 @@ void Track::init() {
     });
 }
 
-double Track::evalAngle(double t) { return t * 360; }
+double Track::evalAngle(double t) { return fmod(t, 1) * 360.0; }

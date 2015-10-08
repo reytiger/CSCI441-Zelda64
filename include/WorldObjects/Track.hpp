@@ -17,6 +17,7 @@ public:
     // Point eval(double u, double v) const;
     void init();
 
+    Vec eval(double t);
     double evalAngle(double t); // returns 0-360;
 
     virtual void draw() const;
