@@ -5,7 +5,6 @@
 using namespace std;
 
 Vec Track::eval(double t) {
-    info("%f", t);
     Vec current = m_halo.eval(t);
     return current;
 }
