@@ -86,7 +86,7 @@ void initScene() {
     PrettyGLUT::drawn.push_back(&firnenCart);
 
     // Bezier surface!
-    // PrettyGLUT::drawn.push_back(&worldSurface);
+    PrettyGLUT::drawn.push_back(&worldSurface);
 
     // Objects on the world surface.
     PrettyGLUT::drawn.push_back(&flagBanner);
