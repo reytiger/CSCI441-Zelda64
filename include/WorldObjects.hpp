@@ -2,6 +2,7 @@
 
 #include "WorldObjects/BezierCurve.hpp"
 #include "WorldObjects/CallListObject.hpp"
+#include "WorldObjects/DragonBorn.hpp"
 #include "WorldObjects/Firnen.hpp"
 #include "WorldObjects/FirnensAkkkin.hpp"
 #include "WorldObjects/FirnensCart.hpp"

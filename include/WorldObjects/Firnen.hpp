@@ -7,10 +7,7 @@
 class Firnen : public WorldObject {
 public:
     // constructors
-    Firnen() : WorldObject() {
-        m_armRotation = 0.0;
-        m_count       = 0;
-    }
+    Firnen() : WorldObject() { m_armRotation = 0.0; }
 
     virtual void draw() const;
 
@@ -29,7 +26,6 @@ public:
 
     // modifiers
     void updateAnimation(double t, double dt);
-    int m_count;
 
 private:
     float m_armRotation;

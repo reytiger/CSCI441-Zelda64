@@ -8,7 +8,6 @@ void Firnen::updateAnimation(double t, double dt) {
     akkkin.updateAnimation(t, dt);
     m_armRotation = sin(t * 6.05);
     m_height      = sin(t * 6);
-    m_count++;
 }
 
 /********************************  DRAW FIRNEN ********************************/

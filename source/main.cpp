@@ -5,6 +5,7 @@
 Incallidus inc;
 Firnen firnen;
 FirnensCart firnenCart;
+DragonBorn dragonBorn;
 // BezierCurve halo;
 Track track;
 CallListObject roomFloor;
@@ -84,6 +85,14 @@ void initScene() {
     firnen.setUpdateFunc(
         [=](double t, double dt) { firnen.updateAnimation(t, dt); });
     PrettyGLUT::drawn.push_back(&firnenCart);
+
+    // Load up our DragonBorn!
+    // TODO: he should be moving basied off arc length.
+    PrettyGLUT::drawn.push_back(&dragonBorn);
+    dragonBorn.setUpdateFunc([=](double t, double dt) {
+        dragonBorn.moveTo(track.eval(0.1 * t));
+        dragonBorn.updateAnimation(t, dt);
+    });
 
     // Bezier surface!
     PrettyGLUT::drawn.push_back(&worldSurface);
