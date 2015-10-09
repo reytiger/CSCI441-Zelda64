@@ -14,7 +14,6 @@ public:
     ////////////////////////////////////////////////////////////////////////////
     // constructors
     FirnensAkkkin() : WorldObject() {
-        m_count                = 0;
         m_wingAngle            = 0.0f;
         m_tPos                 = 0.0f;
         m_angle                = 0.0f;
@@ -36,7 +35,7 @@ public:
     void setBezierCurve(bool value) { this->BezierCurve = value; };
     void setTPos(float tPos) { m_tPos = tPos; };
 
-    void increaseTPos();
+    void increaseTPos(double dt);
 
     ////////////////////////////////////////////////////////////////////////////
     // accessors
@@ -49,13 +48,12 @@ public:
 
     ////////////////////////////////////////////////////////////////////////////
     // modifiers
-    void updateAnimation();
+    void updateAnimation(double t, double dt);
 
 private:
     float m_wingAngle, m_tPos, m_angle;
     float m_targetAngleAkkkinDir;
     int m_currentCurve, m_numberOfCurves;
-    int m_count;
 
     // parts of Akkkin
     void drawBody() const;

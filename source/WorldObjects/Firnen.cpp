@@ -5,7 +5,7 @@
 FirnensAkkkin akkkin;
 
 void Firnen::updateAnimation(double t, double dt) {
-    akkkin.updateAnimation();
+    akkkin.updateAnimation(t, dt);
     m_armRotation = sin(t * 6.05);
     m_height      = sin(t * 6);
     m_count++;
@@ -19,17 +19,15 @@ void Firnen::draw() const {
     }
     glPushMatrix();
     {
-        // TODO: fix akkkin's updateing.
         glRotated(-90, 1, 0, 0);
+        glScaled(0.7, 0.7, 0.7); // make him smaller
         glPushMatrix();
         {
-            glTranslated(0, 0, 4);
+            glTranslated(0, 0, 5 - (m_height * 0.2));
             akkkin.draw();
         };
         glPopMatrix();
 
-
-        glScaled(0.7, 0.7, 0.7); // make him smaller
         glPushMatrix();
         {
             glTranslated(0, 1, 0.5);

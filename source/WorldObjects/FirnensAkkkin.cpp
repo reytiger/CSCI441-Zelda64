@@ -4,8 +4,8 @@
 #include "WorldObjects/Point.hpp"
 using namespace std;
 
-void FirnensAkkkin::increaseTPos() {
-    m_tPos += 0.012f;
+void FirnensAkkkin::increaseTPos(double dt) {
+    m_tPos += dt * 0.5;
     if (m_tPos > 1) {
         m_currentCurve++;
         if (m_currentCurve >= m_numberOfCurves) {
@@ -15,13 +15,13 @@ void FirnensAkkkin::increaseTPos() {
     }
 }
 
-void FirnensAkkkin::updateAnimation() {
-    m_wingAngle = sinf(m_count * 0.06f);
-    increaseTPos();
+void FirnensAkkkin::updateAnimation(double t, double dt) {
+    m_wingAngle = sin(t * 6);
+    increaseTPos(dt);
 
     // akkkin randomly tilts and slowly moves to angle for a few seconds
-    setWingRot(sinf(m_count * 0.1f));
-    if (m_count % 200 == 0) {
+    setWingRot(sin(t * 6));
+    if (fmod(t, 5.0) <= 0.1) {
         m_targetAngleAkkkinDir = getRandf() * 60.0f;
         if (getRandf() > 0.5f)
             m_targetAngleAkkkinDir *= -1;
@@ -33,8 +33,6 @@ void FirnensAkkkin::updateAnimation() {
         stepSize = 0;
     }
     setAngle(getAngle() + stepSize);
-
-    m_count++;
 }
 
 /*******************************  DRAW AKKKIN  ********************************/
