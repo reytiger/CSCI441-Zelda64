@@ -4,10 +4,10 @@
 
 FirnensAkkkin akkkin;
 
-void Firnen::updateAnimation() {
+void Firnen::updateAnimation(double t, double dt) {
     akkkin.updateAnimation();
-    m_armRotation = sinf(m_count * 0.1f);
-    m_height      = sin(m_count * 0.1);
+    m_armRotation = sin(t * 6.05);
+    m_height      = sin(t * 6);
     m_count++;
 }
 
@@ -19,6 +19,7 @@ void Firnen::draw() const {
     }
     glPushMatrix();
     {
+        // TODO: fix akkkin's updateing.
         glRotated(-90, 1, 0, 0);
         glPushMatrix();
         {

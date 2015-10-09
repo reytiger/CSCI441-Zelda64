@@ -6,7 +6,7 @@ Incallidus inc;
 Firnen firnen;
 FirnensCart firnenCart;
 // BezierCurve halo;
-Track halo;
+Track track;
 CallListObject roomFloor;
 WorldSurface worldSurface;
 FlagBanner flagBanner;
@@ -74,18 +74,19 @@ void initScene() {
 
     // Load up Incallidus!
     PrettyGLUT::drawn.push_back(&inc);
-    inc.setRadius(0.1);
+    inc.setRadius(0.5);
     // TODO: Update to the track
-    // inc.setUpdateFunc(
-    //     [=](double t, double) { inc.moveTo(halo.eval(0.1 * t)); });
+    inc.setUpdateFunc(
+        [=](double t, double) { inc.moveTo(track.eval(0.05 * t)); });
 
     // Load up Firnen!
     PrettyGLUT::drawn.push_back(&firnen);
-    firnen.setUpdateFunc([=](double t, double) { firnen.updateAnimation(); });
+    firnen.setUpdateFunc(
+        [=](double t, double dt) { firnen.updateAnimation(t, dt); });
     PrettyGLUT::drawn.push_back(&firnenCart);
 
     // Bezier surface!
-    PrettyGLUT::drawn.push_back(&worldSurface);
+    // PrettyGLUT::drawn.push_back(&worldSurface);
 
     // Objects on the world surface.
     PrettyGLUT::drawn.push_back(&flagBanner);
@@ -94,9 +95,10 @@ void initScene() {
         [=](double t, double dt) { flagBanner.updateAnimation(t, dt); });
 
     // Track for our heros to race on!
-    PrettyGLUT::drawn.push_back(&halo);
-    // halo.moveTo(Vec(30.0, 30.0, 30.0));
-    // halo.loadFile("./assets/world/bezier-halo.csv");
+    PrettyGLUT::drawn.push_back(&track);
+    track.init();
+    // track.moveTo(Vec(30.0, 30.0, 30.0));
+    // track.loadFile("./assets/world/bezier-track.csv");
 
     PrettyGLUT::drawn.push_back(&roomFloor);
     roomFloor = CallListObject([](GLuint dl) {
@@ -105,31 +107,30 @@ void initScene() {
         glColor3d(0.3, 0.6, 0.3);
 
         for (int i = -10; i <= 100 + 10; i += 1) {
-            glBegin(GL_TRIANGLE_STRIP);
+            glBegin(GL_TRIANGLES);
             for (int k = -10; k <= 100 + 10; k += 1) {
                 Vec off  = citySize / 100;
                 auto pos = Vec(i, k) * off - citySize / 2.0;
 
-                // glColor3d(getRand(), getRand(), getRand());
-                glVertex3d(pos.x, 0.0, pos.y);
+                randColor().glSet();
                 glNormal3d(0.0, 1.0, 0.0);
+                glVertex3d(pos.x, 0.0, pos.y);
 
+                glNormal3d(0.0, 1.0, 0.0);
                 glVertex3d(pos.x, 0.0, pos.y - off.y);
-                glNormal3d(0.0, 1.0, 0.0);
 
+                glNormal3d(0.0, 1.0, 0.0);
                 glVertex3d(pos.x - off.x, 0.0, pos.y);
+
+                // 2nd triangle
                 glNormal3d(0.0, 1.0, 0.0);
-
-
-                // glColor3d(getRand(), getRand(), getRand());
                 glVertex3d(pos.x, 0.0, pos.y);
-                glNormal3d(0.0, 1.0, 0.0);
 
+                glNormal3d(0.0, 1.0, 0.0);
                 glVertex3d(pos.x, 0.0, pos.y + off.y);
-                glNormal3d(0.0, 1.0, 0.0);
 
-                glVertex3d(pos.x + off.x, 0.0, pos.y);
                 glNormal3d(0.0, 1.0, 0.0);
+                glVertex3d(pos.x + off.x, 0.0, pos.y);
             }
             glEnd();
         }
