@@ -26,6 +26,8 @@ private:
     void drawFlag() const;
     void drawPole() const;
 
+    double m_height = 10;
+
     BezierCurve m_WindsCurve;
 
     // set up for control points
@@ -33,6 +35,4 @@ private:
 
     vector<Point> m_controlPoints;
     bool loadControlPoints(string filename);
-    void drawControlPoints() const;
-    // control curves
 };

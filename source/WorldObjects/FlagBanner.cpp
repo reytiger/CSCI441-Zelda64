@@ -9,18 +9,11 @@ using namespace std;
 /*************************  DRAW FLAG BANNER  *********************************/
 void FlagBanner::draw() const {
     pushMatrixAnd([&]() {
-        glTranslatef(0, 2, 5);
-        drawControlPoints();
+        glTranslatef(0, 0, 5);
+        glScalef(0.25, 0.25, 0.25);
         drawPole();
-        m_WindsCurve.draw();
         glTranslatef(0, 4, 0);
         drawFlag();
-    });
-}
-
-void FlagBanner::drawControlPoints() const {
-    pushMatrixAnd([&]() {
-
     });
 }
 
@@ -29,8 +22,8 @@ void FlagBanner::drawFlag() const {
         // TODO: culling? lighting? What should we do here
         // TODO: set a texture.
         // num of points to draw
-        double stepSize = 0.1;
-        double height = 5;
+        double stepSize   = 0.1;
+        double heightFlag = 5;
         glDisable(GL_CULL_FACE);
         // glDisable(GL_LIGHTING);
         glColor3f(210 / 255.0,
@@ -43,12 +36,12 @@ void FlagBanner::drawFlag() const {
                 Vec next    = m_WindsCurve.eval(i + stepSize);
                 // first triangle
                 glVertex3f(drawing.x, drawing.y, drawing.z);
-                glVertex3f(drawing.x, drawing.y + height, drawing.z);
+                glVertex3f(drawing.x, drawing.y + heightFlag, drawing.z);
                 glVertex3f(next.x, next.y, next.z);
                 // second trianlge
-                glVertex3f(drawing.x, drawing.y + height, drawing.z);
+                glVertex3f(drawing.x, drawing.y + heightFlag, drawing.z);
                 glVertex3f(next.x, next.y, next.z);
-                glVertex3f(next.x, next.y + height, next.z);
+                glVertex3f(next.x, next.y + heightFlag, next.z);
             }
         };
         glEnd();
@@ -64,12 +57,18 @@ void FlagBanner::drawPole() const {
         glTranslatef(target.x, 0, target.z);
         // turn so its faccing up
         glRotatef(-90, 1, 0, 0);
-        glColor3f(153 / 255.0,
+        glColor3d(153 / 255.0,
                   89 / 255.0,
                   45 / 255.0); // nice dark brown for the base
         GLUquadricObj *quadratic;
         quadratic = gluNewQuadric();
-        gluCylinder(quadratic, 1, 0.8, 10, 20, 2);
+        gluCylinder(quadratic, 1, 0.8, m_height, 20, 2);
+
+        // top of pole
+        glTranslatef(0, 0, m_height); // WAT?? should be y..... hmm.
+        glColor3d(
+            153 / 255.0, 153 / 255.0, 0 / 255.0); // nice green for the top
+        glutSolidCone(1, 2, 20, 2);
     });
 }
 
