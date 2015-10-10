@@ -14,11 +14,11 @@ void WorldSurface::draw() const {
         }
     });
     pushMatrixAnd([&]() {
-        Point test = eval(-1, -1.8);
+        Vec test = eval(-1, -1.8);
         glPushMatrix();
         {
             glColor3d(200 / 255.0, 10 / 255.0, 10 / 255.0);
-            glTranslated(test.getX(), test.getY(), test.getZ());
+            glTranslated(test.x, test.y, test.z);
             glScaled(0.2, 0.2, 0.2);
             glutSolidSphere(1, 10, 10);
         };
@@ -35,9 +35,9 @@ void WorldSurface::drawControlPoints() const {
         glPushMatrix();
         {
             glColor3d(10 / 255.0, 200 / 255.0, 10 / 255.0);
-            glTranslated(m_controlPoints.at(i).getX(),
-                         m_controlPoints.at(i).getY(),
-                         m_controlPoints.at(i).getZ());
+            glTranslated(m_controlPoints.at(i).x,
+                         m_controlPoints.at(i).y,
+                         m_controlPoints.at(i).z);
             glScaled(scaleDown, scaleDown, scaleDown);
             glutSolidSphere(1, 10, 10);
         };
@@ -54,12 +54,11 @@ void WorldSurface::drawGround() const {
              x <= m_curvesCPoints.at(0).getXmax();
              x += dt) {
             for (double z = m_zMin; z <= m_zMax; z += dt) {
-                Point location = eval(x, z);
+                Vec location = eval(x, z);
                 glPushMatrix();
                 {
                     glColor3d(200 / 255.0, 200 / 255.0, 200 / 255.0);
-                    glTranslated(
-                        location.getX(), location.getY(), location.getZ());
+                    glTranslated(location.x, location.y, location.z);
                     glScaled(0.06, 0.06, 0.06);
                     glutSolidSphere(1, 10, 10);
                 };
@@ -100,17 +99,18 @@ bool WorldSurface::loadControlPoints(string filename) {
         getline(file, str, '\n');
         float z = static_cast<float>(atoi(str.c_str()));
 
-        Point createPoint(x, y, z);
-        m_controlPoints.push_back(createPoint);
+        // Point createPoint(x, y, z);
+        Vec createVec = Vec(x, y, z);
+        m_controlPoints.push_back(createVec);
     }
 
     if (m_controlPoints.size() > 0) {
-        m_zMin = m_controlPoints.at(0).getZ();
-        m_zMax = m_controlPoints.at(0).getZ();
+        m_zMin = m_controlPoints.at(0).z;
+        m_zMax = m_controlPoints.at(0).z;
     }
 
     for (int i = 0; i < m_numberOfCurves; ++i) {
-        std::vector<Point> v;
+        std::vector<Vec> v;
         v.push_back(m_controlPoints.at(i * 4));
         v.push_back(m_controlPoints.at(i * 4 + 1));
         v.push_back(m_controlPoints.at(i * 4 + 2));
@@ -128,18 +128,19 @@ bool WorldSurface::loadControlPoints(string filename) {
     return true;
 }
 
-Point WorldSurface::eval(double u, double v) const {
+Vec WorldSurface::eval(double x, double z) const {
     // firt, get the x pos.
-    std::vector<Point> tmp;
+    std::vector<Vec> tmp;
     for (int i = 0; i < m_curvesCPoints.size(); ++i) {
         BezierCurve currentCurve = m_curvesCPoints.at(i);
-        double _u = (u - currentCurve.getXmin())
+        double _x = (x - currentCurve.getXmin())
                     / (currentCurve.getXmax() - currentCurve.getXmin());
-        tmp.push_back(m_curvesCPoints.at(i).evalCubicPoint(_u));
+
+        tmp.push_back(m_curvesCPoints.at(i).eval(_x));
     }
 
     // now get the z position.
     BezierCurve uCurve = BezierCurve(tmp);
-    double _v = (v - uCurve.getZmin()) / (uCurve.getZmax() - uCurve.getZmin());
-    return uCurve.evalCubicPoint(_v);
+    double _z = (z - uCurve.getZmin()) / (uCurve.getZmax() - uCurve.getZmin());
+    return uCurve.eval(_z);
 }

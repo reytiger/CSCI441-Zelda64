@@ -10,7 +10,7 @@
 class BezierCurve : public WorldObject {
 public:
     BezierCurve() : WorldObject() {}
-    BezierCurve(const std::vector<Point> &v) : WorldObject(), pointsP(v) {
+    BezierCurve(const std::vector<Vec> &v) : WorldObject(), pointsV(v) {
         evalMaxMin();
     }
 
@@ -18,7 +18,7 @@ public:
     virtual void drawCurve() const;
 
     Vec eval(double t) const;
-    Point evalCubicPoint(double t) const;
+    Vec evalCubicPoint(double t) const;
 
     void loadFile(const std::string &filename);
     void evalMaxMin();

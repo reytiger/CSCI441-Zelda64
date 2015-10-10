@@ -15,7 +15,7 @@ public:
     // constructors
     WorldSurface() = default;
 
-    Point eval(double u, double v) const;
+    Vec eval(double x, double z) const;
 
     virtual void draw() const;
     bool loadControlPoints(string filename);
@@ -27,7 +27,8 @@ private:
 
     // set up for control points
     string m_WorldSurfaceCPointsFile;
-    vector<Point> m_controlPoints;
+    vector<Vec> m_controlPoints;
+    // Vec m_controlPoints;
     // control points
     void drawControlPoints() const;
     // control curves

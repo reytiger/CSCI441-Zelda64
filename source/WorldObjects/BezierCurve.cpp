@@ -132,7 +132,7 @@ void BezierCurve::draw() const {
         glBegin(GL_LINES);
         for (double t = 0; t < 1.0; t += dt) {
             auto point = evalCubicPoint(t);
-            glVertex3d(point.getX(), point.getY(), point.getZ());
+            glVertex3d(point.x, point.y, point.z);
         }
         glEnd();
         glEnable(GL_LIGHTING);
@@ -155,7 +155,7 @@ void BezierCurve::drawCurve() const {
     glBegin(GL_LINES);
     for (double t = 0; t <= 1.0; t += dt) {
         auto point = evalCubicPoint(t);
-        glVertex3d(point.getX(), point.getY(), point.getZ());
+        glVertex3d(point.x, point.y, point.z);
     }
     glEnd();
     glEnable(GL_LIGHTING);
@@ -178,20 +178,20 @@ Vec BezierCurve::eval(double t) const {
     return lerp(ratio, ss[i], ss[i - 1]) + m_pos;
 }
 
-Point BezierCurve::evalCubicPoint(double tt) const {
+Vec BezierCurve::evalCubicPoint(double tt) const {
     if (pointsP.size() < 4) {
-        return Point();
+        return Vec();
     }
     // equation used from:
     //   https://en.wikipedia.org/wiki/B%C3%A9zier_curve
     // navigate to the Cubic Bézier curves
-    float t      = static_cast<float>(tt);
-    auto b0      = (1 - t) * (1 - t) * (1 - t);
-    auto b1      = 3 * (1 - t) * (1 - t) * t;
-    auto b2      = 3 * (1 - t) * t * t;
-    auto b3      = t * t * t;
-    Point target = b0 * pointsP.at(0) + b1 * pointsP.at(1) + b2 * pointsP.at(2)
-                   + b3 * pointsP.at(3);
+    float t    = static_cast<float>(tt);
+    auto b0    = (1 - t) * (1 - t) * (1 - t);
+    auto b1    = 3 * (1 - t) * (1 - t) * t;
+    auto b2    = 3 * (1 - t) * t * t;
+    auto b3    = t * t * t;
+    Vec target = b0 * pointsV.at(0) + b1 * pointsV.at(1) + b2 * pointsV.at(2)
+                 + b3 * pointsV.at(3);
     return target;
 }
 
@@ -219,24 +219,24 @@ void BezierCurve::recomputeCurve(int resolution) const {
 }
 
 void BezierCurve::evalMaxMin() {
-    double xMin = pointsP.at(0).getX();
-    double xMax = pointsP.at(0).getX();
-    for (int i = 0; i < pointsP.size(); ++i) {
-        if (pointsP.at(i).getX() < xMin) {
-            xMin = pointsP.at(i).getX();
+    double xMin = pointsV.at(0).x;
+    double xMax = pointsV.at(0).x;
+    for (int i = 0; i < pointsV.size(); ++i) {
+        if (pointsV.at(i).x < xMin) {
+            xMin = pointsV.at(i).x;
         }
-        if (pointsP.at(i).getX() > xMax) {
-            xMax = pointsP.at(i).getX();
+        if (pointsV.at(i).x > xMax) {
+            xMax = pointsV.at(i).x;
         }
     }
-    double zMin = pointsP.at(0).getZ();
-    double zMax = pointsP.at(0).getZ();
-    for (int i = 0; i < pointsP.size(); ++i) {
-        if (pointsP.at(i).getZ() < zMin) {
-            zMin = pointsP.at(i).getZ();
+    double zMin = pointsV.at(0).z;
+    double zMax = pointsV.at(0).z;
+    for (int i = 0; i < pointsV.size(); ++i) {
+        if (pointsV.at(i).z < zMin) {
+            zMin = pointsV.at(i).z;
         }
-        if (pointsP.at(i).getZ() > zMax) {
-            zMax = pointsP.at(i).getZ();
+        if (pointsV.at(i).z > zMax) {
+            zMax = pointsV.at(i).z;
         }
     }
     m_xMin = xMin;
