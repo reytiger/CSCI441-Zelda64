@@ -5,7 +5,10 @@
 using namespace std;
 
 Vec Track::eval(double t) {
+    t           = fmod(t, 1);
     Vec current = m_halo.eval(t);
+    // TODO: heros are jumping around.... WHY?????
+    // info("%s\n%f", current, t);
     return current;
 }
 
@@ -16,19 +19,6 @@ void Track::draw() const {
         m_trackCallBack.draw();
         // drawTrackBlocks();
     });
-    // pushMatrixAnd([&]() {
-    //     Point test = eval(-1, -1.8);
-    //     glPushMatrix();
-    //     {
-    //         glColor3d(200 / 255.0, 10 / 255.0, 10 / 255.0);
-    //         glTranslated(test.getX(), test.getY(), test.getZ());
-    //         glScaled(0.2, 0.2, 0.2);
-    //         glutSolidSphere(1, 10, 10);
-    //     };
-    //     glPopMatrix();
-
-    // });
-    // pushMatrixAnd([&]() { drawGround(); });
 }
 
 void Track::drawTrackBlocks() const {
@@ -39,7 +29,7 @@ void Track::drawTrackBlocks() const {
         {
             for (double i = 0; i < 1 + stepSize; i += stepSize) {
                 Vec current = m_halo.eval(i);
-                Vec target  = m_halo.eval(i + stepSize);
+                Vec target = m_halo.eval(i + stepSize);
                 randColor().glSet();
 
                 // glRotatef(evalAngle(i), 0, 1, 0);

@@ -80,7 +80,7 @@ void BezierCurve::loadFile(const std::string &filename) {
         }
     }
 
-    recomputeCurve(100);
+    recomputeCurve(10000);
 }
 
 void BezierCurve::draw() const {
@@ -162,6 +162,7 @@ void BezierCurve::drawCurve() const {
 }
 
 Vec BezierCurve::eval(double t) const {
+    // info("%s", t);
     if (ts.size() == 0) {
         recomputeCurve(100);
     }
@@ -196,7 +197,7 @@ Point BezierCurve::evalCubicPoint(double tt) const {
 
 void BezierCurve::recomputeCurve(int resolution) const {
     assert(!pointsV.empty());
-    assert(!pointsP.empty());
+    // assert(!pointsP.empty());
     assert(resolution > 0);
 
     ss.clear();

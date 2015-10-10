@@ -10,6 +10,11 @@ void Firnen::updateAnimation(double t, double dt) {
     m_height      = sin(t * 6);
 }
 
+void Firnen::update(double t, double dt) {
+    WorldObject::update(t, dt);
+    updateAnimation(t, dt);
+}
+
 /********************************  DRAW FIRNEN ********************************/
 // the objects are a simple circle.
 void Firnen::draw() const {

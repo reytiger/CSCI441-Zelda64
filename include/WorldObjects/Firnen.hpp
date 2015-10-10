@@ -11,6 +11,7 @@ public:
     Firnen() = default;
 
     virtual void draw() const;
+    virtual void update(double t, double dt);
 
     // constructors
     void setArmRotation(float armRotation) { m_armRotation = armRotation; };
