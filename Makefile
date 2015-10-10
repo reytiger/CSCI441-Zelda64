@@ -39,6 +39,7 @@ $(BINARY): $(OBJECTS)
 
 clean:
 	@rm -vf $(OBJECTS) $(BINARY) depend.mk
+	@rm -vr object
 
 object/%.o: source/%.cpp
 	@mkdir -p $(dir $@)
