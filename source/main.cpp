@@ -42,7 +42,7 @@ void updateScene(double t, double dt) {
 void initScene() {
     float lightCol[4]   = {1, 1, 1, 1};
     float ambientCol[4] = {0.0, 0.0, 0.0, 1.0};
-    float lPosition[4]  = {0.0, 0.0, 0.0, 1};
+    float lPosition[4] = {0.0, 0.0, 0.0, 1};
     glLightfv(GL_LIGHT0, GL_POSITION, lPosition);
     glLightfv(GL_LIGHT0, GL_DIFFUSE, lightCol);
     glLightfv(GL_LIGHT0, GL_AMBIENT, ambientCol);
@@ -56,7 +56,11 @@ void initScene() {
     // twice.
 
     // First Person!
-    PrettyGLUT::firstPerson.follow(&inc);
+    PrettyGLUT::firstPerson.follow(&dragonBorn);
+    // PrettyGLUT::firstPerson.followLook(&dragonBorn);
+    PrettyGLUT::firstPerson.setUpdateFunc([=](double t, double dt) {
+        PrettyGLUT::firstPerson.lookAt(dragonBorn.looking());
+    });
     PrettyGLUT::firstPerson.setColor(randColor());
 
     // Setup controls for PrettyGLUT::freecam.
@@ -71,28 +75,28 @@ void initScene() {
 
     // Arcballs for DAYZ.
     PrettyGLUT::arcballcam.setColor(randColor());
-    PrettyGLUT::arcballcam.follow(&inc);
+    PrettyGLUT::arcballcam.setRadius(5);
+    PrettyGLUT::arcballcam.follow(&dragonBorn);
 
     // Load up Incallidus!
     PrettyGLUT::drawn.push_back(&inc);
     inc.setRadius(0.5);
     // TODO: Update to the track
-    inc.setUpdateFunc(
-        [=](double t, double) { inc.moveTo(track.eval(0.05 * t)); });
+    // inc.setUpdateFunc(
+    //     [=](double t, double) { inc.moveTo(track.eval(0.05 * t)); });
 
     // Load up Firnen!
     PrettyGLUT::drawn.push_back(&firnen);
     firnen.load();
-    firnen.setUpdateFunc(
-        [=](double t, double dt) { firnen.updateAnimation(t, dt); });
+    firnen.setUpdateFunc([=](double t, double dt) {});
     PrettyGLUT::drawn.push_back(&firnenCart);
 
     // Load up our DragonBorn!
     // TODO: he should be moving basied off arc length.
     PrettyGLUT::drawn.push_back(&dragonBorn);
     dragonBorn.setUpdateFunc([=](double t, double dt) {
-        dragonBorn.moveTo(track.eval(0.1 * t));
-        dragonBorn.updateAnimation(t, dt);
+        dragonBorn.moveTo(track.eval(0.01 * t));
+        // dragonBorn.update(t, dt);
     });
 
     // Bezier surface!

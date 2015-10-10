@@ -7,11 +7,13 @@ public:
     DragonBorn() : WorldObject() {}
 
     virtual void draw() const;
+    virtual void update(double t, double dt);
 
     // modifiers
-    void updateAnimation(double t, double dt);
 
 private:
     // TODO: create more drawings for a better dragonBron
     void drawTorso() const;
+
+    void updateAnimation(double t, double dt);
 };

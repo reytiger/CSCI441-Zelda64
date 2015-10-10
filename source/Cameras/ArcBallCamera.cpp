@@ -1,7 +1,7 @@
 #include "Cameras/ArcBallCamera.hpp"
 
 void ArcBallCamera::adjustGLU() const {
-    auto pos = m_arc.cart() + m_pos;
+    auto pos = m_arc.cart() * m_radius + m_pos;
     // clang-format off
     gluLookAt(pos.x, pos.y, pos.z,       // Where the camera is viewing from
               m_pos.x, m_pos.y, m_pos.z, // Where the camera is 'logically'
@@ -16,12 +16,12 @@ void ArcBallCamera::draw() const {
     pushMatrixAnd([&]() {
         auto pos = m_arc.cart() + m_pos;
         glTranslated(pos.x, pos.y, pos.z);
-        glutSolidSphere(m_radius, 10, 10);
+        glutSolidSphere(0.1, 10, 10);
     });
 
     // And a cube where it "is".
     pushMatrixAnd([&]() {
         glTranslated(m_pos.x, m_pos.y, m_pos.z);
-        glutSolidCube(m_radius);
+        glutSolidCube(0.1);
     });
 }

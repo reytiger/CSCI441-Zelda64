@@ -24,9 +24,10 @@ int windowHeight = 1024;
 Color colorClear = Color(0.3f, 0.2f, 0.8f);
 
 // Input states
-Vec mouse            = Vec();
-int leftMouse        = 0;
-bool keyPressed[256] = {};
+Vec mouse             = Vec();
+int leftMouse         = 0;
+GLint modifiersButton = 0;
+bool keyPressed[256]  = {};
 
 // Things to draw
 std::vector<WorldObject *> drawn = std::vector<WorldObject *>();
@@ -137,8 +138,9 @@ void mouseCallback(int button, int state, int x, int y) {
     // update the left mouse button states, if applicable
     switch (button) {
     case GLUT_LEFT_BUTTON:
-        mouse     = Vec(x, y, 0.0);
-        leftMouse = state;
+        mouse           = Vec(x, y, 0.0);
+        leftMouse       = state;
+        modifiersButton = glutGetModifiers();
         break;
     }
 }
@@ -152,6 +154,22 @@ void mouseMotion(int x, int y) {
 
         mouse.x = x;
         mouse.y = y;
+
+        // Adjust the radius of the active cam. Moves by a constant factor of
+        // the idstance of the mouse moved.
+        if (modifiersButton == GLUT_ACTIVE_CTRL) {
+            // info("%s", dx);
+            Vec dist    = Vec(dx, dy);
+            auto radius = activeCam->radius();
+            if (dy > 0) {
+                radius = radius - fudge * dist.norm();
+            } else {
+                radius = radius + fudge * dist.norm();
+            }
+            radius = clamp(radius, 3.0, 10.0);
+            activeCam->setRadius(radius);
+            return;
+        }
 
         // Adjust the rotation angles by a constant factor of the distance
         // the mouse moved.
