@@ -14,9 +14,16 @@ enum class Log {
 template <typename... Args>
 void log_context(Log loglevel, const char *file, int line, const char *func,
                  const char *fmt, const Args &... args) {
-    // Insert a newline here so we catch and indent it below.
-    std::string text = "\n" + tfm::format(fmt, args...);
+    std::string text = tfm::format(fmt, args...);
     std::string level;
+
+    // Print the entire message below the logging header if it's multiline
+    // and short enough. 30 is picked arbitrarily.
+    // We do that by prefixing a newline to the text, and letting the
+    // following loop indent it.
+    if (text.size() > 30 || text.find('\n') != std::string::npos) {
+        text = "\n" + text;
+    }
 
     // Indent each line with a tab.
     size_t pos = 0;
@@ -43,7 +50,8 @@ void log_context(Log loglevel, const char *file, int line, const char *func,
         assert(0 && "Unknown Logging level!");
     }
 
-    tfm::format(std::cerr, "%s %s:%d:%s():%s\n", level, file, line, func, text);
+    tfm::format(
+        std::cerr, "%s %s:%d:%s(): %s\n", level, file, line, func, text);
 }
 
 #define log_with_context(level, fmt, ...)                                      \

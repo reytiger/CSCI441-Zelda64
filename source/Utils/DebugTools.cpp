@@ -36,11 +36,8 @@ void trace_helper(const char *file, int line, const char *func) {
 
     tfm::printf("%s\n", tracelist);
 #else
-    error("Backtracing not supported on windows. Trace initiated from %s:%s in "
-          "%s().\n",
-          file,
-          line,
-          func);
+    // Visual Studio can break on this.
+    abort();
 #endif
 }
 
@@ -68,7 +65,7 @@ void check_opengl(const char *file, int line) {
             str = "Unknown error";
         }
 
-        error("OpenGL encountered an error.", file, line, str);
+        error("%s:%d\nOpenGL encountered an error: %s", file, line, str);
         trace();
     }
 }
@@ -82,8 +79,7 @@ void check_errno(const char *file, int line) {
         return;
     }
     if (err) {
-        error("errno set!");
-        error("%s:%s: %s", file, line, strerror(err));
+        error("%s:%d\nSomething set errno: \n%s", file, line, strerror(err));
         trace();
     }
 }
