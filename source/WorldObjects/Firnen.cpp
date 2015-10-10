@@ -23,8 +23,11 @@ void Firnen::draw() const {
     }
     glPushMatrix();
     {
+        glTranslated(m_pos.x, m_pos.y, m_pos.z);
+
         glRotated(-90, 1, 0, 0);
         glScaled(0.7, 0.7, 0.7); // make him smaller
+        glScaled(m_radius, m_radius, m_radius);
         glPushMatrix();
         {
             glTranslated(0, 0, 5 - (m_height * 0.2));
