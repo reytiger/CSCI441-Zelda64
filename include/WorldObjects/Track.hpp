@@ -19,6 +19,8 @@ public:
 
     Vec eval_t(double t);
     Vec eval_arc(double arc);
+    Vec eval_deriv_t(double t);
+    Vec eval_deriv_arc(double arc);
 
     double evalAngle(double t); // returns 0-360;
 

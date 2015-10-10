@@ -7,6 +7,9 @@ using namespace std;
 Vec Track::eval_arc(double arc) { return m_halo.eval_arc(arc); }
 Vec Track::eval_t(double t) { return m_halo.eval_t(t); }
 
+Vec Track::eval_deriv_arc(double arc) { return m_halo.eval_deriv_arc(arc); }
+Vec Track::eval_deriv_t(double t) { return m_halo.eval_deriv_t(t); }
+
 /*************************  DRAW WORLD SURFACE  *******************************/
 void Track::draw() const {
     pushMatrixAnd([&]() {

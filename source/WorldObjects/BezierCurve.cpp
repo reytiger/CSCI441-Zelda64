@@ -8,7 +8,15 @@ Vec BezierCurve::evalCubic(Vec p0, Vec p1, Vec p2, Vec p3, double t) const {
     auto b1 = 3 * (1 - t) * (1 - t) * t;
     auto b2 = 3 * (1 - t) * t * t;
     auto b3 = t * t * t;
-    return m_pos + b0 * p0 + b1 * p1 + b2 * p2 + b3 * p3;
+    return m_pos + (b0 * p0) + (b1 * p1) + (b2 * p2) + (b3 * p3);
+}
+
+Vec BezierCurve::evalCubicDeriv(Vec p0, Vec p1, Vec p2, Vec p3,
+                                double t) const {
+    auto b0 = 3 * (1 - t) * (1 - t);
+    auto b1 = 6 * (1 - t) * t;
+    auto b2 = 3 * t * t;
+    return b0 * (p1 - p0) + b1 * (p2 - p1) + b2 * (p3 - p2);
 }
 
 void BezierCurve::loadFile(const std::string &filename) {
@@ -181,6 +189,43 @@ Vec BezierCurve::eval_t(double t) const {
     return lerp(ratio, m_cache_pos[idx], m_cache_pos[idx - 1]) + m_pos;
 }
 
+Vec BezierCurve::eval_deriv_arc(double arc) const {
+    if (m_cache_arc.size() == 0) {
+        recomputeCurve(100);
+    }
+
+    arc = fmod(arc, m_cache_arc.back());
+
+    size_t idx = 1;
+    while (idx < m_cache_arc.size() && m_cache_arc[idx] < arc) {
+        idx += 1;
+    }
+    assert(idx < m_cache_arc.size());
+
+    // Find how close we are to the two neighboring cached t values.
+    auto ratio = (arc - m_cache_arc[idx - 1]) //
+                 / (m_cache_arc[idx] - m_cache_arc[idx - 1]);
+    return lerp(ratio, m_cache_deriv[idx], m_cache_deriv[idx - 1]);
+}
+
+Vec BezierCurve::eval_deriv_t(double t) const {
+    if (m_cache_t.size() == 0) {
+        recomputeCurve(100);
+    }
+
+    t = fmod(t, 1.0);
+
+    size_t idx = 1;
+    while (idx < m_cache_t.size() && m_cache_t[idx] < t) {
+        idx += 1;
+    }
+
+    // Find how close we are to the two neighboring cached t values.
+    auto ratio = (t - m_cache_t[idx - 1]) //
+                 / (m_cache_t[idx] - m_cache_t[idx - 1]);
+    return lerp(ratio, m_cache_deriv[idx], m_cache_deriv[idx - 1]);
+}
+
 void BezierCurve::recomputeCurve(int resolution) const {
     assert(!m_points.empty());
     assert(resolution > 0);
@@ -208,10 +253,16 @@ void BezierCurve::recomputeCurve(int resolution) const {
                 last = m_cache_pos.back();
                 arc  = (pt - last).norm() + m_cache_arc.back();
             }
+            auto deriv = evalCubicDeriv(m_points[i],
+                                        m_points[i + 1],
+                                        m_points[i + 2],
+                                        m_points[i + 3],
+                                        t);
 
             m_cache_t.emplace_back((t + i / 3) / cubics);
             m_cache_arc.emplace_back(arc);
             m_cache_pos.emplace_back(pt);
+            m_cache_deriv.emplace_back(deriv);
         }
     }
 

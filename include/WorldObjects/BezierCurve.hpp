@@ -20,6 +20,9 @@ public:
     Vec eval_arc(double arc) const;
     Vec eval_t(double t) const;
 
+    Vec eval_deriv_arc(double arc) const;
+    Vec eval_deriv_t(double t) const;
+
     void loadFile(const std::string &filename);
     void evalMaxMin();
 
@@ -42,9 +45,11 @@ private:
     mutable std::vector<double> m_cache_t;
     mutable std::vector<double> m_cache_arc;
     mutable std::vector<Vec> m_cache_pos;
+    mutable std::vector<Vec> m_cache_deriv;
 
     std::pair<double, size_t> findInCache(double t) const;
     Vec evalCubic(Vec p0, Vec p1, Vec p2, Vec p3, double t) const;
+    Vec evalCubicDeriv(Vec p0, Vec p1, Vec p2, Vec p3, double t) const;
 
     double m_xMin;
     double m_xMax;
