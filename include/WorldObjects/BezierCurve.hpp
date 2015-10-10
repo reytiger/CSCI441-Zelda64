@@ -10,7 +10,7 @@
 class BezierCurve : public WorldObject {
 public:
     BezierCurve() : WorldObject() {}
-    BezierCurve(const std::vector<Vec> &v) : WorldObject(), pointsV(v) {
+    BezierCurve(const std::vector<Vec> &v) : WorldObject(), m_points(v) {
         evalMaxMin();
     }
 
@@ -18,7 +18,6 @@ public:
     virtual void drawCurve() const;
 
     Vec eval(double t) const;
-    Vec evalCubicPoint(double t) const;
 
     void loadFile(const std::string &filename);
     void evalMaxMin();
@@ -31,14 +30,13 @@ public:
     double getZmin() const { return m_zMin; }
     double getZmax() const { return m_zMax; }
 
-    void setVec(std::vector<Vec> v) { pointsV = v; }
-    std::vector<Vec> getVec() const { return pointsV; }
+    void setVec(std::vector<Vec> v) { m_points = v; }
+    std::vector<Vec> getVec() const { return m_points; }
 
     void recomputeCurve(int resolution) const;
 
 private:
-    std::vector<Vec> pointsV;
-    std::vector<Point> pointsP;
+    std::vector<Vec> m_points;
     // Table to cache curve points.
     mutable std::vector<Vec> ss;
     mutable std::vector<double> ts;
