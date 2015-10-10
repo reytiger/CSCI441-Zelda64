@@ -122,7 +122,7 @@ void BezierCurve::draw() const {
         double dt = 1.0 / 45;
         glBegin(GL_LINES);
         for (double t = 0; t <= 1.0; t += dt) {
-            auto point = eval(t);
+            auto point = eval_t(t);
             glVertex3d(point.x, point.y, point.z);
         }
         glEnd();
@@ -137,57 +137,88 @@ void BezierCurve::drawCurve() const {
     glBegin(GL_LINES);
     // TODO: draw the vec as well.
     for (double t = 0; t <= 1.0; t += dt) {
-        auto point = eval(t);
+        auto point = eval_t(t);
         glVertex3d(point.x, point.y, point.z);
     }
     glEnd();
     glEnable(GL_LIGHTING);
 }
 
-Vec BezierCurve::eval(double t) const {
-    if (t == 0) {
-        return m_points.at(0);
-    }
-    if (ts.size() == 0) {
+Vec BezierCurve::eval_arc(double arc) const {
+    if (m_cache_arc.size() == 0) {
         recomputeCurve(100);
     }
-    t        = fmod(t, 1.0);
-    size_t i = 1;
-    while (i < ts.size() && ts[i] < t) {
-        i += 1;
+
+    arc = fmod(arc, m_cache_arc.back());
+
+    size_t idx = 1;
+    while (idx < m_cache_arc.size() && m_cache_arc[idx] < arc) {
+        idx += 1;
+    }
+    assert(idx < m_cache_arc.size());
+
+    // Find how close we are to the two neighboring cached t values.
+    auto ratio = (arc - m_cache_arc[idx - 1]) //
+                 / (m_cache_arc[idx] - m_cache_arc[idx - 1]);
+    return lerp(ratio, m_cache_pos[idx], m_cache_pos[idx - 1]) + m_pos;
+}
+
+Vec BezierCurve::eval_t(double t) const {
+    if (m_cache_t.size() == 0) {
+        recomputeCurve(100);
+    }
+
+    t = fmod(t, 1.0);
+
+    size_t idx = 1;
+    while (idx < m_cache_t.size() && m_cache_t[idx] < t) {
+        idx += 1;
     }
 
     // Find how close we are to the two neighboring cached t values.
-    auto ratio = (t - ts[i - 1]) / (ts[i] - ts[i - 1]);
-    // ... and lerp it!
-    return lerp(ratio, ss[i], ss[i - 1]) + m_pos;
+    auto ratio = (t - m_cache_t[idx - 1]) //
+                 / (m_cache_t[idx] - m_cache_t[idx - 1]);
+    return lerp(ratio, m_cache_pos[idx], m_cache_pos[idx - 1]) + m_pos;
 }
-
 
 void BezierCurve::recomputeCurve(int resolution) const {
     assert(!m_points.empty());
-    // assert(!pointsP.empty());
     assert(resolution > 0);
 
-    ss.clear();
-    ts.clear();
-
-    ss.push_back(m_points.front());
-    ts.push_back(0);
+    m_cache_t.clear();
+    m_cache_pos.clear();
+    m_cache_arc.clear();
 
     const double dt     = 1.0 / resolution;
     const size_t cubics = (m_points.size() + 1) / 3;
+
     for (size_t i = 0; i + 3 < m_points.size(); i += 3) {
+        Vec last;
+        double arc;
         for (double t = 0; t <= 1.0 + dt; t += dt) {
             auto pt = evalCubic(m_points[i],
                                 m_points[i + 1],
                                 m_points[i + 2],
                                 m_points[i + 3],
                                 t);
-            ss.push_back(pt);
-            ts.push_back((t + i / 3) / cubics);
+            if (m_cache_t.empty()) {
+                last = pt;
+                arc  = 0.0;
+            } else {
+                last = m_cache_pos.back();
+                arc  = (pt - last).norm() + m_cache_arc.back();
+            }
+
+            m_cache_t.emplace_back((t + i / 3) / cubics);
+            m_cache_arc.emplace_back(arc);
+            m_cache_pos.emplace_back(pt);
         }
     }
+
+    assert(!m_cache_t.empty());
+
+    assert(m_cache_t.size() == m_cache_pos.size());
+    assert(m_cache_t.size() == m_cache_arc.size());
 }
 
 void BezierCurve::evalMaxMin() {

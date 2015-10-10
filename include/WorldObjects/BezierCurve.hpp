@@ -17,7 +17,8 @@ public:
     virtual void draw() const;
     virtual void drawCurve() const;
 
-    Vec eval(double t) const;
+    Vec eval_arc(double arc) const;
+    Vec eval_t(double t) const;
 
     void loadFile(const std::string &filename);
     void evalMaxMin();
@@ -38,9 +39,11 @@ public:
 private:
     std::vector<Vec> m_points;
     // Table to cache curve points.
-    mutable std::vector<Vec> ss;
-    mutable std::vector<double> ts;
+    mutable std::vector<double> m_cache_t;
+    mutable std::vector<double> m_cache_arc;
+    mutable std::vector<Vec> m_cache_pos;
 
+    std::pair<double, size_t> findInCache(double t) const;
     Vec evalCubic(Vec p0, Vec p1, Vec p2, Vec p3, double t) const;
 
     double m_xMin;

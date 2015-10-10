@@ -90,14 +90,15 @@ void initScene() {
     // TODO: move cart to firnen class
     // drawn.push_back(&firnenCart);
     firnen.load();
-    firnen.setUpdateFunc(
-        [=](double t, double /*dt*/) { firnen.moveTo(track.eval(0.03 * t)); });
+    firnen.setUpdateFunc([=](double t, double /*dt*/) {
+        firnen.moveTo(track.eval_arc(10.0 * t));
+    });
 
     // Load up our DragonBorn!
     // TODO: he should be moving basied off arc length.
     drawn.push_back(&dragonBorn);
     dragonBorn.setUpdateFunc([=](double t, double /*dt*/) {
-        dragonBorn.moveTo(track.eval(0.01 * t));
+        dragonBorn.moveTo(track.eval_t(0.03 * t));
     });
 
     // Bezier surface!

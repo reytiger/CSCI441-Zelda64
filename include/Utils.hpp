@@ -15,7 +15,8 @@
 #include "Utils/Logging.hpp"
 
 // Common includes
-#include <memory> // std::unique_ptr, std::make_unique
+#include <memory>  // std::unique_ptr, std::make_unique
+#include <utility> // std::pair
 
 #include <cassert>
 #include <cerrno>

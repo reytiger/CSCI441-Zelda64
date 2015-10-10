@@ -4,7 +4,8 @@
 
 using namespace std;
 
-Vec Track::eval(double t) { return m_halo.eval(t); }
+Vec Track::eval_arc(double arc) { return m_halo.eval_arc(arc); }
+Vec Track::eval_t(double t) { return m_halo.eval_t(t); }
 
 /*************************  DRAW WORLD SURFACE  *******************************/
 void Track::draw() const {
@@ -22,8 +23,8 @@ void Track::drawTrackBlocks() const {
         glBegin(GL_TRIANGLES);
         {
             for (double i = 0; i < 1 + stepSize; i += stepSize) {
-                Vec current = m_halo.eval(i);
-                Vec target = m_halo.eval(i + stepSize);
+                Vec current = m_halo.eval_t(i);
+                Vec target = m_halo.eval_t(i + stepSize);
                 randColor().glSet();
 
                 // glRotatef(evalAngle(i), 0, 1, 0);

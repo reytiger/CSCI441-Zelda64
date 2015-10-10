@@ -32,8 +32,8 @@ void FlagBanner::drawFlag() const {
         glBegin(GL_TRIANGLES);
         {
             for (double i = 0; i < 1 - stepSize; i += stepSize) {
-                Vec drawing = m_WindsCurve.eval(i);
-                Vec next    = m_WindsCurve.eval(i + stepSize);
+                Vec drawing = m_WindsCurve.eval_t(i);
+                Vec next    = m_WindsCurve.eval_t(i + stepSize);
                 // first triangle
                 glVertex3f(drawing.x, drawing.y, drawing.z);
                 glVertex3f(drawing.x, drawing.y + heightFlag, drawing.z);

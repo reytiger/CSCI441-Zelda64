@@ -135,11 +135,11 @@ Vec WorldSurface::eval(double x, double z) const {
         double _x = (x - currentCurve.getXmin())
                     / (currentCurve.getXmax() - currentCurve.getXmin());
 
-        tmp.push_back(m_curvesCPoints.at(i).eval(_x));
+        tmp.push_back(m_curvesCPoints.at(i).eval_t(_x));
     }
 
     // now get the z position.
     BezierCurve uCurve = BezierCurve(tmp);
     double _z = (z - uCurve.getZmin()) / (uCurve.getZmax() - uCurve.getZmin());
-    return uCurve.eval(_z);
+    return uCurve.eval_t(_z);
 }
