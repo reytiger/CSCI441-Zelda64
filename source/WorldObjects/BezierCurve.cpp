@@ -145,7 +145,9 @@ void BezierCurve::drawCurve() const {
 }
 
 Vec BezierCurve::eval(double t) const {
-    // info("%s", t);
+    if (t == 0) {
+        return m_points.at(0);
+    }
     if (ts.size() == 0) {
         recomputeCurve(100);
     }

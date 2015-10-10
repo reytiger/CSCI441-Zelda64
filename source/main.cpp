@@ -81,13 +81,17 @@ void initScene() {
     // Load up Incallidus!
     PrettyGLUT::drawn.push_back(&inc);
     inc.setRadius(0.5);
-    inc.setUpdateFunc(
-        [=](double t, double) { inc.moveTo(track.eval(0.05 * t)); });
+    inc.setUpdateFunc([=](double /*t*/, double /*dt*/) {
+        inc.moveTo(worldSurface.eval(2, -2));
+    });
 
     // Load up Firnen!
     PrettyGLUT::drawn.push_back(&firnen);
+    // TODO: move cart to firnen class
+    // PrettyGLUT::drawn.push_back(&firnenCart);
     firnen.load();
-    PrettyGLUT::drawn.push_back(&firnenCart);
+    firnen.setUpdateFunc(
+        [=](double t, double /*dt*/) { firnen.moveTo(track.eval(0.03 * t)); });
 
     // Load up our DragonBorn!
     // TODO: he should be moving basied off arc length.
