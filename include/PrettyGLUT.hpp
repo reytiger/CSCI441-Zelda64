@@ -6,7 +6,17 @@
 
 #include <vector>
 
-namespace PrettyGLUT {
+// Things to draw
+// Pointers stored here can expect to live the duration of the program.
+extern std::vector<WorldObject *> drawn;
+
+// Cameras
+extern ArcBallCamera arcballcam;
+extern FreeCamera firstPerson;
+extern FreeCamera freecam;
+extern FreeCamera fastfreecam; // TODO: Make this a first person.
+
+extern Camera *activeCam;
 
 extern double live_fps;
 
@@ -33,18 +43,4 @@ extern bool keyPressed[256];
 // "public" functions
 void printOpenGLInformation();
 void initGLUT(int *argcp, char **argv);
-void start();
-
-// Things to draw
-// Pointers stored here can expect to live the duration of the program.
-extern std::vector<WorldObject *> drawn;
-
-// Cameras
-extern ArcBallCamera arcballcam;
-extern FreeCamera firstPerson;
-extern FreeCamera freecam;
-extern FreeCamera fastfreecam; // TODO: Make this a first person.
-
-extern Camera *activeCam;
-
-}; // namespace PrettyGLUT
+void startGuildWars();

@@ -12,8 +12,15 @@
 // main.cpp.
 void updateScene(double t, double dt);
 
+// Cameras
+ArcBallCamera arcballcam;
+FreeCamera freecam;
+FreeCamera fastfreecam;
+FreeCamera firstPerson;
+
+Camera *activeCam = &freecam;
+
 // World objects
-namespace PrettyGLUT {
 
 double live_fps = 0.0;
 
@@ -31,14 +38,6 @@ bool keyPressed[256]  = {};
 
 // Things to draw
 std::vector<WorldObject *> drawn = std::vector<WorldObject *>();
-
-// Cameras
-ArcBallCamera arcballcam;
-FreeCamera freecam;
-FreeCamera fastfreecam;
-FreeCamera firstPerson;
-
-Camera *activeCam = &freecam;
 
 void render() {
     // clear the render buffer
@@ -245,10 +244,8 @@ void initGLUT(int *argcp, char **argv) {
     glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
 }
 
-void start() {
+void startGuildWars() {
     doFrame(0);
 
     glutMainLoop();
 }
-
-}; // namespace PrettyGLUT
