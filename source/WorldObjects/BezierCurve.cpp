@@ -191,7 +191,7 @@ void BezierCurve::recomputeCurve(int resolution) const {
 void BezierCurve::evalMaxMin() {
     double xMin = m_points.at(0).x;
     double xMax = m_points.at(0).x;
-    for (int i = 0; i < m_points.size(); ++i) {
+    for (size_t i = 0; i < m_points.size(); ++i) {
         if (m_points.at(i).x < xMin) {
             xMin = m_points.at(i).x;
         }
@@ -201,7 +201,7 @@ void BezierCurve::evalMaxMin() {
     }
     double zMin = m_points.at(0).z;
     double zMax = m_points.at(0).z;
-    for (int i = 0; i < m_points.size(); ++i) {
+    for (size_t i = 0; i < m_points.size(); ++i) {
         if (m_points.at(i).z < zMin) {
             zMin = m_points.at(i).z;
         }

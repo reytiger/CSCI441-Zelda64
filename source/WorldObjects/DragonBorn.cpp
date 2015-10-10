@@ -1,7 +1,9 @@
 
 #include "WorldObjects/DragonBorn.hpp"
 
-void DragonBorn::updateAnimation(double t, double dt) {}
+void DragonBorn::updateAnimation(double /*t*/, double /*dt*/) {
+    // TODO: Animate Dovakiin!
+}
 
 void DragonBorn::update(double t, double dt) {
     WorldObject::update(t, dt);

@@ -72,7 +72,7 @@ void FlagBanner::drawPole() const {
     });
 }
 
-void FlagBanner::updateAnimation(double t, double dt) {
+void FlagBanner::updateAnimation(double t, double /*dt*/) {
     // TODO: create a more relistic movement
     std::vector<Vec> currentVec = m_WindsCurve.getVec();
     double speed                = 4;
@@ -93,23 +93,6 @@ void FlagBanner::updateAnimation(double t, double dt) {
 }
 
 /*************************  SET UP FOR CURVES  ********************************/
-////////////////////////////////////////////////////////////////////////////////
-//  Load our control points from file and store them in a global variable.
-bool FlagBanner::loadControlPoints(string filename) {
-    string str;
-    int numOfPoints = 0;
-    ifstream file(filename.c_str());
-
-    info("%s", filename);
-    assert(file && "The file didn't load. :(");
-
-    // get the number of points to build
-    getline(file, str);
-    numOfPoints = atoi(str.c_str());
-
-
-    return true;
-}
 
 void FlagBanner::init() {
     m_FlagCPointsFile = "assets/world/flagBanner.csv";
@@ -118,7 +101,7 @@ void FlagBanner::init() {
     glChk();
 }
 
-Point FlagBanner::eval(double u, double v) {
+Point FlagBanner::eval(double /*u*/, double /*v*/) {
     // firt, get the x pos.
     // std::vector<Point> tmp;
     // for (int i = 0; i < m_curvesCPoints.size(); ++i) {

@@ -4,13 +4,7 @@
 
 using namespace std;
 
-Vec Track::eval(double t) {
-    t           = fmod(t, 1);
-    Vec current = m_halo.eval(t);
-    // TODO: heros are jumping around.... WHY?????
-    // info("%s\n%f", current, t);
-    return current;
-}
+Vec Track::eval(double t) { return m_halo.eval(t); }
 
 /*************************  DRAW WORLD SURFACE  *******************************/
 void Track::draw() const {

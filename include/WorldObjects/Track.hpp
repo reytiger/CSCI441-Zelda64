@@ -23,8 +23,6 @@ public:
     virtual void draw() const;
 
 private:
-    int m_numberOfCurves = 0;
-
     // set up for control points
     string m_TrackCPointsFile;
     std::vector<BezierCurve> m_curvesCPoints;

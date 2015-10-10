@@ -1,7 +1,7 @@
 #include "Cameras.hpp"
 
 void FreeCamera::addWASDControls(double speedPerSec, bool *pressed) {
-    setUpdateFunc([=](double t, double dt) {
+    setUpdateFunc([=](double /*t*/, double dt) {
         Vec vel;
 
         Vec up      = this->up();

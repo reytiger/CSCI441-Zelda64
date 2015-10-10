@@ -9,7 +9,7 @@ using namespace std;
 void WorldSurface::draw() const {
     pushMatrixAnd([&]() {
         drawControlPoints();
-        for (int i = 0; i < m_curvesCPoints.size(); ++i) {
+        for (size_t i = 0; i < m_curvesCPoints.size(); ++i) {
             m_curvesCPoints.at(i).drawCurve();
         }
     });
@@ -31,7 +31,7 @@ void WorldSurface::draw() const {
 void WorldSurface::drawControlPoints() const {
     // Draw our control points
     float scaleDown = 0.1f;
-    for (int i = 0; i < m_controlPoints.size(); ++i) {
+    for (size_t i = 0; i < m_controlPoints.size(); ++i) {
         glPushMatrix();
         {
             glColor3d(10 / 255.0, 200 / 255.0, 10 / 255.0);
@@ -48,8 +48,7 @@ void WorldSurface::drawControlPoints() const {
 void WorldSurface::drawGround() const {
     // TODO: it works right now, assums a square world. change so it's dynamic
     pushMatrixAnd([&]() {
-        double dt      = 0.25;
-        int resolution = 4;
+        double dt = 0.25;
         for (double x = m_curvesCPoints.at(0).getXmin();
              x <= m_curvesCPoints.at(0).getXmax();
              x += dt) {
@@ -131,7 +130,7 @@ bool WorldSurface::loadControlPoints(string filename) {
 Vec WorldSurface::eval(double x, double z) const {
     // firt, get the x pos.
     std::vector<Vec> tmp;
-    for (int i = 0; i < m_curvesCPoints.size(); ++i) {
+    for (size_t i = 0; i < m_curvesCPoints.size(); ++i) {
         BezierCurve currentCurve = m_curvesCPoints.at(i);
         double _x = (x - currentCurve.getXmin())
                     / (currentCurve.getXmax() - currentCurve.getXmin());

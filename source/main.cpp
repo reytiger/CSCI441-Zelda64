@@ -58,7 +58,7 @@ void initScene() {
     // First Person!
     PrettyGLUT::firstPerson.follow(&dragonBorn);
     // PrettyGLUT::firstPerson.followLook(&dragonBorn);
-    PrettyGLUT::firstPerson.setUpdateFunc([=](double t, double dt) {
+    PrettyGLUT::firstPerson.setUpdateFunc([=](double /*t*/, double /*dt*/) {
         PrettyGLUT::firstPerson.lookAt(dragonBorn.looking());
     });
     PrettyGLUT::firstPerson.setColor(randColor());
@@ -81,22 +81,19 @@ void initScene() {
     // Load up Incallidus!
     PrettyGLUT::drawn.push_back(&inc);
     inc.setRadius(0.5);
-    // TODO: Update to the track
-    // inc.setUpdateFunc(
-    //     [=](double t, double) { inc.moveTo(track.eval(0.05 * t)); });
+    inc.setUpdateFunc(
+        [=](double t, double) { inc.moveTo(track.eval(0.05 * t)); });
 
     // Load up Firnen!
     PrettyGLUT::drawn.push_back(&firnen);
     firnen.load();
-    firnen.setUpdateFunc([=](double t, double dt) {});
     PrettyGLUT::drawn.push_back(&firnenCart);
 
     // Load up our DragonBorn!
     // TODO: he should be moving basied off arc length.
     PrettyGLUT::drawn.push_back(&dragonBorn);
-    dragonBorn.setUpdateFunc([=](double t, double dt) {
+    dragonBorn.setUpdateFunc([=](double t, double /*dt*/) {
         dragonBorn.moveTo(track.eval(0.01 * t));
-        // dragonBorn.update(t, dt);
     });
 
     // Bezier surface!
@@ -160,6 +157,9 @@ void handleMainMenu(int val) {
     switch (static_cast<MenuOpt>(val)) {
     case MenuOpt::Quit:
         exit(0);
+
+    default:
+        info("Unhandled menu case: %d", val);
     }
 }
 
@@ -180,6 +180,9 @@ void handleCamerasMenu(int val) {
     case MenuOpt::SwitchToFirstCam:
         PrettyGLUT::activeCam = &PrettyGLUT::firstPerson;
         break;
+
+    default:
+        info("Unhandled menu case: %d", val);
     }
 }
 
