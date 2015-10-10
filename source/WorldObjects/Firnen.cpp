@@ -21,6 +21,7 @@ void Firnen::draw() const {
     if (!m_visible) {
         return;
     }
+    drawText("Firnen", m_pos, randColor());
     glPushMatrix();
     {
         glTranslated(m_pos.x, m_pos.y, m_pos.z);

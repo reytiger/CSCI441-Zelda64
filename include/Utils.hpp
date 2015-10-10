@@ -22,3 +22,6 @@
 #include <cerrno>
 #include <cmath>
 #include <cstring>
+
+// ... I've given up.
+void drawText(const std::string &text, Vec pos, Color color);

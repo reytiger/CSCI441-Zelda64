@@ -39,6 +39,24 @@ bool keyPressed[256]  = {};
 // Things to draw
 std::vector<WorldObject *> drawn = std::vector<WorldObject *>();
 
+// TODO: Make this stroke.
+void drawText(const std::string &text, Vec pos, Color color) {
+    color.glSet();
+    glRasterPos3d(pos.x, pos.y + 4.0, pos.z);
+    pushMatrixAnd([&]() {
+        for (size_t i = 0; i < text.size(); i += 1) {
+            glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, text[i]);
+        }
+    });
+}
+
+// TODO: Fix this.
+void drawFPS() {
+    auto white = Color(1.0, 1.0, 1.0);
+    auto pos = activeCam->pos() + activeCam->lookAt();
+    drawText(tfm::format("%0.0f", live_fps), pos, white);
+}
+
 void render() {
     // clear the render buffer
     glDrawBuffer(GL_BACK);
@@ -49,6 +67,8 @@ void render() {
     glLoadIdentity();
 
     activeCam->adjustGLU();
+
+    drawFPS();
 
     for (WorldObject *wo : drawn) {
         glChk();
