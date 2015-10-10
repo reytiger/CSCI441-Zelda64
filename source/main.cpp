@@ -71,7 +71,8 @@ void initScene() {
 
     // Arcballs for DAYZ.
     PrettyGLUT::arcballcam.setColor(randColor());
-    PrettyGLUT::arcballcam.follow(&inc);
+    PrettyGLUT::arcballcam.setRadius(5);
+    PrettyGLUT::arcballcam.follow(&dragonBorn);
 
     // Load up Incallidus!
     PrettyGLUT::drawn.push_back(&inc);
