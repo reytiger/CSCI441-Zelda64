@@ -22,8 +22,8 @@ public:
     void loadFile(const std::string &filename);
     void evalMaxMin();
 
-    bool drawCage = true;
-    bool drawPath = true;
+    bool drawCage = false;
+    bool drawPath = false;
 
     double getXmin() const { return m_xMin; }
     double getXmax() const { return m_xMax; }
