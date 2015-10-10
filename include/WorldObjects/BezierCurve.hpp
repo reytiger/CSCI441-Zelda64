@@ -34,14 +34,14 @@ public:
     void setVec(std::vector<Vec> v) { pointsV = v; }
     std::vector<Vec> getVec() const { return pointsV; }
 
-    void recomputeCurve(int resolution);
+    void recomputeCurve(int resolution) const;
 
 private:
     std::vector<Vec> pointsV;
     std::vector<Point> pointsP;
     // Table to cache curve points.
-    std::vector<Vec> ss;
-    std::vector<double> ts;
+    mutable std::vector<Vec> ss;
+    mutable std::vector<double> ts;
 
     Vec evalCubic(Vec p0, Vec p1, Vec p2, Vec p3, double t) const;
 

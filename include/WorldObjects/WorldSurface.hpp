@@ -13,18 +13,12 @@ class WorldSurface : public WorldObject {
 public:
     ////////////////////////////////////////////////////////////////////////////
     // constructors
-    WorldSurface() : WorldObject() {
-        // WorldSurfaceCPointsFile = "assets/world/WorldSurfaceCPoints.csv";
-        m_WorldSurfaceCPointsFile = "assets/world/WorldSurfaceCPoints.csv";
-        // info("%s", WorldSurfaceCPointsFile);
-        glChk();
-        loadControlPoints(m_WorldSurfaceCPointsFile);
-        glChk();
-    };
+    WorldSurface() = default;
 
     Point eval(double u, double v) const;
 
     virtual void draw() const;
+    bool loadControlPoints(string filename);
 
 private:
     int m_numberOfCurves;
@@ -34,7 +28,6 @@ private:
     // set up for control points
     string m_WorldSurfaceCPointsFile;
     vector<Point> m_controlPoints;
-    bool loadControlPoints(string filename);
     // control points
     void drawControlPoints() const;
     // control curves

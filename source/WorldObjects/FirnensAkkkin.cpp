@@ -37,6 +37,10 @@ void FirnensAkkkin::updateAnimation(double t, double dt) {
 
 /*******************************  DRAW AKKKIN  ********************************/
 void FirnensAkkkin::draw() const {
+    // Nothing to print.
+    if (m_controlPoints.empty()) {
+        return;
+    }
     glPushMatrix();
     {
         drawCage();
@@ -45,10 +49,10 @@ void FirnensAkkkin::draw() const {
         glPushMatrix();
         {
             // check which curver we are on and where on that curve
-            Point p0      = controlPoints.at(m_currentCurve * 3);
-            Point p1      = controlPoints.at((m_currentCurve * 3) + 1);
-            Point p2      = controlPoints.at((m_currentCurve * 3) + 2);
-            Point p3      = controlPoints.at((m_currentCurve * 3) + 3);
+            Point p0 = m_controlPoints.at(m_currentCurve * 3);
+            Point p1 = m_controlPoints.at((m_currentCurve * 3) + 1);
+            Point p2 = m_controlPoints.at((m_currentCurve * 3) + 2);
+            Point p3 = m_controlPoints.at((m_currentCurve * 3) + 3);
             Point nextPos = evaluateBezierCurve(p0, p1, p2, p3, m_tPos);
             glTranslatef(nextPos.getX(), nextPos.getY(), nextPos.getZ());
 
@@ -146,12 +150,12 @@ bool FirnensAkkkin::loadControlPoints(string filename) {
     int numOfPoints = 0;
     ifstream file(filename.c_str());
 
-    info("%s", filename);
+    info("Trying to load '%s'", filename);
     assert(file && "The file didn't load. :(");
 
     // get the number of points to build
     getline(file, str);
-    numOfPoints      = atoi(str.c_str());
+    numOfPoints = atoi(str.c_str());
     m_numberOfCurves = numOfPoints / 3;
 
     // go through each line. The cotrol file ahs the structure xn, yn, zn
@@ -166,7 +170,7 @@ bool FirnensAkkkin::loadControlPoints(string filename) {
         float z = static_cast<float>(atoi(str.c_str()));
 
         Point createPoint(x, y, z);
-        controlPoints.push_back(createPoint);
+        m_controlPoints.push_back(createPoint);
     }
     return true;
 }
@@ -176,7 +180,7 @@ bool FirnensAkkkin::loadControlPoints(string filename) {
 void FirnensAkkkin::drawCage() const {
     glPushMatrix();
     {
-        if (ControlCage) {
+        if (m_controlCage) {
             drawControlPoints();
             drawCageLines();
         }
@@ -187,13 +191,13 @@ void FirnensAkkkin::drawCage() const {
 void FirnensAkkkin::drawControlPoints() const {
     // Draw our control points
     float scaleDown = 0.1f;
-    for (int i = 0; i < (signed)controlPoints.size(); ++i) {
+    for (int i = 0; i < (signed)m_controlPoints.size(); ++i) {
         glPushMatrix();
         {
             glColor3d(10 / 255.0, 200 / 255.0, 10 / 255.0);
-            glTranslatef(controlPoints.at(i).getX(),
-                         controlPoints.at(i).getY(),
-                         controlPoints.at(i).getZ());
+            glTranslatef(m_controlPoints.at(i).getX(),
+                         m_controlPoints.at(i).getY(),
+                         m_controlPoints.at(i).getZ());
             glScaled(scaleDown, scaleDown, scaleDown);
             glutSolidSphere(1, 10, 10);
         };
@@ -203,7 +207,7 @@ void FirnensAkkkin::drawControlPoints() const {
 
 void FirnensAkkkin::drawCageLines() const {
     // Draw yellow lines to connect the points
-    for (int i = 0; i < (signed)controlPoints.size() - 1; ++i) {
+    for (int i = 0; i < (signed)m_controlPoints.size() - 1; ++i) {
         glPushMatrix();
         {
             glColor3d(245 / 255.0, 184 / 255.0, 0 / 255.0);
@@ -211,13 +215,13 @@ void FirnensAkkkin::drawCageLines() const {
             glDisable(GL_LIGHTING);
             glBegin(GL_LINES);
             {
-                glVertex3f(controlPoints.at(i).getX(),
-                           controlPoints.at(i).getY(),
-                           controlPoints.at(i).getZ());
+                glVertex3f(m_controlPoints.at(i).getX(),
+                           m_controlPoints.at(i).getY(),
+                           m_controlPoints.at(i).getZ());
 
-                glVertex3f(controlPoints.at(i + 1).getX(),
-                           controlPoints.at(i + 1).getY(),
-                           controlPoints.at(i + 1).getZ());
+                glVertex3f(m_controlPoints.at(i + 1).getX(),
+                           m_controlPoints.at(i + 1).getY(),
+                           m_controlPoints.at(i + 1).getZ());
             };
             glEnd();
             glEnable(GL_LIGHTING);
@@ -228,15 +232,15 @@ void FirnensAkkkin::drawCageLines() const {
 
 // DRAW THE CURVE!
 void FirnensAkkkin::drawBezierCurve() const {
-    if (BezierCurve) {
+    if (m_bezierCurve) {
         // Draw the Bezier Curve!
         int resolution = 20;
-        for (int i = 0; i < (signed)controlPoints.size() - 1; i += 3) {
+        for (int i = 0; i < (signed)m_controlPoints.size() - 1; i += 3) {
             // check the 1, 2, 3, and 4th point starting at the current.
-            renderBezierCurve(controlPoints.at(i),
-                              controlPoints.at(i + 1),
-                              controlPoints.at(i + 2),
-                              controlPoints.at(i + 3),
+            renderBezierCurve(m_controlPoints.at(i),
+                              m_controlPoints.at(i + 1),
+                              m_controlPoints.at(i + 2),
+                              m_controlPoints.at(i + 3),
                               resolution);
         }
     }

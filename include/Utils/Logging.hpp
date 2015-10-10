@@ -17,11 +17,10 @@ void log_context(Log loglevel, const char *file, int line, const char *func,
     std::string text = tfm::format(fmt, args...);
     std::string level;
 
-    // Print the entire message below the logging header if it's multiline
-    // and short enough. 30 is picked arbitrarily.
+    // Print the entire message below the logging header if it's multiline.
     // We do that by prefixing a newline to the text, and letting the
     // following loop indent it.
-    if (text.size() > 30 || text.find('\n') != std::string::npos) {
+    if (text.back() != '\n' && text.find('\n') != std::string::npos) {
         text = "\n" + text;
     }
 

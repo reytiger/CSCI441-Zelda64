@@ -1,13 +1,14 @@
 #pragma once
 
 #include "WorldObjects/WorldObjectBase.hpp"
+#include "WorldObjects/FirnensAkkkin.hpp"
 
 /************************************************  DRAW FIRNEN
  * *************************************/
 class Firnen : public WorldObject {
 public:
     // constructors
-    Firnen() : WorldObject() { m_armRotation = 0.0; }
+    Firnen() = default;
 
     virtual void draw() const;
 
@@ -27,6 +28,11 @@ public:
     // modifiers
     void updateAnimation(double t, double dt);
 
+    void load() {
+        m_akkin.loadControlPoints("assets/world/AkkkinControlPoints.csv");
+    }
+
 private:
-    float m_armRotation;
+    FirnensAkkkin m_akkin;
+    float m_armRotation = 0.0f;
 };

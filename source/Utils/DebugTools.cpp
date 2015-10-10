@@ -79,7 +79,7 @@ void check_errno(const char *file, int line) {
         return;
     }
     if (err) {
-        error("%s:%d\nSomething set errno: \n%s", file, line, strerror(err));
+        error("%s:%d\nSomething set errno: %s", file, line, strerror(err));
         trace();
     }
 }

@@ -42,7 +42,7 @@ void updateScene(double t, double dt) {
 void initScene() {
     float lightCol[4]   = {1, 1, 1, 1};
     float ambientCol[4] = {0.0, 0.0, 0.0, 1.0};
-    float lPosition[4] = {0.0, 0.0, 0.0, 1};
+    float lPosition[4]  = {0.0, 0.0, 0.0, 1};
     glLightfv(GL_LIGHT0, GL_POSITION, lPosition);
     glLightfv(GL_LIGHT0, GL_DIFFUSE, lightCol);
     glLightfv(GL_LIGHT0, GL_AMBIENT, ambientCol);
@@ -82,6 +82,7 @@ void initScene() {
 
     // Load up Firnen!
     PrettyGLUT::drawn.push_back(&firnen);
+    firnen.load();
     firnen.setUpdateFunc(
         [=](double t, double dt) { firnen.updateAnimation(t, dt); });
     PrettyGLUT::drawn.push_back(&firnenCart);
@@ -96,6 +97,9 @@ void initScene() {
 
     // Bezier surface!
     PrettyGLUT::drawn.push_back(&worldSurface);
+    glChk();
+    worldSurface.loadControlPoints("assets/world/WorldSurfaceCPoints.csv");
+    glChk();
 
     // Objects on the world surface.
     PrettyGLUT::drawn.push_back(&flagBanner);

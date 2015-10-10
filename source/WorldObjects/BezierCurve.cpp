@@ -162,6 +162,9 @@ void BezierCurve::drawCurve() const {
 }
 
 Vec BezierCurve::eval(double t) const {
+    if (ts.size() == 0) {
+        recomputeCurve(100);
+    }
     t        = fmod(t, 1.0);
     size_t i = 1;
     while (i < ts.size() && ts[i] < t) {
@@ -191,8 +194,9 @@ Point BezierCurve::evalCubicPoint(double tt) const {
     return target;
 }
 
-void BezierCurve::recomputeCurve(int resolution) {
+void BezierCurve::recomputeCurve(int resolution) const {
     assert(!pointsV.empty());
+    assert(!pointsP.empty());
     assert(resolution > 0);
 
     ss.clear();

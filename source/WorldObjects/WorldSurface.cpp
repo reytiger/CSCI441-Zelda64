@@ -75,14 +75,18 @@ void WorldSurface::drawGround() const {
 bool WorldSurface::loadControlPoints(string filename) {
     string str;
     int numOfPoints = 0;
-    ifstream file(filename.c_str());
+    ifstream file;
 
-    info("%s", filename);
-    assert(file && "The file didn't load. :(");
+    glChk();
+    file.open(filename.c_str());
+    if (!file) {
+        error("Unable to load '%s'.", filename);
+        exit(1);
+    }
 
     // get the number of points to build
     getline(file, str);
-    numOfPoints      = atoi(str.c_str());
+    numOfPoints = atoi(str.c_str());
     m_numberOfCurves = numOfPoints / 4;
 
     // go through each line. The cotrol file ahs the structure xn, yn, zn

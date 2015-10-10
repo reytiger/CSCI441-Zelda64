@@ -2,10 +2,10 @@
 #include "WorldObjects/Firnen.hpp"
 #include "WorldObjects/FirnensAkkkin.hpp"
 
-FirnensAkkkin akkkin;
+FirnensAkkkin m_akkkin;
 
 void Firnen::updateAnimation(double t, double dt) {
-    akkkin.updateAnimation(t, dt);
+    m_akkkin.updateAnimation(t, dt);
     m_armRotation = sin(t * 6.05);
     m_height      = sin(t * 6);
 }
@@ -23,7 +23,7 @@ void Firnen::draw() const {
         glPushMatrix();
         {
             glTranslated(0, 0, 5 - (m_height * 0.2));
-            akkkin.draw();
+            m_akkkin.draw();
         };
         glPopMatrix();
 

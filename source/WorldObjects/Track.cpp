@@ -39,7 +39,7 @@ void Track::drawTrackBlocks() const {
         {
             for (double i = 0; i < 1 + stepSize; i += stepSize) {
                 Vec current = m_halo.eval(i);
-                Vec target = m_halo.eval(i + stepSize);
+                Vec target  = m_halo.eval(i + stepSize);
                 randColor().glSet();
 
                 // glRotatef(evalAngle(i), 0, 1, 0);

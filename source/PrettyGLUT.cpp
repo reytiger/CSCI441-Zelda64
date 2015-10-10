@@ -122,7 +122,7 @@ void doFrame(int) {
         live_fps = frames / (now - last_fps_update);
 
         // We really only need two figures, but everyone likes seeing decimals.
-        info("Average FPS: %0.1f\n", live_fps);
+        info("Average FPS: %0.1f", live_fps);
 
         // Reset everything.
         last_fps_update = now;
