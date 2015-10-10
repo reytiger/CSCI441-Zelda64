@@ -56,7 +56,11 @@ void initScene() {
     // twice.
 
     // First Person!
-    PrettyGLUT::firstPerson.follow(&inc);
+    PrettyGLUT::firstPerson.follow(&dragonBorn);
+    // PrettyGLUT::firstPerson.followLook(&dragonBorn);
+    PrettyGLUT::firstPerson.setUpdateFunc([=](double t, double dt) {
+        PrettyGLUT::firstPerson.lookAt(dragonBorn.looking());
+    });
     PrettyGLUT::firstPerson.setColor(randColor());
 
     // Setup controls for PrettyGLUT::freecam.

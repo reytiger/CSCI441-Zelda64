@@ -11,6 +11,7 @@ public:
 
     virtual void draw() const = 0;
     virtual void update(double t, double dt);
+    virtual Vec lookAt(VecPolar polar) { return m_arc = polar; }
 
     virtual ~WorldObject(){};
 
@@ -41,6 +42,8 @@ public:
 
     Vec pos() const { return m_pos; }
     Vec vel() const { return m_vel; }
+    Vec lookAt() const { return m_arc.cart(); }
+    VecPolar looking() const { return m_arc; }
     double radius() const { return m_radius; }
     double heading() const { return m_heading; }
     double height() const { return m_height; }
@@ -65,6 +68,7 @@ protected:
     Vec m_pos;
     Vec m_posUV;
     Vec m_vel;
+    VecPolar m_arc;
     Color m_color;
     double m_heading = 0.0; // About the Z-axis, for now.
     double m_radius  = 1.0;

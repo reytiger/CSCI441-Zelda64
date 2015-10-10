@@ -36,7 +36,7 @@ std::vector<WorldObject *> drawn = std::vector<WorldObject *>();
 ArcBallCamera arcballcam;
 FreeCamera freecam;
 FreeCamera fastfreecam;
-FreeCamera firstPerson;
+FirstPersonCamera firstPerson;
 
 Camera *activeCam = &freecam;
 

@@ -21,7 +21,4 @@ public:
     virtual void draw() const;
 
 private:
-    // The camera rotates around m_pos
-
-    // The viewer's location in the arc is stored in m_arc.
 };

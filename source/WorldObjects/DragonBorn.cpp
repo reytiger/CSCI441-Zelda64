@@ -18,5 +18,9 @@ void DragonBorn::draw() const {
         glTranslated(m_pos.x, m_pos.y, m_pos.z);
         glColor3f(1, 0.5, 0.5);
         glutSolidSphere(1.5, 20, 20);
+
+        auto pos = m_arc.cart() * 2;
+        glTranslated(pos.x, pos.y, pos.z);
+        glutSolidSphere(0.2, 20, 20);
     });
 }
