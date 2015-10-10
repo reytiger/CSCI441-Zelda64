@@ -14,7 +14,7 @@ void WorldSurface::draw() const {
         }
     });
     pushMatrixAnd([&]() {
-        Vec test = eval(-1, -1.8);
+        Vec test = eval(-1, -1.8) + pos();
         glPushMatrix();
         {
             glColor3d(200 / 255.0, 10 / 255.0, 10 / 255.0);
@@ -35,9 +35,9 @@ void WorldSurface::drawControlPoints() const {
         glPushMatrix();
         {
             glColor3d(10 / 255.0, 200 / 255.0, 10 / 255.0);
-            glTranslated(m_controlPoints.at(i).x,
-                         m_controlPoints.at(i).y,
-                         m_controlPoints.at(i).z);
+            glTranslated(m_controlPoints.at(i).x + pos().x,
+                         m_controlPoints.at(i).y + pos().y,
+                         m_controlPoints.at(i).z + pos().z);
             glScaled(scaleDown, scaleDown, scaleDown);
             glutSolidSphere(1, 10, 10);
         };
@@ -54,7 +54,7 @@ void WorldSurface::drawGround() const {
              x <= m_curvesCPoints.at(0).getXmax();
              x += dt) {
             for (double z = m_zMin; z <= m_zMax; z += dt) {
-                Vec location = eval(x, z);
+                Vec location = eval(x, z) + pos();
                 glPushMatrix();
                 {
                     glColor3d(200 / 255.0, 200 / 255.0, 200 / 255.0);

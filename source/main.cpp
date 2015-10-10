@@ -103,7 +103,7 @@ void initScene() {
 
     // Bezier surface!
     PrettyGLUT::drawn.push_back(&worldSurface);
-    glChk();
+    worldSurface.moveToY(1.0);
     worldSurface.loadControlPoints("assets/world/WorldSurfaceCPoints.csv");
     glChk();
 
