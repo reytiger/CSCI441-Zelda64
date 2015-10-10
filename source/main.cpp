@@ -98,8 +98,12 @@ void initScene() {
     PrettyGLUT::drawn.push_back(&dragonBorn);
     dragonBorn.setUpdateFunc([=](double t, double /*dt*/) {
         dragonBorn.moveTo(track.eval(0.01 * t));
-        dragonBorn.lookAt(VecPolar(track.eval(0.01 * (t + 3))));
-        // dragonBorn.update(t, dt);
+
+        // TODO get the lookAt to view the next location
+        auto pos    = track.eval(0.01 * t);
+        auto target = track.eval(0.01 * (t + 0.017));
+
+        dragonBorn.lookAt(VecPolar(track.eval(0.01 * (t - 0.085))));
     });
 
     // Bezier surface!

@@ -7,12 +7,7 @@ using namespace std;
 
 /*************************  DRAW WORLD SURFACE  *******************************/
 void WorldSurface::draw() const {
-    pushMatrixAnd([&]() {
-        drawControlPoints();
-        for (size_t i = 0; i < m_curvesCPoints.size(); ++i) {
-            m_curvesCPoints.at(i).drawCurve();
-        }
-    });
+    pushMatrixAnd([&]() { drawControlPoints(); });
     pushMatrixAnd([&]() {
         Vec test = eval(-1, -1.8) + pos();
         glPushMatrix();
