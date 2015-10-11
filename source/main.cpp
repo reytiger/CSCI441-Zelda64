@@ -180,19 +180,16 @@ void handleMainMenu(int val) {
 void handleCamerasMenu(int val) {
     switch (static_cast<MenuOpt>(val)) {
     case MenuOpt::SwitchToFreeCam:
-        activeCam = &freecam;
+        switch_cam(freecam);
         break;
-
     case MenuOpt::SwitchToFastFreeCam:
-        activeCam = &fastfreecam;
+        switch_cam(fastfreecam);
         break;
-
     case MenuOpt::SwitchToArcBallCam:
-        activeCam = &arcballcam;
+        switch_cam(arcballcam);
         break;
-
     case MenuOpt::SwitchToFirstCam:
-        activeCam = &firstPerson;
+        switch_cam(firstPerson);
         break;
 
     default:
