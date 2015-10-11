@@ -21,14 +21,31 @@ void Firnen::draw() const {
     if (!m_visible) {
         return;
     }
-    drawText("Firnen", m_pos, randColor());
+    // drawText("Firnen", m_pos, randColor());
     glPushMatrix();
     {
+        // move all of firnen to there location
         glTranslated(m_pos.x, m_pos.y, m_pos.z);
+
+        // draw their name.
+        glPushMatrix();
+        {
+            std::string name = "Firnen";
+            glDisable(GL_LIGHTING);
+            glTranslated(-(int)name.size() / 4, 5, 0);
+            glScaled(0.01, 0.01, 0.01);
+            glColor3d(0.9, 0.2, 0.15);
+            for (char c : name) {
+                glutStrokeCharacter(GLUT_STROKE_ROMAN, c);
+            }
+            glEnable(GL_LIGHTING);
+        };
+        glPopMatrix();
 
         glRotated(-90, 1, 0, 0);
         glScaled(0.7, 0.7, 0.7); // make him smaller
         glScaled(m_radius, m_radius, m_radius);
+        // TODO: find out why akkkin isn't loading
         glPushMatrix();
         {
             glTranslated(0, 0, 5 - (m_height * 0.2));
@@ -36,19 +53,6 @@ void Firnen::draw() const {
         };
         glPopMatrix();
 
-        glPushMatrix();
-        {
-            glTranslated(0, 1, 0.5);
-            // drawLeg();
-        };
-        glPopMatrix();
-        glPushMatrix();
-        {
-            glScaled(1, -1, 1);
-            glTranslated(0, 1, 0.5);
-            // drawLeg();
-        };
-        glPopMatrix();
         glScaled(1, 1, 1 - (m_height * 0.1));
         drawTorso();
         // glutSolidCone( 1, height, 5, 2 );

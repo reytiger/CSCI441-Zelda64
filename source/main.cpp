@@ -123,7 +123,7 @@ void initScene() {
     // track.moveTo(Vec(30.0, 30.0, 30.0));
     // track.loadFile("./assets/world/bezier-track.csv");
 
-    drawn.push_back(&roomFloor);
+    // drawn.push_back(&roomFloor);
     roomFloor = CallListObject([](GLuint dl) {
         glNewList(dl, GL_COMPILE);
         auto citySize = Vec(100, 100);
