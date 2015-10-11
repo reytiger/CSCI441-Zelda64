@@ -16,7 +16,13 @@ extern FreeCamera firstPerson;
 extern FreeCamera freecam;
 extern FreeCamera fastfreecam; // TODO: Make this a first person.
 
+// Heros
+extern Incallidus inc;
+extern Firnen firnen;
+extern DragonBorn dragonBorn;
+
 extern Camera *activeCam;
+extern WorldObject *activeHero;
 
 extern double live_fps;
 

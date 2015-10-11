@@ -18,7 +18,14 @@ FreeCamera freecam;
 FreeCamera fastfreecam;
 FreeCamera firstPerson;
 
+// Heros
+Incallidus inc;
+Firnen firnen;
+DragonBorn dragonBorn;
+
 Camera *activeCam = &freecam;
+
+WorldObject *activeHero = &inc;
 
 // World objects
 

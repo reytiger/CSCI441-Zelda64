@@ -2,11 +2,11 @@
 
 #include "WorldObjects.hpp"
 
-Incallidus inc;
-Firnen firnen;
-FirnensCart firnenCart;
-DragonBorn dragonBorn;
+// Incallidus inc;
+// Firnen firnen;
+// DragonBorn dragonBorn;
 // BezierCurve halo;
+FirnensCart firnenCart;
 Track track;
 CallListObject roomFloor;
 WorldSurface worldSurface;
@@ -21,8 +21,13 @@ enum MenuOpt {
     SwitchToArcBallCam,
     SwitchToFirstCam,
 
+    SwitchToIncallidus,
+    SwitchToFirnen,
+    SwitchToDragonBorn,
+
     Quit,
 };
+
 
 // This function is expected by PrettyGLUT, because I designed it to get
 // done fast, not smart. We can change this later, but this makes sure it
@@ -56,8 +61,8 @@ void initScene() {
     // twice.
 
     // First Person!
+    // FirstPerson has to be picture-in-picture viewport.
     firstPerson.follow(&dragonBorn);
-    // firstPerson.followLook(&dragonBorn);
     firstPerson.setUpdateFunc([=](double /*t*/, double /*dt*/) {
         firstPerson.lookAt(dragonBorn.looking());
     });
@@ -195,12 +200,31 @@ void handleCamerasMenu(int val) {
     }
 }
 
+void handleHerossMenu(int val) {
+    switch (static_cast<MenuOpt>(val)) {
+    case MenuOpt::SwitchToIncallidus:
+        activeHero = &inc;
+        break;
+    case MenuOpt::SwitchToFirnen:
+        activeHero = &firnen;
+        break;
+    case MenuOpt::SwitchToDragonBorn:
+        activeHero = &dragonBorn;
+        break;
+
+    default:
+        info("Unhandled menu case: %d", val);
+    }
+}
+
 void initRightClickMenu() {
     int main    = glutCreateMenu(handleMainMenu);
     int cameras = glutCreateMenu(handleCamerasMenu);
+    int heros   = glutCreateMenu(handleHerossMenu);
 
     glutSetMenu(main);
     glutAddSubMenu("Switch Camera", cameras);
+    glutAddSubMenu("Switch Hero", heros);
     glutAddMenuEntry("Quit", MenuOpt::Quit);
 
     glutSetMenu(cameras);
@@ -209,6 +233,11 @@ void initRightClickMenu() {
     glutAddMenuEntry("Fast Free Cam", MenuOpt::SwitchToFastFreeCam);
     glutAddMenuEntry("First-Person Cam", MenuOpt::SwitchToFirstCam);
     glutAddMenuEntry("Free Cam", MenuOpt::SwitchToFreeCam);
+
+    glutSetMenu(heros);
+    glutAddMenuEntry("Follow Incallidus", MenuOpt::SwitchToIncallidus);
+    glutAddMenuEntry("Follow Firnen", MenuOpt::SwitchToFirnen);
+    glutAddMenuEntry("Follow Dragon Born", MenuOpt::SwitchToDragonBorn);
 
     glutSetMenu(main);
 
