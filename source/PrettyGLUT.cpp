@@ -2,13 +2,8 @@
 
 #include "Cameras.hpp"
 
-#define switch_cam(cam)                                                        \
-    do {                                                                       \
-        activeCam = &cam;                                                      \
-        info("Switching camera to %s\n", #cam);                                \
-    } while (0)
-
-// We need to know about this. but it's entirely game logic so it's defined in
+// We need to know about this. but it's entirely game logic so it's defined
+// in
 // main.cpp.
 void updateScene(double t, double dt);
 
@@ -23,11 +18,9 @@ Incallidus inc;
 Firnen firnen;
 DragonBorn dragonBorn;
 
-Camera *activeCam = &freecam;
-
-WorldObject *activeHero = &inc;
-
 // World objects
+Camera *activeCam       = &freecam;
+WorldObject *activeHero = &inc;
 
 double live_fps = 0.0;
 

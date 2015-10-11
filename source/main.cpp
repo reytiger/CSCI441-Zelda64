@@ -62,7 +62,7 @@ void initScene() {
 
     // First Person!
     // FirstPerson has to be picture-in-picture viewport.
-    firstPerson.follow(&dragonBorn);
+    firstPerson.follow(activeHero);
     firstPerson.setUpdateFunc([=](double /*t*/, double /*dt*/) {
         firstPerson.lookAt(dragonBorn.looking());
     });
@@ -81,7 +81,7 @@ void initScene() {
     // Arcballs for DAYZ.
     arcballcam.setColor(randColor());
     arcballcam.setRadius(5);
-    arcballcam.follow(&dragonBorn);
+    arcballcam.follow(activeHero);
 
     // Load up Incallidus!
     drawn.push_back(&inc);
@@ -203,18 +203,20 @@ void handleCamerasMenu(int val) {
 void handleHerossMenu(int val) {
     switch (static_cast<MenuOpt>(val)) {
     case MenuOpt::SwitchToIncallidus:
-        activeHero = &inc;
+        switch_hero(inc);
         break;
     case MenuOpt::SwitchToFirnen:
-        activeHero = &firnen;
+        switch_hero(firnen);
         break;
     case MenuOpt::SwitchToDragonBorn:
-        activeHero = &dragonBorn;
+        switch_hero(dragonBorn);
         break;
 
     default:
         info("Unhandled menu case: %d", val);
     }
+    arcballcam.follow(activeHero);
+    firstPerson.follow(activeHero);
 }
 
 void initRightClickMenu() {
