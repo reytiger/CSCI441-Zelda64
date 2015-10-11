@@ -14,7 +14,7 @@ public:
     virtual void update(double t, double dt);
 
     // constructors
-    void setArmRotation(float armRotation) { m_armRotation = armRotation; };
+    void setArmRotation(double armRotation) { m_armRotation = armRotation; };
 
     void drawTorso() const;
     void drawHead() const;
@@ -24,7 +24,7 @@ public:
     void drawLeg() const;
 
     // accessors
-    float getArmRotation() { return m_armRotation; }
+    double getArmRotation() { return m_armRotation; }
 
     // modifiers
     void updateAnimation(double t, double dt);
@@ -35,5 +35,5 @@ public:
 
 private:
     FirnensAkkkin m_akkin;
-    float m_armRotation = 0.0f;
+    double m_armRotation = 0.0f;
 };

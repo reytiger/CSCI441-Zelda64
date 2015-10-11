@@ -6,17 +6,17 @@ Point::Point() {
     z = 0;
 }
 
-Point::Point(float x, float y, float z) {
+Point::Point(double x, double y, double z) {
     this->x = x;
     this->y = y;
     this->z = z;
 }
 
-Point operator*(Point p, float f) {
+Point operator*(Point p, double f) {
     return Point(p.getX() * f, p.getY() * f, p.getZ() * f);
 }
 
-Point operator*(float f, Point p) {
+Point operator*(double f, Point p) {
     return Point(f * p.getX(), f * p.getY(), f * p.getZ());
 }
 

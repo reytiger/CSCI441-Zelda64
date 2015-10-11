@@ -18,19 +18,19 @@ public:
     void drawAkkkin();
     virtual void draw() const;
 
-    void setWingRot(float wingAngle) { m_wingAngle = wingAngle; };
-    void setAngle(float angle) { m_angle = angle; };
+    void setWingRot(double wingAngle) { m_wingAngle = wingAngle; };
+    void setAngle(double angle) { m_angle = angle; };
     void setControlCage(bool value) { this->m_controlCage = value; };
     void setBezierCurve(bool value) { this->m_bezierCurve = value; };
-    void setTPos(float tPos) { m_tPos = tPos; };
+    void setTPos(double tPos) { m_tPos = tPos; };
 
     void increaseTPos(double dt);
 
     ////////////////////////////////////////////////////////////////////////////
     // accessors
-    float getTPos() { return m_tPos; }
-    float getWingRot() { return m_wingAngle; }
-    float getAngle() { return m_angle; }
+    double getTPos() { return m_tPos; }
+    double getWingRot() { return m_wingAngle; }
+    double getAngle() { return m_angle; }
 
     bool getControlCage() { return m_controlCage; }
     bool getBezierCurve() { return m_bezierCurve; }
@@ -41,14 +41,14 @@ public:
     bool loadControlPoints(string filename);
 
 private:
-    bool m_controlCage           = true;
-    bool m_bezierCurve           = true;
-    int m_currentCurve           = 0;
-    int m_numberOfCurves         = 0;
-    float m_wingAngle            = 0.0f;
-    float m_tPos                 = 0.0f;
-    float m_angle                = 0.0f;
-    float m_targetAngleAkkkinDir = 0.0f;
+    bool m_controlCage            = true;
+    bool m_bezierCurve            = true;
+    int m_currentCurve            = 0;
+    int m_numberOfCurves          = 0;
+    double m_wingAngle            = 0.0;
+    double m_tPos                 = 0.0;
+    double m_angle                = 0.0;
+    double m_targetAngleAkkkinDir = 0.0;
 
     // set up for control points
     string m_akkkinCPointsFile;
@@ -68,5 +68,5 @@ private:
     void renderBezierCurve(Point p0, Point p1, Point p2, Point p3,
                            int resolution) const;
     Point evaluateBezierCurve(Point p0, Point p1, Point p2, Point p3,
-                              float t) const;
+                              double t) const;
 };

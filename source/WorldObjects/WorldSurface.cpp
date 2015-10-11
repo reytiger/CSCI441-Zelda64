@@ -84,7 +84,7 @@ bool WorldSurface::loadControlPoints(string filename) {
 
     // get the number of points to build
     getline(file, str);
-    numOfPoints      = atoi(str.c_str());
+    numOfPoints = atoi(str.c_str());
     m_numberOfCurves = numOfPoints / 4;
 
     // go through each line. The cotrol file ahs the structure xn, yn, zn

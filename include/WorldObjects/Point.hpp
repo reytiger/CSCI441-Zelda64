@@ -10,26 +10,26 @@ public:
 
     // consturctor
     Point();
-    Point(float x, float y, float z);
+    Point(double x, double y, double z);
 
-    void setX(float x) { this->x = x; };
-    void setY(float y) { this->y = y; };
-    void setZ(float z) { this->z = z; };
-    void setXYZ(float x, float y, float z) {
+    void setX(double x) { this->x = x; };
+    void setY(double y) { this->y = y; };
+    void setZ(double z) { this->z = z; };
+    void setXYZ(double x, double y, double z) {
         this->x = x;
         this->y = y;
         this->z = z;
     };
 
     // accessor
-    float getX() const { return this->x; }
-    float getY() const { return this->y; }
-    float getZ() const { return this->z; }
+    double getX() const { return this->x; }
+    double getY() const { return this->y; }
+    double getZ() const { return this->z; }
 
 private:
-    float x, y, z;
+    double x, y, z;
 };
 
-Point operator*(Point p, float f);
-Point operator*(float f, Point p);
+Point operator*(Point p, double f);
+Point operator*(double f, Point p);
 Point operator+(Point a, Point b);

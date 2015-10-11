@@ -26,7 +26,7 @@ void FirnensAkkkin::updateAnimation(double t, double dt) {
         if (getRandf() > 0.5f)
             m_targetAngleAkkkinDir *= -1;
     }
-    float stepSize = 0.25;
+    double stepSize = 0.25;
     if (m_targetAngleAkkkinDir < getAngle()) {
         stepSize *= -1;
     } else if (m_targetAngleAkkkinDir == getAngle()) {
@@ -49,12 +49,12 @@ void FirnensAkkkin::draw() const {
         glPushMatrix();
         {
             // check which curver we are on and where on that curve
-            Point p0      = m_controlPoints.at(m_currentCurve * 3);
-            Point p1      = m_controlPoints.at((m_currentCurve * 3) + 1);
-            Point p2      = m_controlPoints.at((m_currentCurve * 3) + 2);
-            Point p3      = m_controlPoints.at((m_currentCurve * 3) + 3);
+            Point p0 = m_controlPoints.at(m_currentCurve * 3);
+            Point p1 = m_controlPoints.at((m_currentCurve * 3) + 1);
+            Point p2 = m_controlPoints.at((m_currentCurve * 3) + 2);
+            Point p3 = m_controlPoints.at((m_currentCurve * 3) + 3);
             Point nextPos = evaluateBezierCurve(p0, p1, p2, p3, m_tPos);
-            glTranslatef(nextPos.getX(), nextPos.getY(), nextPos.getZ());
+            glTranslated(nextPos.getX(), nextPos.getY(), nextPos.getZ());
 
             glRotated(m_angle, 1, 0, 0);
 
@@ -67,7 +67,7 @@ void FirnensAkkkin::draw() const {
 
 void FirnensAkkkin::drawBody() const {
     pushMatrixAnd([=]() {
-        float scaleDown = 0.2f;
+        double scaleDown = 0.2f;
         glColor3d(200 / 255.0, 10 / 255.0, 10 / 255.0);
 
         glScaled(scaleDown, scaleDown, scaleDown);
@@ -76,7 +76,7 @@ void FirnensAkkkin::drawBody() const {
         // right wing
         glPushMatrix();
         {
-            glTranslatef(0.5, 0, 0.5);
+            glTranslated(0.5, 0, 0.5);
             glRotated(90, 1, 0, 0);
             glRotated(m_wingAngle * 30, 1, 0, 0);
             drawWing();
@@ -86,7 +86,7 @@ void FirnensAkkkin::drawBody() const {
         glPushMatrix();
         {
             glScaled(1, -1, 1);
-            glTranslatef(0.5, 0, 0.5);
+            glTranslated(0.5, 0, 0.5);
             glRotated(90, 1, 0, 0);
             glRotated(m_wingAngle * 30, 1, 0, 0);
             drawWing();
@@ -106,7 +106,7 @@ void FirnensAkkkin::drawWing() const {
         gluCylinder(quadratic, 0.1, 0.1, 2, 10, 2); // bot
 
         glRotated(15, 1, 0, 0);
-        glTranslatef(0, 0.5, 1.75);
+        glTranslated(0, 0.5, 1.75);
         gluCylinder(quadratic, 0.1, 0.1, 2, 10, 2); // middle
         // Draw fingers
         glPushMatrix();
@@ -122,7 +122,7 @@ void FirnensAkkkin::drawWing() const {
         glPopMatrix();
 
         glRotated(15, 1, 0, 0);
-        glTranslatef(0, 0.5, 1.75);
+        glTranslated(0, 0.5, 1.75);
         // Draw fingers
         glPushMatrix();
         {
@@ -154,19 +154,19 @@ bool FirnensAkkkin::loadControlPoints(string filename) {
 
     // get the number of points to build
     getline(file, str);
-    numOfPoints      = atoi(str.c_str());
+    numOfPoints = atoi(str.c_str());
     m_numberOfCurves = numOfPoints / 3;
 
     // go through each line. The cotrol file ahs the structure xn, yn, zn
     for (int i = 0; i < numOfPoints; ++i) {
         getline(file, str, ',');
-        float x = static_cast<float>(atoi(str.c_str()));
+        double x = static_cast<double>(atoi(str.c_str()));
 
         getline(file, str, ',');
-        float y = static_cast<float>(atoi(str.c_str()));
+        double y = static_cast<double>(atoi(str.c_str()));
 
         getline(file, str, '\n');
-        float z = static_cast<float>(atoi(str.c_str()));
+        double z = static_cast<double>(atoi(str.c_str()));
 
         Point createPoint(x, y, z);
         m_controlPoints.push_back(createPoint);
@@ -189,12 +189,12 @@ void FirnensAkkkin::drawCage() const {
 
 void FirnensAkkkin::drawControlPoints() const {
     // Draw our control points
-    float scaleDown = 0.1f;
+    double scaleDown = 0.1f;
     for (int i = 0; i < (signed)m_controlPoints.size(); ++i) {
         glPushMatrix();
         {
             glColor3d(10 / 255.0, 200 / 255.0, 10 / 255.0);
-            glTranslatef(m_controlPoints.at(i).getX(),
+            glTranslated(m_controlPoints.at(i).getX(),
                          m_controlPoints.at(i).getY(),
                          m_controlPoints.at(i).getZ());
             glScaled(scaleDown, scaleDown, scaleDown);
@@ -214,11 +214,11 @@ void FirnensAkkkin::drawCageLines() const {
             glDisable(GL_LIGHTING);
             glBegin(GL_LINES);
             {
-                glVertex3f(m_controlPoints.at(i).getX(),
+                glVertex3d(m_controlPoints.at(i).getX(),
                            m_controlPoints.at(i).getY(),
                            m_controlPoints.at(i).getZ());
 
-                glVertex3f(m_controlPoints.at(i + 1).getX(),
+                glVertex3d(m_controlPoints.at(i + 1).getX(),
                            m_controlPoints.at(i + 1).getY(),
                            m_controlPoints.at(i + 1).getZ());
             };
@@ -257,7 +257,7 @@ void FirnensAkkkin::renderBezierCurve(Point p0, Point p1, Point p2, Point p3,
         glLineWidth(3.5f);
         glBegin(GL_LINES);
         {
-            float t       = 0;  // should go from 0 - 1
+            double t      = 0;  // should go from 0 - 1
             Point current = p0; // get the start location
 
             // draw the individ lines
@@ -265,12 +265,12 @@ void FirnensAkkkin::renderBezierCurve(Point p0, Point p1, Point p2, Point p3,
                 Point next = evaluateBezierCurve(p0, p1, p2, p3, t);
 
                 // draw stuff!!!!!
-                glVertex3f(current.getX(), current.getY(), current.getZ());
-                glVertex3f(next.getX(), next.getY(), next.getZ());
+                glVertex3d(current.getX(), current.getY(), current.getZ());
+                glVertex3d(next.getX(), next.getY(), next.getZ());
 
                 current = next;
                 // increment the step size, the (-1) gets us to step from 0 - 1
-                t += 1 / ((float)resolution - 1);
+                t += 1 / ((double)resolution - 1);
             }
         };
         glEnd();
@@ -282,14 +282,14 @@ void FirnensAkkkin::renderBezierCurve(Point p0, Point p1, Point p2, Point p3,
 ////////////////////////////////////////////////////////////////////////////////
 // Computes a location along a Bezier Curve.
 Point FirnensAkkkin::evaluateBezierCurve(Point p0, Point p1, Point p2, Point p3,
-                                         float t) const {
+                                         double t) const {
     // equation used from:
     //   https://en.wikipedia.org/wiki/B%C3%A9zier_curve
     // navigate to the Cubic Bézier curves
-    Point target
-        = (((float)pow((1 - t), 3) * p0) + (3 * (float)pow((1 - t), 2) * t * p1)
-           + (3 * (float)(1 - t) * pow(t, 2) * p2)
-           + (pow(t, 3) * p3));
+    Point target = (((double)pow((1 - t), 3) * p0)
+                    + (3 * (double)pow((1 - t), 2) * t * p1)
+                    + (3 * (double)(1 - t) * pow(t, 2) * p2)
+                    + (pow(t, 3) * p3));
 
     return target;
 }

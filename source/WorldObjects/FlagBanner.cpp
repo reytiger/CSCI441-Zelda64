@@ -9,10 +9,10 @@ using namespace std;
 /*************************  DRAW FLAG BANNER  *********************************/
 void FlagBanner::draw() const {
     pushMatrixAnd([&]() {
-        glTranslatef(0, 0, 5);
+        glTranslated(0, 0, 5);
         glScalef(0.25, 0.25, 0.25);
         drawPole();
-        glTranslatef(0, 4, 0);
+        glTranslated(0, 4, 0);
         drawFlag();
     });
 }
@@ -26,7 +26,7 @@ void FlagBanner::drawFlag() const {
         double heightFlag = 5;
         glDisable(GL_CULL_FACE);
         // glDisable(GL_LIGHTING);
-        glColor3f(210 / 255.0,
+        glColor3d(210 / 255.0,
                   40 / 255.0,
                   45 / 255.0); // nice dark brown for the base
         glBegin(GL_TRIANGLES);
@@ -35,13 +35,13 @@ void FlagBanner::drawFlag() const {
                 Vec drawing = m_WindsCurve.eval_t(i);
                 Vec next    = m_WindsCurve.eval_t(i + stepSize);
                 // first triangle
-                glVertex3f(drawing.x, drawing.y, drawing.z);
-                glVertex3f(drawing.x, drawing.y + heightFlag, drawing.z);
-                glVertex3f(next.x, next.y, next.z);
+                glVertex3d(drawing.x, drawing.y, drawing.z);
+                glVertex3d(drawing.x, drawing.y + heightFlag, drawing.z);
+                glVertex3d(next.x, next.y, next.z);
                 // second trianlge
-                glVertex3f(drawing.x, drawing.y + heightFlag, drawing.z);
-                glVertex3f(next.x, next.y, next.z);
-                glVertex3f(next.x, next.y + heightFlag, next.z);
+                glVertex3d(drawing.x, drawing.y + heightFlag, drawing.z);
+                glVertex3d(next.x, next.y, next.z);
+                glVertex3d(next.x, next.y + heightFlag, next.z);
             }
         };
         glEnd();
@@ -54,7 +54,7 @@ void FlagBanner::drawPole() const {
     pushMatrixAnd([&]() {
         // base of pole
         Vec target = m_WindsCurve.getVec().at(0);
-        glTranslatef(target.x, 0, target.z);
+        glTranslated(target.x, 0, target.z);
         // turn so its faccing up
         glRotatef(-90, 1, 0, 0);
         glColor3d(153 / 255.0,
@@ -65,7 +65,7 @@ void FlagBanner::drawPole() const {
         gluCylinder(quadratic, 1, 0.8, m_height, 20, 2);
 
         // top of pole
-        glTranslatef(0, 0, m_height); // WAT?? should be y..... hmm.
+        glTranslated(0.0, 0.0, m_height); // WAT?? should be y..... hmm.
         glColor3d(
             153 / 255.0, 153 / 255.0, 0 / 255.0); // nice green for the top
         glutSolidCone(1, 2, 20, 2);
