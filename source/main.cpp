@@ -2,11 +2,11 @@
 
 #include "WorldObjects.hpp"
 
-Incallidus inc;
-Firnen firnen;
-FirnensCart firnenCart;
-DragonBorn dragonBorn;
+// Incallidus inc;
+// Firnen firnen;
+// DragonBorn dragonBorn;
 // BezierCurve halo;
+FirnensCart firnenCart;
 Track track;
 CallListObject roomFloor;
 WorldSurface worldSurface;
@@ -21,8 +21,13 @@ enum MenuOpt {
     SwitchToArcBallCam,
     SwitchToFirstCam,
 
+    SwitchToIncallidus,
+    SwitchToFirnen,
+    SwitchToDragonBorn,
+
     Quit,
 };
+
 
 // This function is expected by PrettyGLUT, because I designed it to get
 // done fast, not smart. We can change this later, but this makes sure it
@@ -30,13 +35,13 @@ enum MenuOpt {
 // It takes in t and dt, the time and time since the last updateScene was
 // called.
 void updateScene(double t, double dt) {
-    for (WorldObject *wo : PrettyGLUT::drawn) {
+    for (WorldObject *wo : drawn) {
         wo->update(t, dt);
     }
 
     // Even though they're rendered, the cameras are NOT in the drawn list, so
     // we have to update them manually, if we want them updated at all.
-    PrettyGLUT::activeCam->update(t, dt);
+    activeCam->update(t, dt);
 }
 
 void initScene() {
@@ -52,31 +57,31 @@ void initScene() {
     glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
 
     // Cameras are important. Note, they are hard-coded in the render loop.
-    // Do NOT add a camera to the  PrettyGLUT::drawn, or it'll draw (and update)
+    // Do NOT add a camera to the  drawn, or it'll draw (and update)
     // twice.
 
     // First Person!
-    PrettyGLUT::firstPerson.follow(&dragonBorn);
-    // PrettyGLUT::firstPerson.followLook(&dragonBorn);
-    PrettyGLUT::firstPerson.setUpdateFunc([=](double t, double dt) {
-        PrettyGLUT::firstPerson.lookAt(dragonBorn.looking());
+    // FirstPerson has to be picture-in-picture viewport.
+    firstPerson.follow(activeHero);
+    firstPerson.setUpdateFunc([=](double /*t*/, double /*dt*/) {
+        firstPerson.lookAt(dragonBorn.looking());
     });
-    PrettyGLUT::firstPerson.setColor(randColor());
+    firstPerson.setColor(randColor());
 
-    // Setup controls for PrettyGLUT::freecam.
-    PrettyGLUT::freecam.addWASDControls(100.0, PrettyGLUT::keyPressed);
-    PrettyGLUT::freecam.moveToY(1.0);
-    PrettyGLUT::freecam.setColor(randColor());
+    // Setup controls for freecam.
+    freecam.addWASDControls(100.0, keyPressed);
+    freecam.moveToY(1.0);
+    freecam.setColor(randColor());
 
     // Cam2 is much faster.
-    PrettyGLUT::fastfreecam.addWASDControls(200.0, PrettyGLUT::keyPressed);
-    PrettyGLUT::fastfreecam.moveToY(1.0);
-    PrettyGLUT::fastfreecam.setColor(randColor());
+    fastfreecam.addWASDControls(200.0, keyPressed);
+    fastfreecam.moveToY(1.0);
+    fastfreecam.setColor(randColor());
 
     // Arcballs for DAYZ.
-    PrettyGLUT::arcballcam.setColor(randColor());
-    PrettyGLUT::arcballcam.setRadius(5);
-    PrettyGLUT::arcballcam.follow(&dragonBorn);
+    arcballcam.setColor(randColor());
+    arcballcam.setRadius(5);
+    arcballcam.follow(activeHero);
 
     // Load up Incallidus!
     drawn.push_back(&inc);
@@ -87,38 +92,44 @@ void initScene() {
     });
 
     // Load up Firnen!
-    PrettyGLUT::drawn.push_back(&firnen);
+    drawn.push_back(&firnen);
+    // TODO: move cart to firnen class
+    // drawn.push_back(&firnenCart);
     firnen.load();
-    firnen.setUpdateFunc([=](double t, double dt) {});
-    PrettyGLUT::drawn.push_back(&firnenCart);
+    firnen.setUpdateFunc([=](double t, double /*dt*/) {
+        auto arc = 10.0 * t;
+        firnen.moveTo(track.eval_arc(arc));
+        firnen.lookAt(track.eval_deriv_arc(arc));
+    });
 
     // Load up our DragonBorn!
-    // TODO: he should be moving basied off arc length.
-    PrettyGLUT::drawn.push_back(&dragonBorn);
-    dragonBorn.setUpdateFunc([=](double t, double dt) {
-        dragonBorn.moveTo(track.eval(0.01 * t));
-        // dragonBorn.update(t, dt);
+    drawn.push_back(&dragonBorn);
+    dragonBorn.setUpdateFunc([=](double t, double /*dt*/) {
+        auto param = 0.03 * t;
+        dragonBorn.moveTo(track.eval_t(param));
+        dragonBorn.lookAt(track.eval_deriv_t(param));
     });
 
     // Bezier surface!
-    PrettyGLUT::drawn.push_back(&worldSurface);
-    glChk();
+    // TODO: draw surface as a callback
+    drawn.push_back(&worldSurface);
+    worldSurface.moveToY(1.0);
     worldSurface.loadControlPoints("assets/world/WorldSurfaceCPoints.csv");
     glChk();
 
     // Objects on the world surface.
-    PrettyGLUT::drawn.push_back(&flagBanner);
+    drawn.push_back(&flagBanner);
     flagBanner.init();
     flagBanner.setUpdateFunc(
         [=](double t, double dt) { flagBanner.updateAnimation(t, dt); });
 
     // Track for our heros to race on!
-    PrettyGLUT::drawn.push_back(&track);
+    drawn.push_back(&track);
     track.init();
     // track.moveTo(Vec(30.0, 30.0, 30.0));
     // track.loadFile("./assets/world/bezier-track.csv");
 
-    PrettyGLUT::drawn.push_back(&roomFloor);
+    // drawn.push_back(&roomFloor);
     roomFloor = CallListObject([](GLuint dl) {
         glNewList(dl, GL_COMPILE);
         auto citySize = Vec(100, 100);
@@ -161,35 +172,59 @@ void handleMainMenu(int val) {
     switch (static_cast<MenuOpt>(val)) {
     case MenuOpt::Quit:
         exit(0);
+
+    default:
+        info("Unhandled menu case: %d", val);
     }
 }
 
 void handleCamerasMenu(int val) {
     switch (static_cast<MenuOpt>(val)) {
     case MenuOpt::SwitchToFreeCam:
-        PrettyGLUT::activeCam = &PrettyGLUT::freecam;
+        switch_cam(freecam);
         break;
-
     case MenuOpt::SwitchToFastFreeCam:
-        PrettyGLUT::activeCam = &PrettyGLUT::fastfreecam;
+        switch_cam(fastfreecam);
         break;
-
     case MenuOpt::SwitchToArcBallCam:
-        PrettyGLUT::activeCam = &PrettyGLUT::arcballcam;
+        switch_cam(arcballcam);
+        break;
+    case MenuOpt::SwitchToFirstCam:
+        switch_cam(firstPerson);
         break;
 
-    case MenuOpt::SwitchToFirstCam:
-        PrettyGLUT::activeCam = &PrettyGLUT::firstPerson;
-        break;
+    default:
+        info("Unhandled menu case: %d", val);
     }
+}
+
+void handleHerossMenu(int val) {
+    switch (static_cast<MenuOpt>(val)) {
+    case MenuOpt::SwitchToIncallidus:
+        switch_hero(inc);
+        break;
+    case MenuOpt::SwitchToFirnen:
+        switch_hero(firnen);
+        break;
+    case MenuOpt::SwitchToDragonBorn:
+        switch_hero(dragonBorn);
+        break;
+
+    default:
+        info("Unhandled menu case: %d", val);
+    }
+    arcballcam.follow(activeHero);
+    firstPerson.follow(activeHero);
 }
 
 void initRightClickMenu() {
     int main    = glutCreateMenu(handleMainMenu);
     int cameras = glutCreateMenu(handleCamerasMenu);
+    int heros   = glutCreateMenu(handleHerossMenu);
 
     glutSetMenu(main);
     glutAddSubMenu("Switch Camera", cameras);
+    glutAddSubMenu("Switch Hero", heros);
     glutAddMenuEntry("Quit", MenuOpt::Quit);
 
     glutSetMenu(cameras);
@@ -199,6 +234,11 @@ void initRightClickMenu() {
     glutAddMenuEntry("First-Person Cam", MenuOpt::SwitchToFirstCam);
     glutAddMenuEntry("Free Cam", MenuOpt::SwitchToFreeCam);
 
+    glutSetMenu(heros);
+    glutAddMenuEntry("Follow Incallidus", MenuOpt::SwitchToIncallidus);
+    glutAddMenuEntry("Follow Firnen", MenuOpt::SwitchToFirnen);
+    glutAddMenuEntry("Follow Dragon Born", MenuOpt::SwitchToDragonBorn);
+
     glutSetMenu(main);
 
     glutAttachMenu(GLUT_RIGHT_BUTTON);
@@ -207,14 +247,14 @@ void initRightClickMenu() {
 int main(int argc, char **argv) {
     srand(static_cast<unsigned int>(time(nullptr)));
 
-    PrettyGLUT::initGLUT(&argc, argv);
+    initGLUT(&argc, argv);
 
     // It looks pretty.
-    PrettyGLUT::printOpenGLInformation();
+    printOpenGLInformation();
 
     initRightClickMenu();
     initScene();
 
-    PrettyGLUT::start();
+    startGuildWars();
     return 0;
 }

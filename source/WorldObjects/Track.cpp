@@ -4,13 +4,11 @@
 
 using namespace std;
 
-Vec Track::eval(double t) {
-    t           = fmod(t, 1);
-    Vec current = m_halo.eval(t);
-    // TODO: heros are jumping around.... WHY?????
-    // info("%s\n%f", current, t);
-    return current;
-}
+Vec Track::eval_arc(double arc) { return m_halo.eval_arc(arc); }
+Vec Track::eval_t(double t) { return m_halo.eval_t(t); }
+
+Vec Track::eval_deriv_arc(double arc) { return m_halo.eval_deriv_arc(arc); }
+Vec Track::eval_deriv_t(double t) { return m_halo.eval_deriv_t(t); }
 
 /*************************  DRAW WORLD SURFACE  *******************************/
 void Track::draw() const {
@@ -28,8 +26,8 @@ void Track::drawTrackBlocks() const {
         glBegin(GL_TRIANGLES);
         {
             for (double i = 0; i < 1 + stepSize; i += stepSize) {
-                Vec current = m_halo.eval(i);
-                Vec target = m_halo.eval(i + stepSize);
+                Vec current = m_halo.eval_t(i);
+                Vec target = m_halo.eval_t(i + stepSize);
                 randColor().glSet();
 
                 // glRotatef(evalAngle(i), 0, 1, 0);

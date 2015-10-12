@@ -32,8 +32,8 @@ void FlagBanner::drawFlag() const {
         glBegin(GL_TRIANGLES);
         {
             for (double i = 0; i < 1 - stepSize; i += stepSize) {
-                Vec drawing = m_WindsCurve.eval(i);
-                Vec next    = m_WindsCurve.eval(i + stepSize);
+                Vec drawing = m_WindsCurve.eval_t(i);
+                Vec next    = m_WindsCurve.eval_t(i + stepSize);
                 // first triangle
                 glVertex3f(drawing.x, drawing.y, drawing.z);
                 glVertex3f(drawing.x, drawing.y + heightFlag, drawing.z);
@@ -65,14 +65,16 @@ void FlagBanner::drawPole() const {
         gluCylinder(quadratic, 1, 0.8, m_height, 20, 2);
 
         // top of pole
-        glTranslatef(0, 0, m_height); // WAT?? should be y..... hmm.
+        // Both the top and pole need rotated, either move up with z than rotate
+        // each or rotate both and move along the z.
+        glTranslatef(0, 0, m_height);
         glColor3d(
             153 / 255.0, 153 / 255.0, 0 / 255.0); // nice green for the top
         glutSolidCone(1, 2, 20, 2);
     });
 }
 
-void FlagBanner::updateAnimation(double t, double dt) {
+void FlagBanner::updateAnimation(double t, double /*dt*/) {
     // TODO: create a more relistic movement
     std::vector<Vec> currentVec = m_WindsCurve.getVec();
     double speed                = 4;
@@ -93,23 +95,6 @@ void FlagBanner::updateAnimation(double t, double dt) {
 }
 
 /*************************  SET UP FOR CURVES  ********************************/
-////////////////////////////////////////////////////////////////////////////////
-//  Load our control points from file and store them in a global variable.
-bool FlagBanner::loadControlPoints(string filename) {
-    string str;
-    int numOfPoints = 0;
-    ifstream file(filename.c_str());
-
-    info("%s", filename);
-    assert(file && "The file didn't load. :(");
-
-    // get the number of points to build
-    getline(file, str);
-    numOfPoints = atoi(str.c_str());
-
-
-    return true;
-}
 
 void FlagBanner::init() {
     m_FlagCPointsFile = "assets/world/flagBanner.csv";
@@ -118,7 +103,7 @@ void FlagBanner::init() {
     glChk();
 }
 
-Point FlagBanner::eval(double u, double v) {
+Point FlagBanner::eval(double /*u*/, double /*v*/) {
     // firt, get the x pos.
     // std::vector<Point> tmp;
     // for (int i = 0; i < m_curvesCPoints.size(); ++i) {

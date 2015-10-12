@@ -16,6 +16,22 @@ public:
 
         pushMatrixAnd([&]() {
             glTranslated(m_pos.x, m_pos.y, m_pos.z);
+
+            // draw their name.
+            glPushMatrix();
+            {
+                std::string name = "Incallidus";
+                glDisable(GL_LIGHTING);
+                glTranslated(-(int)name.size() / 4, 3, 0);
+                glScaled(0.01, 0.01, 0.01);
+                glColor3d(0.9, 0.2, 0.15);
+                for (char c : name) {
+                    glutStrokeCharacter(GLUT_STROKE_ROMAN, c);
+                }
+                glEnable(GL_LIGHTING);
+            };
+            glPopMatrix();
+
             glRotated(180.0 / M_PI * m_heading, 0.0, 0.0, 1.0);
             glScaled(m_radius, m_radius, m_radius);
 

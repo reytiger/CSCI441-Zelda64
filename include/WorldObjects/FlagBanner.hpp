@@ -34,5 +34,4 @@ private:
     string m_FlagCPointsFile;
 
     vector<Point> m_controlPoints;
-    bool loadControlPoints(string filename);
 };

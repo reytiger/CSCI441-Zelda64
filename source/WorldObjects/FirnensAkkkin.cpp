@@ -150,8 +150,7 @@ bool FirnensAkkkin::loadControlPoints(string filename) {
     int numOfPoints = 0;
     ifstream file(filename.c_str());
 
-    info("Trying to load '%s'", filename);
-    assert(file && "The file didn't load. :(");
+    glChk();
 
     // get the number of points to build
     getline(file, str);

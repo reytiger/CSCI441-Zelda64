@@ -2,18 +2,25 @@
 
 #include "Cameras.hpp"
 
-#define switch_cam(cam)                                                        \
-    do {                                                                       \
-        activeCam = &cam;                                                      \
-        info("Switching camera to %s\n", #cam);                                \
-    } while (0)
-
-// We need to know about this. but it's entirely game logic so it's defined in
+// We need to know about this. but it's entirely game logic so it's defined
+// in
 // main.cpp.
 void updateScene(double t, double dt);
 
+// Cameras
+ArcBallCamera arcballcam;
+FreeCamera freecam;
+FreeCamera fastfreecam;
+FreeCamera firstPerson;
+
+// Heros
+Incallidus inc;
+Firnen firnen;
+DragonBorn dragonBorn;
+
 // World objects
-namespace PrettyGLUT {
+Camera *activeCam       = &freecam;
+WorldObject *activeHero = &inc;
 
 double live_fps = 0.0;
 
@@ -32,13 +39,23 @@ bool keyPressed[256]  = {};
 // Things to draw
 std::vector<WorldObject *> drawn = std::vector<WorldObject *>();
 
-// Cameras
-ArcBallCamera arcballcam;
-FreeCamera freecam;
-FreeCamera fastfreecam;
-FreeCamera firstPerson;
+// TODO: Make this stroke.
+void drawText(const std::string &text, Vec pos, Color color) {
+    color.glSet();
+    glRasterPos3d(pos.x, pos.y + 4.0, pos.z);
+    pushMatrixAnd([&]() {
+        for (size_t i = 0; i < text.size(); i += 1) {
+            glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, text[i]);
+        }
+    });
+}
 
-Camera *activeCam = &freecam;
+// TODO: Fix this.
+void drawFPS() {
+    auto white = Color(1.0, 1.0, 1.0);
+    auto pos = activeCam->pos() + activeCam->lookAt();
+    drawText(tfm::format("%0.0f", live_fps), pos, white);
+}
 
 void render() {
     // clear the render buffer
@@ -50,6 +67,8 @@ void render() {
     glLoadIdentity();
 
     activeCam->adjustGLU();
+
+    drawFPS();
 
     for (WorldObject *wo : drawn) {
         glChk();
@@ -245,10 +264,8 @@ void initGLUT(int *argcp, char **argv) {
     glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
 }
 
-void start() {
+void startGuildWars() {
     doFrame(0);
 
     glutMainLoop();
 }
-
-}; // namespace PrettyGLUT
