@@ -30,6 +30,8 @@ public:
         });
     }
 
+    void addWASDControls(double speedPerSec, bool *pressed);
+
 private:
     void drawFrontNose() const {
         pushMatrixAnd([&]() {

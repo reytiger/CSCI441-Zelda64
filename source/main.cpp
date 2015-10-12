@@ -79,11 +79,12 @@ void initScene() {
     PrettyGLUT::arcballcam.follow(&dragonBorn);
 
     // Load up Incallidus!
-    PrettyGLUT::drawn.push_back(&inc);
-    inc.setRadius(0.5);
-    // TODO: Update to the track
-    // inc.setUpdateFunc(
-    //     [=](double t, double) { inc.moveTo(track.eval(0.05 * t)); });
+    drawn.push_back(&inc);
+    inc.addWASDControls(20.0, keyPressed);
+    inc.setRadius(0.2);
+    inc.setUpdateFunc([=](double /*t*/, double /*dt*/) {
+        inc.moveTo(worldSurface.eval(2, -2) + worldSurface.pos());
+    });
 
     // Load up Firnen!
     PrettyGLUT::drawn.push_back(&firnen);
