@@ -85,9 +85,9 @@ void initScene() {
 
     // Load up Incallidus!
     drawn.push_back(&inc);
-    inc.setRadius(0.5);
+    inc.setRadius(0.2);
     inc.setUpdateFunc([=](double /*t*/, double /*dt*/) {
-        inc.moveTo(worldSurface.eval(2, -2));
+        inc.moveTo(worldSurface.eval(2, -2) + worldSurface.pos());
     });
 
     // Load up Firnen!
@@ -102,7 +102,6 @@ void initScene() {
     });
 
     // Load up our DragonBorn!
-    // TODO: he should be moving basied off arc length.
     drawn.push_back(&dragonBorn);
     dragonBorn.setUpdateFunc([=](double t, double /*dt*/) {
         auto param = 0.03 * t;
@@ -111,6 +110,7 @@ void initScene() {
     });
 
     // Bezier surface!
+    // TODO: draw surface as a callback
     drawn.push_back(&worldSurface);
     worldSurface.moveToY(1.0);
     worldSurface.loadControlPoints("assets/world/WorldSurfaceCPoints.csv");

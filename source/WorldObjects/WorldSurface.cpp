@@ -9,7 +9,8 @@ using namespace std;
 void WorldSurface::draw() const {
     pushMatrixAnd([&]() { drawControlPoints(); });
     pushMatrixAnd([&]() {
-        Vec test = eval(-1, -1.8) + pos();
+        // TODO: the first point on a curve seems to return the last point...
+        Vec test = eval(3, -2) + pos();
         glPushMatrix();
         {
             glColor3d(200 / 255.0, 10 / 255.0, 10 / 255.0);
@@ -18,6 +19,18 @@ void WorldSurface::draw() const {
             glutSolidSphere(1, 10, 10);
         };
         glPopMatrix();
+
+        test = eval(2, -2) + pos();
+        glPushMatrix();
+        {
+            glColor3d(200 / 255.0, 10 / 255.0, 10 / 255.0);
+            glTranslated(test.x, test.y, test.z);
+            glScaled(0.2, 0.2, 0.2);
+            glutSolidSphere(1, 10, 10);
+        };
+        glPopMatrix();
+
+
 
     });
     pushMatrixAnd([&]() { drawGround(); });
@@ -42,19 +55,51 @@ void WorldSurface::drawControlPoints() const {
 
 void WorldSurface::drawGround() const {
     // TODO: it works right now, assums a square world. change so it's dynamic
+    // Each curve has a Xmax/min and Zmax/min. So, the dt will build points
+    // baised on these values. We could have curves that have different values
+    // so each curve should have different logic.
     pushMatrixAnd([&]() {
-        double dt = 0.25;
+        double dt = 0.5;
         for (double x = m_curvesCPoints.at(0).getXmin();
-             x <= m_curvesCPoints.at(0).getXmax();
+             x <= m_curvesCPoints.at(0).getXmax() - 2 * dt;
              x += dt) {
-            for (double z = m_zMin; z <= m_zMax; z += dt) {
-                Vec location = eval(x, z) + pos();
+            for (double z = m_zMin; z <= m_zMax - 2 * dt; z += dt) {
+                Vec location     = eval(x, z) + pos();
+                Vec nextLocation = eval(x + dt, z + dt) + pos();
+                // glPushMatrix();
+                // {
+                //     glColor3d(200 / 255.0, 200 / 255.0, 200 / 255.0);
+                //     glTranslated(location.x, location.y, location.z);
+                //     glScaled(0.06, 0.06, 0.06);
+                //     glutSolidSphere(1, 10, 10);
+                // };
                 glPushMatrix();
                 {
-                    glColor3d(200 / 255.0, 200 / 255.0, 200 / 255.0);
-                    glTranslated(location.x, location.y, location.z);
-                    glScaled(0.06, 0.06, 0.06);
-                    glutSolidSphere(1, 10, 10);
+                    glDisable(GL_CULL_FACE);
+                    glBegin(GL_TRIANGLES);
+                    {
+                        // first triangle
+                        glColor3d(100 / 255.0, 120 / 255.0, 120 / 255.0);
+                        glVertex3f(location.x, location.y, location.z);
+                        glColor3d(10 / 255.0, 200 / 255.0, 10 / 255.0);
+                        glVertex3f(nextLocation.x,
+                                   eval(x + dt, z).y + pos().y,
+                                   location.z);
+                        glColor3d(10 / 255.0, 10 / 255.0, 150 / 255.0);
+                        glVertex3f(
+                            nextLocation.x, nextLocation.y, nextLocation.z);
+
+                        // second triangle
+                        glColor3d(100 / 255.0, 120 / 255.0, 120 / 255.0);
+                        glVertex3f(location.x, location.y, location.z);
+                        glVertex3f(
+                            nextLocation.x, nextLocation.y, nextLocation.z);
+                        glVertex3f(location.x,
+                                   eval(x, z + dt).y + pos().y,
+                                   nextLocation.z);
+                    };
+                    glEnd();
+                    glEnable(GL_CULL_FACE);
                 };
                 glPopMatrix();
             }
@@ -131,6 +176,14 @@ Vec WorldSurface::eval(double x, double z) const {
                     / (currentCurve.getXmax() - currentCurve.getXmin());
 
         tmp.push_back(m_curvesCPoints.at(i).eval_t(_x));
+        if (i == 0) {
+            // Vec tmp = eval_t(_x);
+            // info("%s", m_curvesCPoints.at(i).eval_t(_x));
+            // info("%s  %s", x, _x);
+            // tmp.push_back(m_curvesCPoints.at(i).eval_t(0));
+
+        } else {
+        }
     }
 
     // now get the z position.
