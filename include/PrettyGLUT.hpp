@@ -6,6 +6,19 @@
 
 #include <vector>
 
+#define switch_cam(cam)                                                        \
+    do {                                                                       \
+        activeCam = &cam;                                                      \
+        info("Switching camera to %s\n", #cam);                                \
+    } while (0)
+
+#define switch_hero(hero)                                                      \
+    do {                                                                       \
+        activeHero = &hero;                                                    \
+        info("Following %s\n", #hero);                                         \
+    } while (0)
+
+
 // Things to draw
 // Pointers stored here can expect to live the duration of the program.
 extern std::vector<WorldObject *> drawn;
@@ -16,7 +29,13 @@ extern FreeCamera firstPerson;
 extern FreeCamera freecam;
 extern FreeCamera fastfreecam; // TODO: Make this a first person.
 
+// Heros
+extern Incallidus inc;
+extern Firnen firnen;
+extern DragonBorn dragonBorn;
+
 extern Camera *activeCam;
+extern WorldObject *activeHero;
 
 extern double live_fps;
 

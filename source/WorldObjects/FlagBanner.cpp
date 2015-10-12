@@ -65,7 +65,9 @@ void FlagBanner::drawPole() const {
         gluCylinder(quadratic, 1, 0.8, m_height, 20, 2);
 
         // top of pole
-        glTranslated(0.0, 0.0, m_height); // WAT?? should be y..... hmm.
+        // Both the top and pole need rotated, either move up with z than rotate
+        // each or rotate both and move along the z.
+        glTranslated(0.0, 0.0, m_height);
         glColor3d(
             153 / 255.0, 153 / 255.0, 0 / 255.0); // nice green for the top
         glutSolidCone(1, 2, 20, 2);

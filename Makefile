@@ -1,5 +1,5 @@
 FLAGS := -std=c++11 -g -O2 -fmax-errors=5
-Wwarnings := -Wall -Wextra
+Wwarnings := -Wall -Wextra 
 Wno-warnings := -Wno-char-subscripts
 # Any directory in 'include' is fair game.
 INCPATH := -Iinclude

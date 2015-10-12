@@ -2,11 +2,11 @@
 
 #include "WorldObjects.hpp"
 
-Incallidus inc;
-Firnen firnen;
-FirnensCart firnenCart;
-DragonBorn dragonBorn;
+// Incallidus inc;
+// Firnen firnen;
+// DragonBorn dragonBorn;
 // BezierCurve halo;
+FirnensCart firnenCart;
 Track track;
 CallListObject roomFloor;
 WorldSurface worldSurface;
@@ -21,8 +21,13 @@ enum MenuOpt {
     SwitchToArcBallCam,
     SwitchToFirstCam,
 
+    SwitchToIncallidus,
+    SwitchToFirnen,
+    SwitchToDragonBorn,
+
     Quit,
 };
+
 
 // This function is expected by PrettyGLUT, because I designed it to get
 // done fast, not smart. We can change this later, but this makes sure it
@@ -56,8 +61,8 @@ void initScene() {
     // twice.
 
     // First Person!
-    firstPerson.follow(&dragonBorn);
-    // firstPerson.followLook(&dragonBorn);
+    // FirstPerson has to be picture-in-picture viewport.
+    firstPerson.follow(activeHero);
     firstPerson.setUpdateFunc([=](double /*t*/, double /*dt*/) {
         firstPerson.lookAt(dragonBorn.looking());
     });
@@ -76,13 +81,13 @@ void initScene() {
     // Arcballs for DAYZ.
     arcballcam.setColor(randColor());
     arcballcam.setRadius(5);
-    arcballcam.follow(&dragonBorn);
+    arcballcam.follow(activeHero);
 
     // Load up Incallidus!
     drawn.push_back(&inc);
-    inc.setRadius(0.5);
+    inc.setRadius(0.2);
     inc.setUpdateFunc([=](double /*t*/, double /*dt*/) {
-        inc.moveTo(worldSurface.eval(2, -2));
+        inc.moveTo(worldSurface.eval(2, -2) + worldSurface.pos());
     });
 
     // Load up Firnen!
@@ -97,7 +102,6 @@ void initScene() {
     });
 
     // Load up our DragonBorn!
-    // TODO: he should be moving basied off arc length.
     drawn.push_back(&dragonBorn);
     dragonBorn.setUpdateFunc([=](double t, double /*dt*/) {
         auto param = 0.03 * t;
@@ -106,6 +110,7 @@ void initScene() {
     });
 
     // Bezier surface!
+    // TODO: draw surface as a callback
     drawn.push_back(&worldSurface);
     worldSurface.moveToY(1.0);
     worldSurface.loadControlPoints("assets/world/WorldSurfaceCPoints.csv");
@@ -123,7 +128,7 @@ void initScene() {
     // track.moveTo(Vec(30.0, 30.0, 30.0));
     // track.loadFile("./assets/world/bezier-track.csv");
 
-    drawn.push_back(&roomFloor);
+    // drawn.push_back(&roomFloor);
     roomFloor = CallListObject([](GLuint dl) {
         glNewList(dl, GL_COMPILE);
         auto citySize = Vec(100, 100);
@@ -175,19 +180,16 @@ void handleMainMenu(int val) {
 void handleCamerasMenu(int val) {
     switch (static_cast<MenuOpt>(val)) {
     case MenuOpt::SwitchToFreeCam:
-        activeCam = &freecam;
+        switch_cam(freecam);
         break;
-
     case MenuOpt::SwitchToFastFreeCam:
-        activeCam = &fastfreecam;
+        switch_cam(fastfreecam);
         break;
-
     case MenuOpt::SwitchToArcBallCam:
-        activeCam = &arcballcam;
+        switch_cam(arcballcam);
         break;
-
     case MenuOpt::SwitchToFirstCam:
-        activeCam = &firstPerson;
+        switch_cam(firstPerson);
         break;
 
     default:
@@ -195,12 +197,33 @@ void handleCamerasMenu(int val) {
     }
 }
 
+void handleHerossMenu(int val) {
+    switch (static_cast<MenuOpt>(val)) {
+    case MenuOpt::SwitchToIncallidus:
+        switch_hero(inc);
+        break;
+    case MenuOpt::SwitchToFirnen:
+        switch_hero(firnen);
+        break;
+    case MenuOpt::SwitchToDragonBorn:
+        switch_hero(dragonBorn);
+        break;
+
+    default:
+        info("Unhandled menu case: %d", val);
+    }
+    arcballcam.follow(activeHero);
+    firstPerson.follow(activeHero);
+}
+
 void initRightClickMenu() {
     int main    = glutCreateMenu(handleMainMenu);
     int cameras = glutCreateMenu(handleCamerasMenu);
+    int heros   = glutCreateMenu(handleHerossMenu);
 
     glutSetMenu(main);
     glutAddSubMenu("Switch Camera", cameras);
+    glutAddSubMenu("Switch Hero", heros);
     glutAddMenuEntry("Quit", MenuOpt::Quit);
 
     glutSetMenu(cameras);
@@ -209,6 +232,11 @@ void initRightClickMenu() {
     glutAddMenuEntry("Fast Free Cam", MenuOpt::SwitchToFastFreeCam);
     glutAddMenuEntry("First-Person Cam", MenuOpt::SwitchToFirstCam);
     glutAddMenuEntry("Free Cam", MenuOpt::SwitchToFreeCam);
+
+    glutSetMenu(heros);
+    glutAddMenuEntry("Follow Incallidus", MenuOpt::SwitchToIncallidus);
+    glutAddMenuEntry("Follow Firnen", MenuOpt::SwitchToFirnen);
+    glutAddMenuEntry("Follow Dragon Born", MenuOpt::SwitchToDragonBorn);
 
     glutSetMenu(main);
 
