@@ -49,10 +49,10 @@ void FirnensAkkkin::draw() const {
         glPushMatrix();
         {
             // check which curver we are on and where on that curve
-            Point p0 = m_controlPoints.at(m_currentCurve * 3);
-            Point p1 = m_controlPoints.at((m_currentCurve * 3) + 1);
-            Point p2 = m_controlPoints.at((m_currentCurve * 3) + 2);
-            Point p3 = m_controlPoints.at((m_currentCurve * 3) + 3);
+            Point p0      = m_controlPoints.at(m_currentCurve * 3);
+            Point p1      = m_controlPoints.at((m_currentCurve * 3) + 1);
+            Point p2      = m_controlPoints.at((m_currentCurve * 3) + 2);
+            Point p3      = m_controlPoints.at((m_currentCurve * 3) + 3);
             Point nextPos = evaluateBezierCurve(p0, p1, p2, p3, m_tPos);
             glTranslated(nextPos.getX(), nextPos.getY(), nextPos.getZ());
 
@@ -154,7 +154,7 @@ bool FirnensAkkkin::loadControlPoints(string filename) {
 
     // get the number of points to build
     getline(file, str);
-    numOfPoints = atoi(str.c_str());
+    numOfPoints      = atoi(str.c_str());
     m_numberOfCurves = numOfPoints / 3;
 
     // go through each line. The cotrol file ahs the structure xn, yn, zn

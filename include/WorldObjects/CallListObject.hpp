@@ -10,7 +10,7 @@ public:
     ~CallListObject();
     CallListObject() = default;
     CallListObject(const CallListObject &) = default;
-    CallListObject &operator               =(CallListObject &&other);
+    CallListObject &operator=(CallListObject &&other);
 
     virtual void draw() const;
 
