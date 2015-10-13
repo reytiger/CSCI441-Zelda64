@@ -12,6 +12,8 @@ CallListObject roomFloor;
 WorldSurface worldSurface;
 FlagBanner flagBanner;
 
+std::array<PointLight, 7> zippy;
+
 // Defines the menu options.
 // See handleRightClickMenu() and initRightClickMenu() for details.
 enum MenuOpt {
@@ -45,16 +47,32 @@ void updateScene(double t, double dt) {
 }
 
 void initScene() {
-    float lightCol[4]   = {1, 1, 1, 1};
-    float ambientCol[4] = {0.0, 0.0, 0.0, 1.0};
-    float lPosition[4] = {0.0, 0.0, 0.0, 1};
-    glLightfv(GL_LIGHT0, GL_POSITION, lPosition);
-    glLightfv(GL_LIGHT0, GL_DIFFUSE, lightCol);
-    glLightfv(GL_LIGHT0, GL_AMBIENT, ambientCol);
 
     // tell OpenGL not to use the material system; just use whatever we
     // pass with glColor*()
     glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+
+    for (PointLight &light : zippy) {
+        drawn.push_back(&light);
+
+        float scale       = 0.3f;
+        float lightCol[4] = {
+            scale * getRandf(), scale * getRandf(), scale * getRandf(), 1.0f};
+        float ambientCol[4] = {0.0f, 0.0f, 0.0f, 1.0f};
+
+        light.enable();
+        light.ambient(ambientCol);
+        light.diffuse(lightCol);
+
+        double a = 3.0 * getRandd() - 1.0;
+        double b = 3.0 * getRandd() - 1.0;
+        double c = 4.0 * getRandd() - 2.0;
+
+        light.setUpdateFunc([&light, a, b](double t, double /*dt*/) {
+            auto vp = VecPolar(a * t, b * t, 5.0);
+            light.moveTo(vp.cart());
+        });
+    }
 
     // Cameras are important. Note, they are hard-coded in the render loop.
     // Do NOT add a camera to the  drawn, or it'll draw (and update)
