@@ -2,10 +2,6 @@
 
 #include "WorldObjects.hpp"
 
-// Incallidus inc;
-// Firnen firnen;
-// DragonBorn dragonBorn;
-// BezierCurve halo;
 FirnensCart firnenCart;
 Track track;
 CallListObject roomFloor;
@@ -13,7 +9,6 @@ WorldSurface worldSurface;
 FlagBanner flagBanner;
 
 std::array<PointLight, 7> pointLights;
-
 Spotlight spotlight;
 
 // Defines the menu options.
@@ -53,32 +48,30 @@ void initScene() {
     // pass with glColor*()
     glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
 
-    // for (PointLight &light : pointLights) {
-    //     drawn.push_back(&light);
+    for (PointLight &light : pointLights) {
+        drawn.push_back(&light);
 
-    //     float scale       = 0.3f;
-    //     float lightCol[4] = {
-    //         scale * getRandf(), scale * getRandf(), scale * getRandf(),
-    //         1.0f};
-    //     float specCol[4] = {
-    //         scale * getRandf(), scale * getRandf(), scale * getRandf(),
-    //         1.0f};
-    //     float ambientCol[4] = {0.0f, 0.0f, 0.0f, 1.0f};
+        float scale       = 0.3f;
+        float lightCol[4] = {
+            scale * getRandf(), scale * getRandf(), scale * getRandf(), 1.0f};
+        float specCol[4] = {
+            scale * getRandf(), scale * getRandf(), scale * getRandf(), 1.0f};
+        float ambientCol[4] = {0.0f, 0.0f, 0.0f, 1.0f};
 
-    //     light.enable();
-    //     light.ambient(ambientCol);
-    //     light.diffuse(lightCol);
-    //     light.specular(specCol);
+        light.enable();
+        light.ambient(ambientCol);
+        light.diffuse(lightCol);
+        light.specular(specCol);
 
-    //     double a = 3.0 * getRandd() - 1.0;
-    //     double b = 3.0 * getRandd() - 1.0;
-    //     double c = 5.0 * getRandd() + 0.5;
+        double a = 3.0 * getRandd() - 1.0;
+        double b = 3.0 * getRandd() - 1.0;
+        double c = 15.0 * getRandd() + 0.5;
 
-    //     light.setUpdateFunc([&light, a, b, c](double t, double /*dt*/) {
-    //         auto vp = VecPolar(a * t, b * t, c);
-    //         light.moveTo(vp.cart());
-    //     });
-    // }
+        light.setUpdateFunc([&light, a, b, c](double t, double /*dt*/) {
+            auto vp = VecPolar(a * t, b * t, c);
+            light.moveTo(vp.cart());
+        });
+    }
 
     drawn.push_back(&spotlight);
     spotlight.enable();
@@ -169,44 +162,6 @@ void initScene() {
     track.init();
     // track.moveTo(Vec(30.0, 30.0, 30.0));
     // track.loadFile("./assets/world/bezier-track.csv");
-
-    // drawn.push_back(&roomFloor);
-    roomFloor = CallListObject([](GLuint dl) {
-        glNewList(dl, GL_COMPILE);
-        auto citySize = Vec(100, 100);
-        glColor3d(0.3, 0.6, 0.3);
-
-        for (int i = -10; i <= 100 + 10; i += 1) {
-            glBegin(GL_TRIANGLES);
-            for (int k = -10; k <= 100 + 10; k += 1) {
-                Vec off  = citySize / 100;
-                auto pos = Vec(i, k) * off - citySize / 2.0;
-
-                randColor().glSet();
-                glNormal3d(0.0, 1.0, 0.0);
-                glVertex3d(pos.x, 0.0, pos.y);
-
-                glNormal3d(0.0, 1.0, 0.0);
-                glVertex3d(pos.x, 0.0, pos.y - off.y);
-
-                glNormal3d(0.0, 1.0, 0.0);
-                glVertex3d(pos.x - off.x, 0.0, pos.y);
-
-                // 2nd triangle
-                glNormal3d(0.0, 1.0, 0.0);
-                glVertex3d(pos.x, 0.0, pos.y);
-
-                glNormal3d(0.0, 1.0, 0.0);
-                glVertex3d(pos.x, 0.0, pos.y + off.y);
-
-                glNormal3d(0.0, 1.0, 0.0);
-                glVertex3d(pos.x + off.x, 0.0, pos.y);
-            }
-            glEnd();
-        }
-
-        glEndList();
-    });
 }
 
 void handleMainMenu(int val) {
