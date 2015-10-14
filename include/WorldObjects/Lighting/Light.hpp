@@ -13,7 +13,7 @@ public:
 
     virtual void draw() const override;
 
-    virtual void enable();
+    virtual void enable() = 0;
 
     Color ambient() { return m_ambient; }
     Color diffuse() { return m_diffuse; }
@@ -23,7 +23,7 @@ public:
     void diffuse(const float *colorv);
     void specular(const float *colorv);
 
-private:
+protected:
     // These are the defaults OpenGL uses.
     // See:
     // https://msdn.microsoft.com/en-us/library/windows/desktop/dd373578%28v=vs.85%29.aspx
