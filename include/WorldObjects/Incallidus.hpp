@@ -46,7 +46,7 @@ public:
             drawBackNose();
 
             auto pos = m_arc.cart() * 2;
-            glTranslated(pos.x, pos.y, pos.z);
+            glTranslated(0, 1, 0);
             glColor3d(1, 1, 1);
             glutSolidSphere(0.2, 20, 20);
         });

@@ -18,28 +18,25 @@ void Incallidus::addWASDControls(double speedPerSec, bool *pressed, double dt,
         m_heading -= 0.1;
     }
     if (pressed['w']) {
-        vel += forward;
-    }
-    if (pressed['s']) {
         vel -= forward;
     }
+    if (pressed['s']) {
+        vel += forward;
+    }
+
+    vel.y = 0.0;
 
     // If no keys were pressed, vel == (0, 0) and we can't normalize.
     if (vel.norm()) {
         vel = speed * vel.normalize();
     }
 
+    m_pos      = world.eval(m_pos.x, m_pos.z);
+    Vec tarPos = world.eval(vel.x + m_pos.x, vel.z + m_pos.z);
+
+    info("%s\n%s", m_pos, tarPos);
+
+    vel = m_pos - tarPos;
+
     this->setVelocity(vel);
-    Vec target = world.eval(m_pos.x, m_pos.z);
-
-    this->moveToY(target.y);
-
-    // if (m_pos.x < 0) {
-    //     target = Vec(-m_pos.x, target.y, m_pos.z);
-
-    // }
-    // // pos
-    // else {
-    //     target = Vec(m_pos.x, target.y, m_pos.z);
-    // }
 }
