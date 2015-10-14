@@ -17,7 +17,7 @@ public:
 
     WorldObject() = default;
     WorldObject(Vec pos, Vec vel = Vec())
-        : m_update(), m_up(Vec(0.0, 1.0, 0.0)), m_pos(pos), m_vel(vel) {}
+        : m_update(), m_pos(pos), m_vel(vel) {}
 
     void move(Vec ds) { m_pos += ds; }
     void moveX(double dx) { m_pos.x += dx; }
@@ -68,7 +68,7 @@ protected:
     Vec m_old_follow_pos;
     Vec m_pos;
     Vec m_posUV;
-    Vec m_up;
+    Vec m_up = Vec(0.0, 1.0, 0.0);
     Vec m_vel;
     VecPolar m_arc;
     Color m_color;

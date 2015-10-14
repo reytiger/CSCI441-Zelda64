@@ -10,7 +10,7 @@ void WorldSurface::draw() const {
     pushMatrixAnd([&]() { drawControlPoints(); });
     pushMatrixAnd([&]() {
         // TODO: the first point on a curve seems to return the last point...
-        Vec test = eval(3, -2) + pos();
+        Vec test = eval(3, -2);
         glPushMatrix();
         {
             glColor3d(200 / 255.0, 10 / 255.0, 10 / 255.0);
@@ -20,7 +20,7 @@ void WorldSurface::draw() const {
         };
         glPopMatrix();
 
-        test = eval(2, -2) + pos();
+        test = eval(2, -2);
         glPushMatrix();
         {
             glColor3d(200 / 255.0, 10 / 255.0, 10 / 255.0);
@@ -64,8 +64,8 @@ void WorldSurface::drawGround() const {
              x <= m_curvesCPoints.at(0).getXmax() - 2 * dt;
              x += dt) {
             for (double z = m_zMin; z <= m_zMax - 2 * dt; z += dt) {
-                Vec location     = eval(x, z) + pos();
-                Vec nextLocation = eval(x + dt, z + dt) + pos();
+                Vec location     = eval(x, z);
+                Vec nextLocation = eval(x + dt, z + dt);
                 // glPushMatrix();
                 // {
                 //     glColor3d(200 / 255.0, 200 / 255.0, 200 / 255.0);
@@ -82,9 +82,8 @@ void WorldSurface::drawGround() const {
                         glColor3d(100 / 255.0, 120 / 255.0, 120 / 255.0);
                         glVertex3f(location.x, location.y, location.z);
                         glColor3d(10 / 255.0, 200 / 255.0, 10 / 255.0);
-                        glVertex3f(nextLocation.x,
-                                   eval(x + dt, z).y + pos().y,
-                                   location.z);
+                        glVertex3f(
+                            nextLocation.x, eval(x + dt, z).y, location.z);
                         glColor3d(10 / 255.0, 10 / 255.0, 150 / 255.0);
                         glVertex3f(
                             nextLocation.x, nextLocation.y, nextLocation.z);
@@ -94,9 +93,8 @@ void WorldSurface::drawGround() const {
                         glVertex3f(location.x, location.y, location.z);
                         glVertex3f(
                             nextLocation.x, nextLocation.y, nextLocation.z);
-                        glVertex3f(location.x,
-                                   eval(x, z + dt).y + pos().y,
-                                   nextLocation.z);
+                        glVertex3f(
+                            location.x, eval(x, z + dt).y, nextLocation.z);
                     };
                     glEnd();
                     glEnable(GL_CULL_FACE);
@@ -189,5 +187,5 @@ Vec WorldSurface::eval(double x, double z) const {
     // now get the z position.
     BezierCurve uCurve = BezierCurve(tmp);
     double _z = (z - uCurve.getZmin()) / (uCurve.getZmax() - uCurve.getZmin());
-    return uCurve.eval_t(_z);
+    return uCurve.eval_t(_z) + pos();
 }

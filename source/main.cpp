@@ -56,6 +56,13 @@ void initScene() {
     // pass with glColor*()
     glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
 
+    // Bezier surface!
+    // TODO: draw surface as a callback
+    drawn.push_back(&worldSurface);
+    worldSurface.moveToY(1.0);
+    worldSurface.loadControlPoints("assets/world/WorldSurfaceCPoints.csv");
+    glChk();
+
     // Cameras are important. Note, they are hard-coded in the render loop.
     // Do NOT add a camera to the  drawn, or it'll draw (and update)
     // twice.
@@ -85,10 +92,14 @@ void initScene() {
 
     // Load up Incallidus!
     drawn.push_back(&inc);
-    inc.addWASDControls(20.0, keyPressed);
     inc.setRadius(0.2);
-    inc.setUpdateFunc([=](double /*t*/, double /*dt*/) {
-        inc.moveTo(worldSurface.eval(2, -2) + worldSurface.pos());
+    inc.moveTo(worldSurface.eval(2, -2) + worldSurface.pos());
+    inc.setUpdateFunc([=](double /*t*/, double dt) {
+        VecPolar vecTest;
+        inc.lookAt(vecTest);
+        // info("%s : %s", vecTest, inc.lookAt());
+        // info("%s", inc.heading());
+        inc.addWASDControls(10.0, keyPressed, dt);
     });
 
     // Load up Firnen!
@@ -110,12 +121,6 @@ void initScene() {
         dragonBorn.lookAt(track.eval_deriv_t(param));
     });
 
-    // Bezier surface!
-    // TODO: draw surface as a callback
-    drawn.push_back(&worldSurface);
-    worldSurface.moveToY(1.0);
-    worldSurface.loadControlPoints("assets/world/WorldSurfaceCPoints.csv");
-    glChk();
 
     // Objects on the world surface.
     drawn.push_back(&flagBanner);
