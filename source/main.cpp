@@ -12,7 +12,7 @@ CallListObject roomFloor;
 WorldSurface worldSurface;
 FlagBanner flagBanner;
 
-std::array<PointLight, 7> zippy;
+std::array<Light *, 7> zippy;
 
 // Defines the menu options.
 // See handleRightClickMenu() and initRightClickMenu() for details.
@@ -52,7 +52,7 @@ void initScene() {
     // pass with glColor*()
     glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
 
-    for (PointLight &light : zippy) {
+    for (Light *light : zippy) {
         drawn.push_back(&light);
 
         float scale       = 0.3f;

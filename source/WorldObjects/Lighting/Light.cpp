@@ -1,8 +1,8 @@
 #include "WorldObjects.hpp"
 
-GLint PointLight::s_lights = 0;
+GLint Light::s_lights = 0;
 
-void PointLight::draw() const {
+void Light::draw() const {
     pushMatrixAnd([&]() {
         float lpos[4] = {(float)pos().x, (float)pos().y, (float)pos().z, 1.0f};
         glLightfv(m_lightid, GL_POSITION, lpos);
@@ -13,7 +13,7 @@ void PointLight::draw() const {
     });
 }
 
-void PointLight::ambient(const float *colorv) {
+void Light::ambient(const float *colorv) {
     assert(colorv != nullptr);
     assert(GL_LIGHT0 <= m_lightid);
     assert(m_lightid < GL_LIGHT7);
@@ -25,7 +25,7 @@ void PointLight::ambient(const float *colorv) {
     glChk();
 }
 
-void PointLight::diffuse(const float *colorv) {
+void Light::diffuse(const float *colorv) {
     assert(colorv != nullptr);
     assert(GL_LIGHT0 <= m_lightid);
     assert(m_lightid < GL_LIGHT7);
@@ -37,7 +37,7 @@ void PointLight::diffuse(const float *colorv) {
     glChk();
 }
 
-void PointLight::specular(const float *colorv) {
+void Light::specular(const float *colorv) {
     assert(colorv != nullptr);
     assert(GL_LIGHT0 <= m_lightid);
     assert(m_lightid < GL_LIGHT7);

@@ -3,13 +3,13 @@
 
 #include "WorldObjects/WorldObjectBase.hpp"
 
-class PointLight : public WorldObject {
+class Light : public WorldObject {
 public:
     // A count of active lights.
     static GLint s_lights;
 
-    PointLight() = default;
-    virtual ~PointLight() override { glDisable(m_lightid); }
+    Light() = default;
+    virtual ~Light() override { glDisable(m_lightid); }
 
     virtual void draw() const override;
 
