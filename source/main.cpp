@@ -160,6 +160,7 @@ void initScene() {
     // Objects on the world surface.
     drawn.push_back(&flagBanner);
     flagBanner.init();
+    flagBanner.moveTo(Vec(5.0, 0.0, 0.0));
     flagBanner.setUpdateFunc(
         [=](double t, double dt) { flagBanner.updateAnimation(t, dt); });
 

@@ -3,7 +3,7 @@
 
 using namespace std;
 
-// BezierCurve bezierCurve;
+void WorldSurface::update(double t, double dt) { WorldObject::update(t, dt); }
 
 /*************************  DRAW WORLD SURFACE  *******************************/
 void WorldSurface::draw() const {
@@ -41,8 +41,6 @@ void WorldSurface::draw() const {
             };
             glPopMatrix();
         }
-
-
     });
     pushMatrixAnd([&]() { drawGround(); });
 }
@@ -79,13 +77,6 @@ void WorldSurface::drawGround() const {
             for (double z = m_zMin; z <= m_zMax - 2 * dt; z += dt) {
                 Vec location     = eval(x, z);
                 Vec nextLocation = eval(x + dt, z + dt);
-                // glPushMatrix();
-                // {
-                //     glColor3d(200 / 255.0, 200 / 255.0, 200 / 255.0);
-                //     glTranslated(location.x, location.y, location.z);
-                //     glScaled(0.06, 0.06, 0.06);
-                //     glutSolidSphere(1, 10, 10);
-                // };
                 glPushMatrix();
                 {
                     glDisable(GL_CULL_FACE);
@@ -107,7 +98,6 @@ void WorldSurface::drawGround() const {
                             nextLocation.x, nextLocation.y, nextLocation.z);
 
                         // second triangle
-
                         glNormal3d(normal.x, normal.y, normal.z);
                         glVertex3f(location.x, location.y, location.z);
 
@@ -164,6 +154,7 @@ bool WorldSurface::loadControlPoints(string filename) {
     int numOfPoints = 0;
     ifstream file;
 
+    // get the file needed
     glChk();
     file.open(filename.c_str());
     if (!file) {
@@ -171,6 +162,7 @@ bool WorldSurface::loadControlPoints(string filename) {
         exit(1);
     }
 
+    // load in the Control Points
     // get the number of points to build
     getline(file, str);
     numOfPoints      = atoi(str.c_str());
@@ -214,6 +206,7 @@ bool WorldSurface::loadControlPoints(string filename) {
         }
     }
 
+    // Load in the Trees CPoints
     getline(file, str);
     int numOfTrees = atoi(str.c_str());
     for (int i = 0; i < numOfTrees; ++i) {

@@ -7,6 +7,7 @@
 
 #include "WorldObjects/Point.hpp"
 #include "WorldObjects/BezierCurve.hpp"
+#include "WorldObjects/FlagBanner.hpp"
 using namespace std;
 
 class WorldSurface : public WorldObject {
@@ -18,6 +19,7 @@ public:
     Vec eval(double x, double z) const;
 
     virtual void draw() const;
+    virtual void update(double t, double dt);
     bool loadControlPoints(string filename);
 
 private:
@@ -30,7 +32,6 @@ private:
     string m_WorldSurfaceCPointsFile;
     vector<Vec> m_controlPoints;
     std::vector<Vec> m_trees;
-    // Vec m_controlPoints;
     // control points
     void drawControlPoints() const;
     // control curves

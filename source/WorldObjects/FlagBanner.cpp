@@ -9,7 +9,7 @@ using namespace std;
 /*************************  DRAW FLAG BANNER  *********************************/
 void FlagBanner::draw() const {
     pushMatrixAnd([&]() {
-        glTranslated(0, 0, 5);
+        glTranslated(m_pos.x, m_pos.y, m_pos.z);
         glScalef(0.25, 0.25, 0.25);
         drawPole();
         glTranslated(0, 4, 0);
