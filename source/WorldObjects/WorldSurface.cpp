@@ -59,6 +59,8 @@ void WorldSurface::drawGround() const {
     // baised on these values. We could have curves that have different values
     // so each curve should have different logic.
     pushMatrixAnd([&]() {
+        static Color color = randColor();
+        color.glSet();
         double dt = 0.5;
         for (double x = m_curvesCPoints.at(0).getXmin();
              x <= m_curvesCPoints.at(0).getXmax() - 2 * dt;
@@ -78,22 +80,32 @@ void WorldSurface::drawGround() const {
                     glDisable(GL_CULL_FACE);
                     glBegin(GL_TRIANGLES);
                     {
+                        // TODO: Make this more reasonable.
+                        Vec normal = Vec(0.0, 1.0, 0.0);
+
                         // first triangle
-                        glColor3d(100 / 255.0, 120 / 255.0, 120 / 255.0);
+                        glNormal3d(normal.x, normal.y, normal.z);
                         glVertex3f(location.x, location.y, location.z);
-                        glColor3d(10 / 255.0, 200 / 255.0, 10 / 255.0);
+
+                        glNormal3d(normal.x, normal.y, normal.z);
                         glVertex3f(nextLocation.x,
                                    eval(x + dt, z).y + pos().y,
                                    location.z);
-                        glColor3d(10 / 255.0, 10 / 255.0, 150 / 255.0);
+
+                        glNormal3d(normal.x, normal.y, normal.z);
                         glVertex3f(
                             nextLocation.x, nextLocation.y, nextLocation.z);
 
                         // second triangle
-                        glColor3d(100 / 255.0, 120 / 255.0, 120 / 255.0);
+
+                        glNormal3d(normal.x, normal.y, normal.z);
                         glVertex3f(location.x, location.y, location.z);
+
+                        glNormal3d(normal.x, normal.y, normal.z);
                         glVertex3f(
                             nextLocation.x, nextLocation.y, nextLocation.z);
+
+                        glNormal3d(normal.x, normal.y, normal.z);
                         glVertex3f(location.x,
                                    eval(x, z + dt).y + pos().y,
                                    nextLocation.z);
