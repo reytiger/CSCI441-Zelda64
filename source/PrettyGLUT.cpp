@@ -256,12 +256,13 @@ void initGLUT(int *argcp, char **argv) {
     glEnable(GL_LIGHTING);
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
-    glEnable(GL_COLOR_MATERIAL);
 
     // Smooth looks so much better.
     glShadeModel(GL_SMOOTH);
 
+    // TODO: Remove me.
     glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+    glEnable(GL_COLOR_MATERIAL);
 }
 
 void startGuildWars() {
