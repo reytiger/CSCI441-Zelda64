@@ -1,21 +1,21 @@
 #include "WorldObjects/Incallidus.hpp"
 
-void Incallidus::addWASDControls(double speedPerSec, bool *pressed, double dt) {
+void Incallidus::addWASDControls(double speedPerSec, bool *pressed, double dt,
+                                 WorldSurface world) {
     Vec vel;
 
     Vec up      = this->up();
-    Vec forward = this->lookAt();
-    Vec right   = forward.cross(up);
+    Vec forward = VecPolar(m_heading, 0, 1);
 
     auto speed = speedPerSec * dt;
 
     // Basic WASD controls to move forward and sideways, *as seen by the
     // camera*.
     if (pressed['d']) {
-        vel += right;
+        m_heading += 0.1;
     }
     if (pressed['a']) {
-        vel -= right;
+        m_heading -= 0.1;
     }
     if (pressed['w']) {
         vel += forward;
@@ -30,7 +30,16 @@ void Incallidus::addWASDControls(double speedPerSec, bool *pressed, double dt) {
     }
 
     this->setVelocity(vel);
-    // this->moveTo(m_vel + m_pos);
-    m_pos += m_vel;
-    info("%s", m_old_follow_pos);
+    Vec target = world.eval(m_pos.x, m_pos.z);
+    // TODO: This is where all the moving logic will go.
+    // neg
+    // if (m_pos.x < 0) {
+    //     target = Vec(-m_pos.x, target.y, m_pos.z);
+
+    // }
+    // // pos
+    // else {
+    //     target = Vec(m_pos.x, target.y, m_pos.z);
+    // }
+    this->moveTo(target);
 }

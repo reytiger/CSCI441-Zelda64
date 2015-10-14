@@ -93,13 +93,14 @@ void initScene() {
     // Load up Incallidus!
     drawn.push_back(&inc);
     inc.setRadius(0.2);
-    inc.moveTo(worldSurface.eval(2, -2) + worldSurface.pos());
+    inc.moveTo(worldSurface.eval(-1.2, -0.6));
     inc.setUpdateFunc([=](double /*t*/, double dt) {
         VecPolar vecTest;
         inc.lookAt(vecTest);
         // info("%s : %s", vecTest, inc.lookAt());
         // info("%s", inc.heading());
-        inc.addWASDControls(10.0, keyPressed, dt);
+        inc.addWASDControls(100.0, keyPressed, dt, worldSurface);
+        // inc.moveTo(worldSurface.eval(inc.pos().x, inc.pos().z));
     });
 
     // Load up Firnen!

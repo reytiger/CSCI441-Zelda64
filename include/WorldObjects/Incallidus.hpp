@@ -1,6 +1,7 @@
 #pragma once
 
 #include "WorldObjects/WorldObjectBase.hpp"
+#include "WorldObjects/WorldSurface.hpp"
 
 class Incallidus : public WorldObject {
 public:
@@ -32,7 +33,7 @@ public:
             };
             glPopMatrix();
 
-            glRotated(180.0 / M_PI * m_heading, 0.0, 0.0, 1.0);
+            glRotated(180.0 / M_PI * m_heading, 0.0, 1.0, 0.0);
             glScaled(m_radius, m_radius, m_radius);
 
             glColor3d(color.x, 0.5, 0.5);
@@ -51,7 +52,8 @@ public:
         });
     }
 
-    void addWASDControls(double speedPerSec, bool *pressed, double dt);
+    void addWASDControls(double speedPerSec, bool *pressed, double dt,
+                         WorldSurface world);
 
 private:
     void drawFrontNose() const {
