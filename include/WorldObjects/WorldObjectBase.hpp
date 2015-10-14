@@ -41,6 +41,7 @@ public:
     void adjustHeading(double dtheta) { m_heading += dtheta; }
 
     Vec pos() const { return m_pos; }
+    Vec up() const { return m_up; }
     Vec vel() const { return m_vel; }
     Vec lookAt() const { return m_arc.cart(); }
     VecPolar looking() const { return m_arc; }
@@ -67,6 +68,7 @@ protected:
     Vec m_old_follow_pos;
     Vec m_pos;
     Vec m_posUV;
+    Vec m_up = Vec(0.0, 1.0, 0.0);
     Vec m_vel;
     VecPolar m_arc;
     Color m_color;

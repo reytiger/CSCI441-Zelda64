@@ -10,7 +10,7 @@ void WorldSurface::draw() const {
     // drawControlPoints();
     pushMatrixAnd([&]() {
         // TODO: the first point on a curve seems to return the last point...
-        Vec test = eval(3, -2) + pos();
+        Vec test = eval(3, -2);
         glPushMatrix();
         {
             glColor3d(200 / 255.0, 10 / 255.0, 10 / 255.0);
@@ -20,7 +20,7 @@ void WorldSurface::draw() const {
         };
         glPopMatrix();
 
-        test = eval(2, -2) + pos();
+        test = eval(2, -2);
         glPushMatrix();
         {
             glColor3d(200 / 255.0, 10 / 255.0, 10 / 255.0);
@@ -240,7 +240,6 @@ Vec WorldSurface::eval(double x, double z) const {
         } else {
         }
     }
-
     // now get the z position.
     BezierCurve uCurve = BezierCurve(tmp);
     double _z = (z - uCurve.getZmin()) / (uCurve.getZmax() - uCurve.getZmin());
