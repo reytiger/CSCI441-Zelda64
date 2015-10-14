@@ -11,7 +11,10 @@ public:
 
     virtual void draw() const = 0;
     virtual void update(double t, double dt);
-    virtual Vec lookAt(VecPolar polar) { return m_arc = polar; }
+    virtual Vec lookAt(VecPolar polar) {
+        polar.r      = 1.0;
+        return m_arc = polar;
+    }
 
     virtual ~WorldObject(){};
 

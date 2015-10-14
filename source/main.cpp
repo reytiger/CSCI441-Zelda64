@@ -8,8 +8,8 @@ CallListObject roomFloor;
 WorldSurface worldSurface;
 FlagBanner flagBanner;
 
-std::array<PointLight, 7> pointLights;
 Spotlight spotlight;
+std::array<PointLight, 6> pointLights;
 
 // Defines the menu options.
 // See handleRightClickMenu() and initRightClickMenu() for details.
@@ -44,9 +44,8 @@ void updateScene(double t, double dt) {
 }
 
 void initScene() {
-    // tell OpenGL not to use the material system; just use whatever we
-    // pass with glColor*()
-    glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+    const float black[4] = {0.0f, 0.0f, 0.0f, 1.0f};
+    const float white[4] = {1.0f, 0.0f, 1.0f, 1.0f};
 
     for (PointLight &light : pointLights) {
         drawn.push_back(&light);
@@ -59,7 +58,6 @@ void initScene() {
         float ambientCol[4] = {0.0f, 0.0f, 0.0f, 1.0f};
 
         light.enable();
-        light.ambient(ambientCol);
         light.diffuse(lightCol);
         light.specular(specCol);
 
@@ -73,21 +71,26 @@ void initScene() {
         });
     }
 
-    drawn.push_back(&spotlight);
-    spotlight.enable();
-
     float diffuseCol[4] = {1.0f, 1.0f, 1.0f, 1.0f};
 
+    drawn.push_back(&spotlight);
+    spotlight.enable();
     spotlight.diffuse(diffuseCol);
-    spotlight.exponent(100.0);
-    spotlight.cutoff(12.5);
+    spotlight.exponent(50.0);
+    spotlight.cutoff(23.5);
+    spotlight.setUpdateFunc([&](double t, double /*dt*/) {
+        auto color      = Vec(cos(30.0 * t), cos(50.0 * t), cos(10.0 * t));
+        color           = 0.5 * color + 0.5;
+        float lcolor[4] = {(float)color.x, (float)color.y, (float)color.z};
+        spotlight.diffuse(lcolor);
+    });
 
     // Spin in a circle at Y=10.0.
     spotlight.setUpdateFunc([&](double t, double /*dt*/) {
         auto vp  = VecPolar(0.68 * t, 0.0, 2.0);
         auto pos = vp.cart() + Vec(0.0, 5.0, 0.0);
         spotlight.moveTo(pos);
-        spotlight.lookAt((Vec() - spotlight.pos()).normalize());
+        spotlight.lookAt((Vec() - spotlight.pos()));
     });
 
     // Bezier surface!
