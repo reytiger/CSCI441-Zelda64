@@ -30,6 +30,16 @@ void WorldSurface::draw() const {
         };
         glPopMatrix();
 
+        // draw the trees
+        for (size_t i = 0; i < m_trees.size(); ++i) {
+            glPushMatrix();
+            {
+                Vec target = eval(m_trees.at(i).x, m_trees.at(i).z);
+                glTranslated(m_trees.at(i).x, target.y, m_trees.at(i).z);
+                drawTree();
+            };
+            glPopMatrix();
+        }
 
 
     });
@@ -107,6 +117,33 @@ void WorldSurface::drawGround() const {
     });
 }
 
+void WorldSurface::drawTree() const {
+    glPushMatrix();
+    {
+        glDisable(GL_CULL_FACE);
+
+        // glTranslatef(objX, 0, objZ);
+        // // draw the base of a tree
+        // glRotatef(-90, 1, 0, 0); // draw the tree up from our current grid
+
+        // glTranslatef(0, height / 2, 0);
+        // glScalef(1, 1, height);
+
+        // base of tree, nice dark brown for the base
+        glColor3f(134 / 255.0, 89 / 255.0, 45 / 255.0);
+        GLUquadricObj *quadratic;
+        quadratic = gluNewQuadric();
+        gluCylinder(quadratic, 0.5, 0.3, 0.5, 20, 2);
+        // // top of tree
+        // glTranslatef(0, 0, 2);
+        // glColor3f(100 / 255.0, 200 / 255.0, 100 / 255.0); // nice green for
+        // the
+        // top glutSolidCone(1, 2, 20, 2);
+        glEnable(GL_CULL_FACE);
+    };
+    glPopMatrix();
+}
+
 /*************************  SET UP FOR CURVES  ********************************/
 ////////////////////////////////////////////////////////////////////////////////
 //  Load our control points from file and store them in a global variable.
@@ -163,6 +200,19 @@ bool WorldSurface::loadControlPoints(string filename) {
         if (create.getZmax() > m_zMax) {
             m_zMax = create.getZmax();
         }
+    }
+
+    getline(file, str);
+    int numOfTrees = atoi(str.c_str());
+    for (int i = 0; i < numOfTrees; ++i) {
+        getline(file, str, ',');
+        float x = static_cast<float>(atoi(str.c_str()));
+
+        getline(file, str, '\n');
+        float z = static_cast<float>(atoi(str.c_str()));
+
+        Vec createVec = Vec(x, 0.0, z);
+        m_trees.push_back(createVec);
     }
     return true;
 }

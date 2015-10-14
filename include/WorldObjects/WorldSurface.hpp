@@ -24,10 +24,12 @@ private:
     int m_numberOfCurves;
 
     void drawGround() const;
+    void drawTree() const;
 
     // set up for control points
     string m_WorldSurfaceCPointsFile;
     vector<Vec> m_controlPoints;
+    std::vector<Vec> m_trees;
     // Vec m_controlPoints;
     // control points
     void drawControlPoints() const;
