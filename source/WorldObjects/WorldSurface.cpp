@@ -7,7 +7,7 @@ using namespace std;
 
 /*************************  DRAW WORLD SURFACE  *******************************/
 void WorldSurface::draw() const {
-    pushMatrixAnd([&]() { drawControlPoints(); });
+    // drawControlPoints();
     pushMatrixAnd([&]() {
         // TODO: the first point on a curve seems to return the last point...
         Vec test = eval(3, -2) + pos();
@@ -35,7 +35,8 @@ void WorldSurface::draw() const {
             glPushMatrix();
             {
                 Vec target = eval(m_trees.at(i).x, m_trees.at(i).z);
-                glTranslated(m_trees.at(i).x, target.y, m_trees.at(i).z);
+                // glTranslated(m_trees.at(i).x, target.y, m_trees.at(i).z);
+                glTranslated(target.x, target.y, target.z);
                 drawTree();
             };
             glPopMatrix();
@@ -69,13 +70,15 @@ void WorldSurface::drawGround() const {
     // baised on these values. We could have curves that have different values
     // so each curve should have different logic.
     pushMatrixAnd([&]() {
+        static Color color = randColor();
+        color.glSet();
         double dt = 0.5;
         for (double x = m_curvesCPoints.at(0).getXmin();
              x <= m_curvesCPoints.at(0).getXmax() - 2 * dt;
              x += dt) {
             for (double z = m_zMin; z <= m_zMax - 2 * dt; z += dt) {
-                Vec location     = eval(x, z) + pos();
-                Vec nextLocation = eval(x + dt, z + dt) + pos();
+                Vec location     = eval(x, z);
+                Vec nextLocation = eval(x + dt, z + dt);
                 // glPushMatrix();
                 // {
                 //     glColor3d(200 / 255.0, 200 / 255.0, 200 / 255.0);
@@ -88,25 +91,33 @@ void WorldSurface::drawGround() const {
                     glDisable(GL_CULL_FACE);
                     glBegin(GL_TRIANGLES);
                     {
+                        // TODO: Make this more reasonable.
+                        Vec normal = Vec(0.0, 1.0, 0.0);
+
                         // first triangle
-                        glColor3d(100 / 255.0, 120 / 255.0, 120 / 255.0);
+                        glNormal3d(normal.x, normal.y, normal.z);
                         glVertex3f(location.x, location.y, location.z);
-                        glColor3d(10 / 255.0, 200 / 255.0, 10 / 255.0);
-                        glVertex3f(nextLocation.x,
-                                   eval(x + dt, z).y + pos().y,
-                                   location.z);
-                        glColor3d(10 / 255.0, 10 / 255.0, 150 / 255.0);
+
+                        glNormal3d(normal.x, normal.y, normal.z);
+                        glVertex3f(
+                            nextLocation.x, eval(x + dt, z).y, location.z);
+
+                        glNormal3d(normal.x, normal.y, normal.z);
                         glVertex3f(
                             nextLocation.x, nextLocation.y, nextLocation.z);
 
                         // second triangle
-                        glColor3d(100 / 255.0, 120 / 255.0, 120 / 255.0);
+
+                        glNormal3d(normal.x, normal.y, normal.z);
                         glVertex3f(location.x, location.y, location.z);
+
+                        glNormal3d(normal.x, normal.y, normal.z);
                         glVertex3f(
                             nextLocation.x, nextLocation.y, nextLocation.z);
-                        glVertex3f(location.x,
-                                   eval(x, z + dt).y + pos().y,
-                                   nextLocation.z);
+
+                        glNormal3d(normal.x, normal.y, normal.z);
+                        glVertex3f(
+                            location.x, eval(x, z + dt).y, nextLocation.z);
                     };
                     glEnd();
                     glEnable(GL_CULL_FACE);
@@ -128,17 +139,18 @@ void WorldSurface::drawTree() const {
 
         // glTranslatef(0, height / 2, 0);
         // glScalef(1, 1, height);
+        // Rototae up!
+        glRotatef(-90.0, 1.0, 0.0, 0.0);
 
         // base of tree, nice dark brown for the base
         glColor3f(134 / 255.0, 89 / 255.0, 45 / 255.0);
         GLUquadricObj *quadratic;
         quadratic = gluNewQuadric();
-        gluCylinder(quadratic, 0.5, 0.3, 0.5, 20, 2);
-        // // top of tree
-        // glTranslatef(0, 0, 2);
-        // glColor3f(100 / 255.0, 200 / 255.0, 100 / 255.0); // nice green for
-        // the
-        // top glutSolidCone(1, 2, 20, 2);
+        gluCylinder(quadratic, 0.2, 0.1, 0.5, 20, 2);
+        // top of tree, nice green for the tops
+        glTranslatef(0, 0, 0.5);
+        glColor3f(100 / 255.0, 200 / 255.0, 100 / 255.0);
+        glutSolidCone(0.15, 0.4, 20, 2);
         glEnable(GL_CULL_FACE);
     };
     glPopMatrix();
@@ -239,5 +251,5 @@ Vec WorldSurface::eval(double x, double z) const {
     // now get the z position.
     BezierCurve uCurve = BezierCurve(tmp);
     double _z = (z - uCurve.getZmin()) / (uCurve.getZmax() - uCurve.getZmin());
-    return uCurve.eval_t(_z);
+    return uCurve.eval_t(_z) + pos();
 }

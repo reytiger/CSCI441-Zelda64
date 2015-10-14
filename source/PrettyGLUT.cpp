@@ -103,6 +103,7 @@ void printOpenGLInformation() {
     info(
         // We don't want to break this string across lines.
         // clang-format off
+         "\n"
          "/-----------------------------------------------------------------------\\\n"
          "| OpenGL Information                                                    |\n"
          "|-----------------------------------------------------------------------|\n"
@@ -253,7 +254,6 @@ void initGLUT(int *argcp, char **argv) {
 
     // Lighting
     glEnable(GL_LIGHTING);
-    glEnable(GL_LIGHT0);
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
     glEnable(GL_COLOR_MATERIAL);

@@ -16,29 +16,34 @@ include(FindALUT)
 # You can
 #       (1) update this file's timestamp, or
 #       (2) re-run 'cmake' manually
-# We do it this way instead of recurisve globs to preserve the file structure in 
+# We do it this way instead of recurisve globs to preserve the file structure in
 # projects like Visual Studio.
 file(GLOB sources              "${S}/source/*.cpp")
 file(GLOB sources_cameras      "${S}/source/Cameras/*.cpp")
 file(GLOB sources_utils        "${S}/source/Utils/*.cpp")
 file(GLOB sources_worldobjects "${S}/source/WorldObjects/*.cpp")
+file(GLOB sources_lighting     "${S}/source/WorldObjects/Lighting/*.cpp")
 
 file(GLOB includes              "${S}/include/*.hpp")
 file(GLOB includes_cameras      "${S}/include/Cameras/*.hpp")
 file(GLOB includes_utils        "${S}/include/Utils/*.hpp")
 file(GLOB includes_worldobjects "${S}/include/WorldObjects/*.hpp")
+file(GLOB includes_lighting     "${S}/include/WorldObjects/Lighting/*.hpp")
 
 list(APPEND sources ${sources_cameras})
 list(APPEND sources ${sources_utils})
 list(APPEND sources ${sources_worldobjects})
+list(APPEND sources ${sources_lighting})
 
 list(APPEND includes ${includes_cameras})
 list(APPEND includes ${includes_utils})
 list(APPEND includes ${includes_worldobjects})
+list(APPEND includes ${includes_lighting})
 
 source_group("Header Files\\Cameras"      FILES ${includes_cameras})
 source_group("Header Files\\Utils"        FILES ${includes_utils})
 source_group("Header Files\\WorldObjects" FILES ${includes_worldobjects})
+source_group("Header Files\\WorldObjects\\Lighting" FILES ${includes_lighting})
 
 source_group("Source Files\\Cameras"      FILES ${sources_cameras})
 source_group("Source Files\\Utils"        FILES ${sources_utils})
