@@ -31,8 +31,9 @@ void Incallidus::addWASDControls(double speedPerSec, bool *pressed, double dt,
 
     this->setVelocity(vel);
     Vec target = world.eval(m_pos.x, m_pos.z);
-    // TODO: This is where all the moving logic will go.
-    // neg
+
+    this->moveToY(target.y);
+
     // if (m_pos.x < 0) {
     //     target = Vec(-m_pos.x, target.y, m_pos.z);
 
@@ -41,5 +42,4 @@ void Incallidus::addWASDControls(double speedPerSec, bool *pressed, double dt,
     // else {
     //     target = Vec(m_pos.x, target.y, m_pos.z);
     // }
-    this->moveTo(target);
 }

@@ -122,7 +122,7 @@ void initScene() {
     // Arcballs for DAYZ.
     arcballcam.setColor(randColor());
     arcballcam.setRadius(5);
-    arcballcam.follow(&spotlight);
+    arcballcam.follow(&inc);
 
     // Load up Incallidus!
     drawn.push_back(&inc);
