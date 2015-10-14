@@ -9,7 +9,7 @@
 #include "WorldObjects/FlagBanner.hpp"
 #include "WorldObjects/Incallidus.hpp"
 #include "WorldObjects/IncallidusPet.hpp"
-#include "WorldObjects/Lighting/PointLight.hpp"
+#include "WorldObjects/Lighting/Light.hpp"
 #include "WorldObjects/Track.hpp"
 #include "WorldObjects/WorldObjectBase.hpp"
 #include "WorldObjects/WorldSurface.hpp"

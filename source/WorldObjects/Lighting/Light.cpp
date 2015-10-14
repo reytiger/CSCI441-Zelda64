@@ -1,27 +1,15 @@
-#include "WorldObjects/Lighting/PointLight.hpp"
+#include "WorldObjects.hpp"
 
 GLint PointLight::s_lights = 0;
-
-void PointLight::enable() {
-    m_lightid = GL_LIGHT0 + s_lights;
-    s_lights += 1;
-    assert(s_lights < 8);
-
-    glEnable(m_lightid);
-
-    // TODO: Make Color a Vec and add a "to-v" function or something.
-    float lpos[4] = {(float)pos().x, (float)pos().y, (float)pos().z, 1.0f};
-    glLightfv(m_lightid, GL_POSITION, lpos);
-}
 
 void PointLight::draw() const {
     pushMatrixAnd([&]() {
         float lpos[4] = {(float)pos().x, (float)pos().y, (float)pos().z, 1.0f};
         glLightfv(m_lightid, GL_POSITION, lpos);
         glTranslated(pos().x, pos().y, pos().z);
-        // Hot pink is sexy.
-        glColor3d(1.0, 0.0, 1.0);
-        glutSolidSphere(0.15, 20, 20);
+        glRotated(45.0, 1.0, 1.0, 1.0);
+        glColor3d(1.0, 1.0, 1.0);
+        glutSolidCube(0.15);
     });
 }
 

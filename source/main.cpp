@@ -66,10 +66,10 @@ void initScene() {
 
         double a = 3.0 * getRandd() - 1.0;
         double b = 3.0 * getRandd() - 1.0;
-        double c = 4.0 * getRandd() - 2.0;
+        double c = 15.0 * getRandd();
 
-        light.setUpdateFunc([&light, a, b](double t, double /*dt*/) {
-            auto vp = VecPolar(a * t, b * t, 5.0);
+        light.setUpdateFunc([&light, a, b, c](double t, double /*dt*/) {
+            auto vp = VecPolar(a * t, b * t, c);
             light.moveTo(vp.cart());
         });
     }

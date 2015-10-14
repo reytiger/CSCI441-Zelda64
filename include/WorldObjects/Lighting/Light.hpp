@@ -13,7 +13,7 @@ public:
 
     virtual void draw() const override;
 
-    void enable();
+    virtual void enable();
 
     Color ambient() { return m_ambient; }
     Color diffuse() { return m_diffuse; }
