@@ -14,6 +14,8 @@ FlagBanner flagBanner;
 
 std::array<PointLight, 7> pointLights;
 
+Spotlight spotlight;
+
 // Defines the menu options.
 // See handleRightClickMenu() and initRightClickMenu() for details.
 enum MenuOpt {
@@ -47,32 +49,53 @@ void updateScene(double t, double dt) {
 }
 
 void initScene() {
-
     // tell OpenGL not to use the material system; just use whatever we
     // pass with glColor*()
     glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
 
-    for (PointLight &light : pointLights) {
-        drawn.push_back(&light);
+    // for (PointLight &light : pointLights) {
+    //     drawn.push_back(&light);
 
-        float scale       = 0.3f;
-        float lightCol[4] = {
-            scale * getRandf(), scale * getRandf(), scale * getRandf(), 1.0f};
-        float ambientCol[4] = {0.0f, 0.0f, 0.0f, 1.0f};
+    //     float scale       = 0.3f;
+    //     float lightCol[4] = {
+    //         scale * getRandf(), scale * getRandf(), scale * getRandf(),
+    //         1.0f};
+    //     float specCol[4] = {
+    //         scale * getRandf(), scale * getRandf(), scale * getRandf(),
+    //         1.0f};
+    //     float ambientCol[4] = {0.0f, 0.0f, 0.0f, 1.0f};
 
-        light.enable();
-        light.ambient(ambientCol);
-        light.diffuse(lightCol);
+    //     light.enable();
+    //     light.ambient(ambientCol);
+    //     light.diffuse(lightCol);
+    //     light.specular(specCol);
 
-        double a = 3.0 * getRandd() - 1.0;
-        double b = 3.0 * getRandd() - 1.0;
-        double c = 15.0 * getRandd();
+    //     double a = 3.0 * getRandd() - 1.0;
+    //     double b = 3.0 * getRandd() - 1.0;
+    //     double c = 5.0 * getRandd() + 0.5;
 
-        light.setUpdateFunc([&light, a, b, c](double t, double /*dt*/) {
-            auto vp = VecPolar(a * t, b * t, c);
-            light.moveTo(vp.cart());
-        });
-    }
+    //     light.setUpdateFunc([&light, a, b, c](double t, double /*dt*/) {
+    //         auto vp = VecPolar(a * t, b * t, c);
+    //         light.moveTo(vp.cart());
+    //     });
+    // }
+
+    drawn.push_back(&spotlight);
+    spotlight.enable();
+
+    float diffuseCol[4] = {1.0f, 1.0f, 1.0f, 1.0f};
+
+    spotlight.diffuse(diffuseCol);
+    spotlight.exponent(100.0);
+    spotlight.cutoff(12.5);
+
+    // Spin in a circle at Y=10.0.
+    spotlight.setUpdateFunc([&](double t, double /*dt*/) {
+        auto vp  = VecPolar(0.68 * t, 0.0, 2.0);
+        auto pos = vp.cart() + Vec(0.0, 5.0, 0.0);
+        spotlight.moveTo(pos);
+        spotlight.lookAt((Vec() - spotlight.pos()).normalize());
+    });
 
     // Cameras are important. Note, they are hard-coded in the render loop.
     // Do NOT add a camera to the  drawn, or it'll draw (and update)
@@ -99,7 +122,7 @@ void initScene() {
     // Arcballs for DAYZ.
     arcballcam.setColor(randColor());
     arcballcam.setRadius(5);
-    arcballcam.follow(activeHero);
+    arcballcam.follow(&spotlight);
 
     // Load up Incallidus!
     drawn.push_back(&inc);
@@ -262,6 +285,7 @@ void initRightClickMenu() {
 }
 
 int main(int argc, char **argv) {
+    errno = 0;
     srand(static_cast<unsigned int>(time(nullptr)));
 
     initGLUT(&argc, argv);

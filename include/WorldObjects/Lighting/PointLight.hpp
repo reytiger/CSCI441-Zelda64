@@ -3,5 +3,4 @@
 
 class PointLight : public Light {
 public:
-    virtual void enable() override;
 };

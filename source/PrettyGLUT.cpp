@@ -103,6 +103,7 @@ void printOpenGLInformation() {
     info(
         // We don't want to break this string across lines.
         // clang-format off
+         "\n"
          "/-----------------------------------------------------------------------\\\n"
          "| OpenGL Information                                                    |\n"
          "|-----------------------------------------------------------------------|\n"

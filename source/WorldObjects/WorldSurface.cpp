@@ -7,7 +7,7 @@ using namespace std;
 
 /*************************  DRAW WORLD SURFACE  *******************************/
 void WorldSurface::draw() const {
-    pushMatrixAnd([&]() { drawControlPoints(); });
+    // drawControlPoints();
     pushMatrixAnd([&]() {
         // TODO: the first point on a curve seems to return the last point...
         Vec test = eval(3, -2) + pos();

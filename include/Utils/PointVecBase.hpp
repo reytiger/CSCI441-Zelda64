@@ -1,4 +1,5 @@
 #pragma once
+#include "Utils/Logging.hpp"
 
 #include <iostream>
 
@@ -33,10 +34,17 @@ struct VecPolar {
     VecPolar() = default;
     VecPolar(double theta, double phi, double r = 1.0)
         : theta(theta), phi(phi), r(r) {}
-    VecPolar(Vec vec)
-        : theta(atan(vec.y / vec.x))
-        , phi(atan(sqrt(vec.x * vec.x + vec.y * vec.y) / vec.z))
-        , r(vec.norm()) {}
+    VecPolar(Vec vec) {
+        r = vec.norm();
+        if (r == 0.0) {
+            return;
+        }
+        vec = vec.normalize();
+
+        theta = atan2(vec.x, vec.z);
+        phi = asin(vec.y);
+        glChk(); // asin sets errno on bad input.
+    }
 
     // Convert to cartesian, aka Vec.
     Vec cart() const {
@@ -63,6 +71,10 @@ struct VecPolar {
 
 #define def_compound_ops(T1, OP, COMP, T2)                                     \
     inline T1 operator COMP(T1 &a, const T2 &b) { return a = a OP b; }
+
+static inline bool operator==(const Vec &a, const Vec &b) {
+    return a.x == b.x && a.y == b.y && a.z == b.z;
+}
 
 // Vec + Vec -> Vec
 def_op_by_components(Vec, +, Vec, Vec);
