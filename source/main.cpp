@@ -2,6 +2,8 @@
 
 #include "WorldObjects.hpp"
 
+#include "yaml-cpp/yaml.h"
+
 FirnensCart firnenCart;
 Track track;
 CallListObject roomFloor;
@@ -133,7 +135,7 @@ void initScene() {
     inc.moveTo(worldSurface.eval(-1.2, -0.6));
     inc.setUpdateFunc([=](double /*t*/, double dt) {
         VecPolar vecTest;
-        inc.lookAt(vecTest);
+        inc.lookAt(Vec(0.0, 0.0, 0.0));
         // info("%s : %s", vecTest, inc.lookAt());
         // info("%s", inc.heading());
         inc.addWASDControls(100.0, keyPressed, dt, worldSurface);
@@ -154,7 +156,7 @@ void initScene() {
     // Load up our DragonBorn!
     drawn.push_back(&dragonBorn);
     dragonBorn.setUpdateFunc([=](double t, double /*dt*/) {
-        auto param = 0.03 * t;
+        auto param = 0.01 * t;
         dragonBorn.moveTo(track.eval_t(param));
         dragonBorn.lookAt(track.eval_deriv_t(param));
     });

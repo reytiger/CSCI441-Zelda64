@@ -34,7 +34,7 @@ void Incallidus::addWASDControls(double speedPerSec, bool *pressed, double dt,
     m_pos      = world.eval(m_pos.x, m_pos.z);
     Vec tarPos = world.eval(vel.x + m_pos.x, vel.z + m_pos.z);
 
-    info("%s\n%s", m_pos, tarPos);
+    // info("%s\n%s", m_pos, tarPos);
 
     vel = m_pos - tarPos;
 
