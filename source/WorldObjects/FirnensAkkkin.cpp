@@ -146,31 +146,7 @@ void FirnensAkkkin::drawWing() const {
 ////////////////////////////////////////////////////////////////////////////////
 //  Load our control points from file and store them in a global variable.
 bool FirnensAkkkin::loadControlPoints(string filename) {
-    string str;
-    int numOfPoints = 0;
-    ifstream file(filename.c_str());
-
-    glChk();
-
-    // get the number of points to build
-    getline(file, str);
-    numOfPoints      = atoi(str.c_str());
-    m_numberOfCurves = numOfPoints / 3;
-
-    // go through each line. The cotrol file ahs the structure xn, yn, zn
-    for (int i = 0; i < numOfPoints; ++i) {
-        getline(file, str, ',');
-        double x = static_cast<double>(atoi(str.c_str()));
-
-        getline(file, str, ',');
-        double y = static_cast<double>(atoi(str.c_str()));
-
-        getline(file, str, '\n');
-        double z = static_cast<double>(atoi(str.c_str()));
-
-        Point createPoint(x, y, z);
-        m_controlPoints.push_back(createPoint);
-    }
+    // TODO: load all the points from a yaml file
     return true;
 }
 
