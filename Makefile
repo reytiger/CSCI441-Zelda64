@@ -1,9 +1,14 @@
 FLAGS := -std=c++11 -g -Os -fmax-errors=5
 Wwarnings := -Wall -Wextra
-Wno-warnings := -Wno-char-subscripts -Wno-deprecated-declarations
+Wno_warnings := -Wno-char-subscripts -Wno-deprecated-declarations
 # Any directory in 'include' is fair game.
 INCPATH := -Iinclude -Iext -Iext/yaml/include
-CXXFLAGS += $(INCPATH) $(FLAGS) $(Wwarnings) $(Wno-warnings)
+CXXFLAGS += $(INCPATH) $(FLAGS) $(Wwarnings) $(Wno_warnings)
+
+YAML_LIB=libyaml-cpp.a
+
+# This needs to be a MinGW or Visual Studio generator on Windows.
+YAML_CMAKE_GEN="Unix Makefiles"
 
 # Windows builds
 ifeq ($(OS), Windows_NT)
@@ -30,23 +35,27 @@ OBJECTS := $(strip $(addprefix object/, $(SOURCES:source/%.cpp=%.o)))
 
 all: format depend $(BINARY)
 
-ext/libyaml-cpp.a:
+ext/$(YAML_LIB):
 	@mkdir -p object/yaml/
-	cd object/yaml/ \
-		&& cmake ../../ext/yaml/ -G "Unix Makefiles" -DYAML_CPP_BUILD_TOOLS=OFF \
-		&& make -j25 --quiet \
-		&& cp libyaml-cpp.a ../../ext
+	+cd object/yaml/ \
+		&& cmake ../../ext/yaml/ -G $(YAML_CMAKE_GEN) -DYAML_CPP_BUILD_TOOLS=OFF \
+		&& make --quiet \
+		&& cp $(YAML_LIB) ../../ext
 
 format:
 	-@clang-format $(HEADERS) -i
 	-@clang-format $(SOURCES) -i
 
-$(BINARY): $(OBJECTS) ext/libyaml-cpp.a
+$(BINARY): $(OBJECTS) ext/$(YAML_LIB)
 	$(CXX) -o $@ $(OBJECTS) $(LD_FLAGS)
 
 clean:
+	@rm -vf $(YAML_LIB)
+	@rm -vfr object/yaml
+	@echo
 	@rm -vf $(OBJECTS) $(BINARY) depend.mk
-	@rm -vr object
+	@rm -vfr object
+	@echo
 
 object/%.o: source/%.cpp
 	@mkdir -p $(dir $@)
