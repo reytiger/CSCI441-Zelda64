@@ -3,7 +3,8 @@
 void Spotlight::update(double t, double dt) {
     Light::update(t, dt);
 
-    float ldir[4] = {(float)lookAt().x, (float)lookAt().y, (float)lookAt().z};
+    auto ldir_vec = lookDir().cart();
+    float ldir[4] = {(float)ldir_vec.x, (float)ldir_vec.y, (float)ldir_vec.z};
     glLightfv(m_lightid, GL_SPOT_DIRECTION, ldir);
     glChk();
 

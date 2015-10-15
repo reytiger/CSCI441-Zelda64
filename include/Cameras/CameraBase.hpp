@@ -16,7 +16,7 @@ public:
         m_material = Material::YellowRubber;
         m_visible  = false;
     }
-    Camera(Vec pos, Vec arc, Vec up = Vec(0.0, 1.0, 0.0))
+    Camera(Vec pos, VecPolar arc, Vec up = Vec(0.0, 1.0, 0.0))
         : WorldObject(pos), m_up(up) {
         m_arc      = arc;
         m_radius   = 0.05;

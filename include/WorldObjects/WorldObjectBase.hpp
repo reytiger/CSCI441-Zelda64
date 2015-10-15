@@ -13,10 +13,15 @@ public:
 
     virtual void draw() const = 0;
     virtual void update(double t, double dt);
-    virtual Vec lookAt(VecPolar polar) {
-        polar.r      = 1.0;
-        return m_arc = polar;
+
+    virtual void lookAtThing(Vec pos) { lookInDir(pos - this->pos()); }
+    virtual void lookInDir(Vec dir) {
+        assert(dir.norm() != 0);
+        m_arc = dir.normalize().polar();
     }
+
+    virtual VecPolar lookDir() const { return m_arc; }
+    virtual Vec lookTarget() const { return m_arc.cart() + pos(); }
 
     virtual ~WorldObject(){};
 
@@ -41,15 +46,13 @@ public:
 
     void setRadius(double radius) { m_radius = radius; }
     void setHeight(double height) { m_height = height; }
-    void setColor(const Color &color) { m_color = color; }
 
     void adjustHeading(double dtheta) { m_heading += dtheta; }
 
     Vec pos() const { return m_pos; }
     Vec up() const { return m_up; }
     Vec vel() const { return m_vel; }
-    Vec lookAt() const { return m_arc.cart(); }
-    VecPolar looking() const { return m_arc; }
+    VecPolar lookAtDir() const { return m_arc; }
     double radius() const { return m_radius; }
     double heading() const { return m_heading; }
     double height() const { return m_height; }
@@ -76,7 +79,6 @@ protected:
     Vec m_up = Vec(0.0, 1.0, 0.0);
     Vec m_vel;
     VecPolar m_arc;
-    Color m_color;
     Material m_material = Material::WhiteRubber;
     double m_heading    = 0.0; // About the Z-axis, for now.
     double m_radius     = 1.0;

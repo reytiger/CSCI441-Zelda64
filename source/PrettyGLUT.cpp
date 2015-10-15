@@ -52,7 +52,7 @@ void drawText(const std::string &text, Vec pos, Color color) {
 // TODO: Fix this.
 void drawFPS() {
     auto white = Color(1.0, 1.0, 1.0);
-    auto pos = activeCam->pos() + activeCam->lookAt();
+    auto pos = activeCam->lookTarget();
     drawText(tfm::format("%0.0f", live_fps), pos, white);
 }
 

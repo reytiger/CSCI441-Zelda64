@@ -19,6 +19,8 @@ struct Vec {
     // Make it easy to fake a 2D vector.
     Vec(double x, double y, double z = 0.0) : x(x), y(y), z(z) {}
 
+    VecPolar polar() const;
+
     double dot(const Vec &other) const;
     double norm() const;
     Vec normalize() const;
@@ -34,7 +36,7 @@ struct VecPolar {
     VecPolar() = default;
     VecPolar(double theta, double phi, double r = 1.0)
         : theta(theta), phi(phi), r(r) {}
-    VecPolar(Vec vec) {
+    explicit VecPolar(Vec vec) {
         r = vec.norm();
         if (r == 0.0) {
             return;
@@ -149,6 +151,8 @@ static inline std::ostream &operator<<(std::ostream &os, const VecPolar &vec) {
     return os << "VecPolar(" << vec.theta << ", " << vec.phi << ", " << vec.r
               << ")";
 }
+
+inline VecPolar Vec::polar() const { return VecPolar(*this); }
 
 inline double Vec::dot(const Vec &other) const {
     return x * other.x + y * other.y + z * other.z;
