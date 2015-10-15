@@ -21,6 +21,7 @@ include_directories("${S}/ext/yaml/include")
 set(YAML_CPP_BUILD_TOOLS OFF)
 set(YAML_CPP_BUILD_CONTRIB OFF)
 add_subdirectory("${S}/ext/yaml")
+set_target_properties(yaml-cpp PROPERTIES COMPILE_FLAGS "-w")
 
 
 # CMake must be manually updated anytime a new file is added, when using globs.
@@ -71,7 +72,7 @@ if (CMAKE_COMPILER_IS_GNUCXX)
   set(Wwarnings "-Wall -Wextra")
 
   # Warnings to turn OFF
-  set(Wno-warnings "")
+  set(Wno-warnings "-Wno-deprecated-declarations")
 
 # This *might* catch Clang, but pretend it only catches MSVC for now.
 else()
