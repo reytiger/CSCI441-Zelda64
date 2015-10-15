@@ -19,7 +19,7 @@ DragonBorn dragonBorn;
 
 // World objects
 Camera *activeCam       = &freecam;
-WorldObject *activeHero = nullptr;
+WorldObject *activeHero = &inc;
 
 double live_fps = 0.0;
 

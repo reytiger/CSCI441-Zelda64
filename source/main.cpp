@@ -132,7 +132,7 @@ void updateScene(double t, double dt) {
             // http://stackoverflow.com/a/13838022
             sys->playSound(skyrim_shout, nullptr, true, &shoutCh);
             // Make the shout much louder than the music.
-            shoutCh->setVolume(5.0f);
+            shoutCh->setVolume(15.0f);
             shoutCh->setPaused(false);
         }
     }
