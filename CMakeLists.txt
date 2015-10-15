@@ -7,8 +7,19 @@ set(S "${CMAKE_SOURCE_DIR}")
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${S}/cmake")
 
 # OpenGL / GLUT
-find_package(OpenGL)
-include(FindFreeGLUT)
+find_package(OpenGL REQUIRED)
+find_package(GLUT)
+
+# If we can't find GLUT, look for FreeGLUT.
+if (NOT GLUT_FOUND)
+  include(FindFreeGLUT)
+  if (NOT ${FREEGLUT_LIBRARIES})
+    message(FATAL "Cannot find FREEGLUT.")
+  endif()
+  set(GLUT_LIBRARIES ${FREEGLUT_LIBRARIES})
+  set(GLUT_INCLUDE_DIR ${FREEGLUT_INCLUDE_DIRS})
+endif()
+include_directories("${GLUT_INCLUDE_DIR}")
 
 # tinyformat
 include_directories("${S}/ext/")
@@ -66,7 +77,6 @@ source_group("Source Files\\Cameras"      FILES ${sources_cameras})
 source_group("Source Files\\Utils"        FILES ${sources_utils})
 source_group("Source Files\\WorldObjects" FILES ${sources_worldobjects})
 
-include_directories("${FREEGLUT_INCLUDE_DIR}")
 include_directories("${S}/include")
 
 if (CMAKE_COMPILER_IS_GNUCXX)
@@ -104,9 +114,9 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${Wwarnings} ${Wno-warnings} ${flags}")
 add_executable(guildWars ${sources} ${includes})
 
 target_link_libraries(guildWars
-                      ${OPENGL_LIBRARIES}
-                      ${FREEGLUT_LIBRARIES}
-                      ${FMOD_LIBRARIES}
+                      "${OPENGL_LIBRARIES}"
+                      "${GLUT_LIBRARIES}"
+                      "${FMOD_LIBRARIES}"
                       yaml-cpp)
 
 if("${AUTO_FORMAT}")
