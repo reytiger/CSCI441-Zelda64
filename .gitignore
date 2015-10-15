@@ -35,6 +35,8 @@ depend.mk
 
 # in-tree CMake build
 build
+msvc64
+perf-stats
 
 # graphviz!
 *.dot
