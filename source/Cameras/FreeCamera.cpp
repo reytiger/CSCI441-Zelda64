@@ -5,7 +5,7 @@ void FreeCamera::addWASDControls(double speedPerSec, bool *pressed) {
         Vec vel;
 
         Vec up      = this->up();
-        Vec forward = this->lookAt();
+        Vec forward = this->lookDir().cart();
         Vec right   = forward.cross(up);
 
         auto speed = dt * speedPerSec;

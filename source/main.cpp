@@ -70,36 +70,34 @@ void loadFromFile(std::string file) {
 // TODO: Make these classes
 void updateSource() {
     // Place the theme on the active hero
-    auto pos             = activeHero->pos();
-    FMOD_VECTOR themePos = {pos.x, pos.y, pos.z};
+    auto pos = activeHero->pos();
+    auto vel = activeHero->vel();
 
-    auto vel             = activeHero->vel();
+    FMOD_VECTOR themePos = {pos.x, pos.y, pos.z};
     FMOD_VECTOR themeVel = {vel.x, vel.y, vel.z};
 
     themeCh->set3DAttributes(&themePos, &themeVel);
 
     // And the shout on Dragonborn!
-    pos                       = dragonBorn.pos();
-    FMOD_VECTOR dragonBornPos = {pos.x, pos.y, pos.z};
+    pos = dragonBorn.pos();
+    vel = dragonBorn.vel();
 
-    vel                       = dragonBorn.vel();
+    FMOD_VECTOR dragonBornPos = {pos.x, pos.y, pos.z};
     FMOD_VECTOR dragonbornVel = {vel.x, vel.y, vel.z};
 
     shoutCh->set3DAttributes(&dragonBornPos, &themeVel);
 }
 
 void updateListener() {
-    auto pos                 = activeCam->pos();
-    FMOD_VECTOR listener_pos = {pos.x, pos.y, pos.z};
+    auto pos     = activeCam->pos();
+    auto vel     = activeCam->vel();
+    auto forward = activeCam->lookDir().cart();
+    auto up      = activeCam->up();
 
-    auto vel                 = activeCam->vel();
-    FMOD_VECTOR listener_vel = {vel.x, vel.y, vel.z};
-
-    auto forward                 = activeCam->lookAt();
+    FMOD_VECTOR listener_pos     = {pos.x, pos.y, pos.z};
+    FMOD_VECTOR listener_vel     = {vel.x, vel.y, vel.z};
     FMOD_VECTOR listener_forward = {forward.x, forward.y, forward.z};
-
-    auto up                 = activeCam->up();
-    FMOD_VECTOR listener_up = {up.x, up.y, up.z};
+    FMOD_VECTOR listener_up      = {up.x, up.y, up.z};
 
     sys->set3DListenerAttributes(
         0, &listener_pos, &listener_vel, &listener_forward, &listener_up);
@@ -132,7 +130,7 @@ void updateScene(double t, double dt) {
             // http://stackoverflow.com/a/13838022
             sys->playSound(skyrim_shout, nullptr, true, &shoutCh);
             // Make the shout much louder than the music.
-            shoutCh->setVolume(15.0f);
+            shoutCh->setVolume(5.0f);
             shoutCh->setPaused(false);
         }
     }
@@ -185,7 +183,7 @@ void initScene() {
         auto vp  = VecPolar(0.68 * t, 0.0, 5.0);
         auto pos = vp.cart() + Vec(0.0, 5.0, 0.0);
         spotlight.moveTo(pos);
-        spotlight.lookAt((Vec() - spotlight.pos()));
+        spotlight.lookInDir((Vec() - spotlight.pos()));
     });
 
     // Bezier surface!
@@ -203,22 +201,18 @@ void initScene() {
     // FirstPerson has to be picture-in-picture viewport.
     firstPerson.follow(activeHero);
     firstPerson.setUpdateFunc([=](double /*t*/, double /*dt*/) {
-        firstPerson.lookAt(dragonBorn.looking());
+        firstPerson.lookInDir(activeHero->lookAtDir());
     });
-    firstPerson.setColor(randColor());
 
     // Setup controls for freecam.
     freecam.addWASDControls(100.0, keyPressed);
     freecam.moveToY(1.0);
-    freecam.setColor(randColor());
 
     // Cam2 is much faster.
     fastfreecam.addWASDControls(200.0, keyPressed);
     fastfreecam.moveToY(1.0);
-    fastfreecam.setColor(randColor());
 
     // Arcballs for DAYZ.
-    arcballcam.setColor(randColor());
     arcballcam.setRadius(5);
     arcballcam.follow(&inc);
 
@@ -227,8 +221,6 @@ void initScene() {
     inc.setRadius(0.2);
     inc.moveTo(worldSurface.eval(-1.2, -0.6));
     inc.setUpdateFunc([=](double t, double dt) {
-        VecPolar vecTest;
-        inc.lookAt(-inc.pos());
         inc.setRadius(0.1 * cos(t) + 0.5);
         if (activeHero == &inc
             && (activeCam == &arcballcam || activeCam == &firstPerson)) {
@@ -242,7 +234,7 @@ void initScene() {
     firnen.setUpdateFunc([=](double t, double /*dt*/) {
         auto arc = 10.0 * t;
         firnen.moveTo(track.eval_arc(arc));
-        firnen.lookAt(track.eval_deriv_arc(arc));
+        firnen.lookInDir(track.eval_deriv_arc(arc).polar());
     });
 
     // Load up our DragonBorn!
@@ -250,7 +242,7 @@ void initScene() {
     dragonBorn.setUpdateFunc([=](double t, double /*dt*/) {
         auto param = 0.01 * t;
         dragonBorn.moveTo(track.eval_t(param));
-        dragonBorn.lookAt(track.eval_deriv_t(param));
+        dragonBorn.lookInDir(track.eval_deriv_t(param).polar());
         dragonBorn.setRadius(0.5 * cos(t) + 1.5);
     });
 

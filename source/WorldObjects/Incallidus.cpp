@@ -7,6 +7,8 @@ void Incallidus::addWASDControls(double speedPerSec, bool *pressed, double dt,
     Vec up      = this->up();
     Vec forward = VecPolar(m_heading, 0, 1);
 
+    this->lookInDir(forward);
+
     auto speed = speedPerSec * dt;
 
     // Basic WASD controls to move forward and sideways, *as seen by the
@@ -34,9 +36,12 @@ void Incallidus::addWASDControls(double speedPerSec, bool *pressed, double dt,
     m_pos      = world.eval(m_pos.x, m_pos.z);
     Vec tarPos = world.eval(vel.x + m_pos.x, vel.z + m_pos.z);
 
-    // info("%s\n%s", m_pos, tarPos);
-
     vel = m_pos - tarPos;
+
+    if (vel.norm()) {
+        vel = speed * vel.normalize();
+    }
+
 
     this->setVelocity(vel);
 }
