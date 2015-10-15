@@ -169,7 +169,6 @@ void initScene() {
     pointLights[1].follow(&firnen);
     pointLights[2].follow(&dragonBorn);
 
-
     drawn.push_back(&spotlight);
     spotlight.enable();
     spotlight.diffuse(Color(0.2, 0.2, 0.2).v);
@@ -179,7 +178,9 @@ void initScene() {
     spotlight.setUpdateFunc([&](double t, double /*dt*/) {
         auto color
             = 0.05 * Color(cos(3.0 * t), cos(5.0 * t), cos(1.0 * t)) + 0.05;
+        spotlight.ambient(color.v);
         spotlight.diffuse(color.v);
+        spotlight.specular(color.v);
 
         auto vp  = VecPolar(0.68 * t, 0.0, 5.0);
         auto pos = vp.cart() + Vec(0.0, 5.0, 0.0);
@@ -229,7 +230,8 @@ void initScene() {
         VecPolar vecTest;
         inc.lookAt(-inc.pos());
         inc.setRadius(0.1 * cos(t) + 0.5);
-        if (activeHero == &inc) {
+        if (activeHero == &inc
+            && (activeCam == &arcballcam || activeCam == &firstPerson)) {
             inc.addWASDControls(100.0, keyPressed, dt, worldSurface);
         }
     });
