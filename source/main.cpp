@@ -3,6 +3,7 @@
 #include "WorldObjects.hpp"
 
 #include "yaml-cpp/yaml.h"
+#include <fstream>
 
 FirnensCart firnenCart;
 Track track;
@@ -256,7 +257,18 @@ int main(int argc, char **argv) {
     errno = 0;
     srand(static_cast<unsigned int>(time(nullptr)));
 
-    YAML::Parser parser;
+    YAML::Node config = YAML::LoadFile("assets/world/Windhelm.yaml");
+    info("%s", config["cat"]);
+
+    // std::ifstream fin("assests/world/Windhelm.yaml");
+    // YAML::Parser parser(fin);
+
+    // YAML::Node doc;
+    // while (parser.GetNextDocument(doc)) {
+    //     // info("%s", doc);
+    // }
+
+
 
     initGLUT(&argc, argv);
 
