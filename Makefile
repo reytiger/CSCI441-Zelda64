@@ -1,8 +1,11 @@
 FLAGS := -std=c++11 -g -Os -fmax-errors=5
 Wwarnings := -Wall -Wextra
-Wno_warnings := -Wno-char-subscripts -Wno-deprecated-declarations -Wno-unused-variable
+Wno_warnings := -Wno-char-subscripts -Wno-deprecated-declarations -Wno-unused-variable -Wno-narrowing
+
 # Any directory in 'include' is fair game.
-INCPATH := -Iinclude -Iext -Iext/yaml/include
+INCPATH := -Iinclude -Iext -Iext/yaml/include -Iext/fmod/inc
+LIBPATH := -Lext/fmod/lib/x86_64
+
 CXXFLAGS += $(INCPATH) $(FLAGS) $(Wwarnings) $(Wno_warnings)
 
 YAML_LIB=libyaml-cpp.a
@@ -20,7 +23,7 @@ else ifeq ($(shell uname), Darwin)
 
 # Linux and all other builds
 else
-	LD_FLAGS += $(LIBPATH) -lglut -lGL -lGLU -lm -L./ext -lyaml-cpp
+	LD_FLAGS += $(LIBPATH) -lglut -lGL -lGLU -lm -L./ext -lyaml-cpp -lfmod
 endif
 
 # Thanks, SO!

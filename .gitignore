@@ -45,5 +45,6 @@ perf-stats
 # nsf files, they are on network drives
 .nfs*
 
-# boost lib
+# External libs
 ext/boost
+ext/fmod
