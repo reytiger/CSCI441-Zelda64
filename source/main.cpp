@@ -22,8 +22,8 @@ FMOD::System *sys = nullptr;
 FMOD::Sound *skyrim_theme = nullptr;
 FMOD::Sound *skyrim_shout = nullptr;
 
-FMOD::Channel *channel = nullptr;
-
+FMOD::Channel *themeCh = nullptr;
+FMOD::Channel *shoutCh = nullptr;
 
 // Defines the menu options.
 // See handleRightClickMenu() and initRightClickMenu() for details.
@@ -67,6 +67,44 @@ void loadFromFile(std::string file) {
     // YAML::Node
 }
 
+// TODO: Make these classes
+void updateSource() {
+    // Place the theme on the active hero
+    auto pos             = activeHero->pos();
+    FMOD_VECTOR themePos = {pos.x, pos.y, pos.z};
+
+    auto vel             = activeHero->vel();
+    FMOD_VECTOR themeVel = {vel.x, vel.y, vel.z};
+
+    themeCh->set3DAttributes(&themePos, &themeVel);
+
+    // And the shout on Dragonborn!
+    pos                       = dragonBorn.pos();
+    FMOD_VECTOR dragonBornPos = {pos.x, pos.y, pos.z};
+
+    vel                       = dragonBorn.vel();
+    FMOD_VECTOR dragonbornVel = {vel.x, vel.y, vel.z};
+
+    shoutCh->set3DAttributes(&dragonBornPos, &themeVel);
+}
+
+void updateListener() {
+    auto pos                 = activeCam->pos();
+    FMOD_VECTOR listener_pos = {pos.x, pos.y, pos.z};
+
+    auto vel                 = activeCam->vel();
+    FMOD_VECTOR listener_vel = {vel.x, vel.y, vel.z};
+
+    auto forward                 = activeCam->lookAt();
+    FMOD_VECTOR listener_forward = {forward.x, forward.y, forward.z};
+
+    auto up                 = activeCam->up();
+    FMOD_VECTOR listener_up = {up.x, up.y, up.z};
+
+    sys->set3DListenerAttributes(
+        0, &listener_pos, &listener_vel, &listener_forward, &listener_up);
+}
+
 // This function is expected by PrettyGLUT, because I designed it to get
 // done fast, not smart. We can change this later, but this makes sure it
 // builds.
@@ -88,11 +126,22 @@ void updateScene(double t, double dt) {
     // TODO: Make this positional.
     if (keyPressed[' ']) {
         FMOD::Sound *playing = nullptr;
-        channel->getCurrentSound(&playing);
+        shoutCh->getCurrentSound(&playing);
         if (playing != skyrim_shout) {
-            sys->playSound(skyrim_shout, nullptr, false, &channel);
+            // The internet told me to.
+            // http://stackoverflow.com/a/13838022
+            sys->playSound(skyrim_shout, nullptr, true, &shoutCh);
+            // Make the shout much louder than the music.
+            shoutCh->setVolume(5.0f);
+            shoutCh->setPaused(false);
         }
     }
+
+    // Move the source with the active Hero.
+    updateSource();
+
+    // And the listener with the active camera.
+    updateListener();
 }
 
 void initScene() {
@@ -291,21 +340,31 @@ void initRightClickMenu() {
     glutAttachMenu(GLUT_RIGHT_BUTTON);
 }
 
-
 // This blog post was helpful.
 // https://katyscode.wordpress.com/2012/10/05/cutting-your-teeth-on-fmod-part-1-build-environment-initialization-and-playing-sounds/
+// So was this one:
+// http://glasnost.itcarlow.ie/~powerk/technology/FMOD/FMOD%203d%20Settings.html
 // Initalizes FMOD.
 void initFMOD() {
     FMOD::System_Create(&sys);
     sys->init(100, FMOD_INIT_NORMAL, nullptr);
 
     // In their tongue, he is Dovahkiin... DRAGONBORN!
-    sys->createStream(
-        "assets/audio/skyrim-theme.mp3", FMOD_DEFAULT, nullptr, &skyrim_theme);
-	sys->playSound(skyrim_theme, nullptr, false, nullptr);
+    sys->createStream("assets/audio/skyrim-theme.mp3",
+                      FMOD_LOOP_NORMAL | FMOD_3D,
+                      nullptr,
+                      &skyrim_theme);
+    sys->playSound(skyrim_theme, nullptr, true, &themeCh);
 
+    // Do not mess with Dovahkiin.
     sys->createSound(
-        "assets/audio/skyrim-shout.mp3", FMOD_DEFAULT, nullptr, &skyrim_shout);
+        "assets/audio/skyrim-shout.mp3", FMOD_3D, nullptr, &skyrim_shout);
+
+    themeCh->setVolume(1.0f);
+    themeCh->set3DMinMaxDistance(5.0f, 1e3f);
+    themeCh->setPaused(false);
+
+    shoutCh->set3DMinMaxDistance(15.0f, 1e3f);
 }
 
 int main(int argc, char **argv) {
