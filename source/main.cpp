@@ -40,7 +40,6 @@ void loadFromFile(std::string file) {
     YAML::Node points = worldCPoints["points"];
     for (std::size_t i = 0; i < points.size(); i++) {
         info("Look at a point: %s", points[i][1].as<double>());
-
     }
     info("%s", points.size());
     // info("%s", worldCPoints.Type());
@@ -81,6 +80,12 @@ void initScene() {
             light.moveTo(pos);
         });
     }
+
+    // Make them follow people!
+    pointLights[0].follow(&inc);
+    pointLights[1].follow(&firnen);
+    pointLights[2].follow(&dragonBorn);
+
 
     drawn.push_back(&spotlight);
     spotlight.enable();
@@ -137,19 +142,17 @@ void initScene() {
     drawn.push_back(&inc);
     inc.setRadius(0.2);
     inc.moveTo(worldSurface.eval(-1.2, -0.6));
-    inc.setUpdateFunc([=](double /*t*/, double dt) {
+    inc.setUpdateFunc([=](double t, double dt) {
         VecPolar vecTest;
-        inc.lookAt(Vec(0.0, 0.0, 0.0));
-        // info("%s : %s", vecTest, inc.lookAt());
-        // info("%s", inc.heading());
-        inc.addWASDControls(100.0, keyPressed, dt, worldSurface);
-        // inc.moveTo(worldSurface.eval(inc.pos().x, inc.pos().z));
+        inc.lookAt(-inc.pos());
+        inc.setRadius(0.1 * cos(t) + 0.5);
+        if (activeHero == &inc) {
+            inc.addWASDControls(100.0, keyPressed, dt, worldSurface);
+        }
     });
 
     // Load up Firnen!
     drawn.push_back(&firnen);
-    // TODO: move cart to firnen class
-    // drawn.push_back(&firnenCart);
     firnen.load();
     firnen.setUpdateFunc([=](double t, double /*dt*/) {
         auto arc = 10.0 * t;
@@ -163,8 +166,8 @@ void initScene() {
         auto param = 0.01 * t;
         dragonBorn.moveTo(track.eval_t(param));
         dragonBorn.lookAt(track.eval_deriv_t(param));
+        dragonBorn.setRadius(0.5 * cos(t) + 1.5);
     });
-
 
     // Objects on the world surface.
     drawn.push_back(&flagBanner);
@@ -176,8 +179,6 @@ void initScene() {
     // Track for our heros to race on!
     drawn.push_back(&track);
     track.init();
-    // track.moveTo(Vec(30.0, 30.0, 30.0));
-    // track.loadFile("./assets/world/bezier-track.csv");
 }
 
 void handleMainMenu(int val) {

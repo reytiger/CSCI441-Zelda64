@@ -8,22 +8,23 @@ public:
         if (!m_visible) {
             return;
         }
-        // The top of the hills are at 25.8.
-        // This effectively gives color as a ratio of where you are in the map.
-        auto color = m_pos / Vec(100.0, 100.0, 25.8);
+
+        static auto mat0 = Material::random();
+        static auto mat1 = Material::random();
+        static auto mat2 = Material::random();
 
         pushMatrixAnd([&]() {
             glTranslated(m_pos.x, m_pos.y, m_pos.z);
             glRotated(180.0 / M_PI * m_heading, 0.0, 0.0, 1.0);
             glScaled(m_radius, m_radius, m_radius);
 
-            glColor3d(1.0 - color.x, 0.5, 0.5);
+            mat0.set();
             drawBody();
 
-            glColor3d(0.5, 1.0 - color.y, 0.5);
+            mat1.set();
             drawFrontNose();
 
-            glColor3d(0.5, 0.5, 1.0 - color.z);
+            mat2.set();
             drawBackNose();
         });
     }

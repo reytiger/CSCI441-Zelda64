@@ -34,11 +34,16 @@ void DragonBorn::draw() const {
         };
         glPopMatrix();
 
-        glColor3f(1, 0.5, 0.5);
-        glutSolidSphere(1.5, 20, 20);
+        Material::Pearl.set();
+        glutSolidSphere(m_radius, 20, 20);
 
-        auto pos = m_arc.cart() * 2;
-        glTranslated(pos.x, pos.y, pos.z);
-        glutSolidSphere(0.2, 20, 20);
+        if (kDrawLookAtTargets) {
+            auto pos = m_arc.cart() * 2;
+            glTranslated(pos.x, pos.y, pos.z);
+            auto mat = Material::Gold;
+            mat.emission(mat.diffuse());
+            mat.set();
+            glutSolidSphere(0.2, 20, 20);
+        }
     });
 }

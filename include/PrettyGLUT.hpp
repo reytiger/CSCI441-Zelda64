@@ -18,7 +18,6 @@
         info("Following %s\n", #hero);                                         \
     } while (0)
 
-
 // Things to draw
 // Pointers stored here can expect to live the duration of the program.
 extern std::vector<WorldObject *> drawn;

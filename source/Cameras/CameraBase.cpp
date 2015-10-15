@@ -42,6 +42,9 @@ const float *Camera::get_modelview() const {
 }
 
 void Camera::draw() const {
+    if (!m_visible) {
+        return;
+    }
     pushMatrixAnd([&]() {
         m_material.set();
         glTranslated(m_pos.x, m_pos.y, m_pos.z);

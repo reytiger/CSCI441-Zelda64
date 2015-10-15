@@ -18,8 +18,6 @@ public:
     void init();
     void updateAnimation(double t, double dt);
 
-    Point eval(double u, double v);
-
     virtual void draw() const;
 
 private:

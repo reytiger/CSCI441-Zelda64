@@ -7,7 +7,6 @@
 #include "WorldObjects/BezierCurve.hpp"
 #include "WorldObjects/CallListObject.hpp"
 
-
 class Track : public WorldObject {
 public:
     ////////////////////////////////////////////////////////////////////////////
@@ -34,7 +33,6 @@ private:
     // control points
     // void drawControlPoints() const;
     // control curves
-
 
     // TODO: update after calllist works
     void drawTrackBlocks() const;

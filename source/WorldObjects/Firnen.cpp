@@ -28,13 +28,15 @@ void Firnen::draw() const {
         glTranslated(m_pos.x, m_pos.y, m_pos.z);
 
         // draw the looking location
-        glPushMatrix();
-        {
-            auto pos = m_arc.cart() * 2;
-            glTranslated(pos.x, pos.y, pos.z);
-            glutSolidSphere(0.2, 20, 20);
-        };
-        glPopMatrix();
+        if (kDrawLookAtTargets) {
+            glPushMatrix();
+            {
+                auto pos = m_arc.cart() * 2;
+                glTranslated(pos.x, pos.y, pos.z);
+                glutSolidSphere(0.2, 20, 20);
+            };
+            glPopMatrix();
+        }
 
         // draw their name.
         glPushMatrix();

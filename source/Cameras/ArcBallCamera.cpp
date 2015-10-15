@@ -10,6 +10,9 @@ void ArcBallCamera::adjustGLU() const {
 }
 
 void ArcBallCamera::draw() const {
+    if (!m_visible) {
+        return;
+    }
     m_material.set();
 
     // Draw a sphere where the camera is viewing from.
@@ -19,9 +22,11 @@ void ArcBallCamera::draw() const {
         glutSolidSphere(0.1, 10, 10);
     });
 
-    // And a cube where it "is".
-    pushMatrixAnd([&]() {
-        glTranslated(m_pos.x, m_pos.y, m_pos.z);
-        glutSolidCube(0.1);
-    });
+    if (kDrawLookAtTargets) {
+        // And a cube where it "is".
+        pushMatrixAnd([&]() {
+            glTranslated(m_pos.x, m_pos.y, m_pos.z);
+            glutSolidCube(0.1);
+        });
+    }
 }

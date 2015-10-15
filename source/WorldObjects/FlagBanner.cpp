@@ -37,7 +37,8 @@ void FlagBanner::drawFlag() const {
                 drawing.y = m_height - 2.0 * heightFlag;
                 next.y    = m_height - 2.0 * heightFlag;
 
-                auto normal = drawing.cross(next);
+                // TODO: Compute normals properly.
+                auto normal = Vec(0.0, 0.0, 1.0);
 
                 // first triangle
                 glNormal3d(normal.x, normal.y, normal.z);
@@ -114,23 +115,4 @@ void FlagBanner::init() {
     glChk();
     m_WindsCurve.loadFile(m_FlagCPointsFile);
     glChk();
-}
-
-Point FlagBanner::eval(double /*u*/, double /*v*/) {
-    // firt, get the x pos.
-    // std::vector<Point> tmp;
-    // for (int i = 0; i < m_curvesCPoints.size(); ++i) {
-    //     BezierCurve currentCurve = m_curvesCPoints.at(i);
-    //     double _u = (u - currentCurve.getXmin())
-    //                 / (currentCurve.getXmax() - currentCurve.getXmin());
-    //     tmp.push_back(m_curvesCPoints.at(i).evalCubicPoint(_u));
-    // }
-
-    // // now get the z position.
-    // BezierCurve uCurve = BezierCurve(tmp);
-    // double _v = (v - uCurve.getZmin()) / (uCurve.getZmax() -
-    // uCurve.getZmin());
-    // return uCurve.evalCubicPoint(_v);
-    Point tmp;
-    return tmp;
 }

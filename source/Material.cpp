@@ -57,7 +57,6 @@ Material::Material(double ambient0, double ambient1, double ambient2,    //
     m_shininess = shininess;
 }
 
-
 void Material::set() const {
     glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, m_ambient.v);
     glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, m_diffuse.v);

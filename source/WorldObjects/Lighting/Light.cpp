@@ -29,12 +29,15 @@ void Light::update(double t, double dt) {
 }
 
 void Light::draw() const {
+    auto mat = Material::WhiteRubber;
+    mat.emission(m_diffuse);
+
     pushMatrixAnd([&]() {
         float lpos[4] = {(float)pos().x, (float)pos().y, (float)pos().z, 1.0f};
         glLightfv(m_lightid, GL_POSITION, lpos);
+
         glTranslated(pos().x, pos().y, pos().z);
         glRotated(45.0, 1.0, 1.0, 1.0);
-        glColor3d(1.0, 1.0, 1.0);
         glutSolidCube(0.15);
     });
 
@@ -43,8 +46,6 @@ void Light::draw() const {
 
         glTranslated(lookatPos.x, lookatPos.y, lookatPos.z);
         glRotated(45.0, 1.0, 1.0, 1.0);
-        glColor3d(1.0, 0.0, 1.0);
-
         glutSolidCube(0.075);
     });
 }

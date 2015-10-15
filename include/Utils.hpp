@@ -23,5 +23,11 @@
 #include <cmath>
 #include <cstring>
 
-// ... I've given up.
+// ... I've given up and I'm lazy.
 void drawText(const std::string &text, Vec pos, Color color);
+
+#ifndef DRAW_LOOKAT_TARGETS
+static bool kDrawLookAtTargets = false;
+#else
+static bool kDrawLookAtTargets = true;
+#endif

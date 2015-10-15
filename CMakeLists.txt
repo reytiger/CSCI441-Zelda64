@@ -73,7 +73,7 @@ if (CMAKE_COMPILER_IS_GNUCXX)
   set(Wwarnings "-Wall -Wextra")
 
   # Warnings to turn OFF
-  set(Wno-warnings "-Wno-deprecated-declarations")
+  set(Wno-warnings "-Wno-char-subscripts -Wno-deprecated-declarations -Wno-unused-variable")
 
 # This *might* catch Clang, but pretend it only catches MSVC for now.
 else()
@@ -107,6 +107,6 @@ target_link_libraries(guildWars
                       yaml-cpp)
 
 if("${AUTO_FORMAT}")
-  add_custom_target(Format COMMAND clang-format ${sources} ${includes} -i -style=.clang-format)
+  add_custom_target(Format COMMAND clang-format ${sources} ${includes} -i)
   add_dependencies(guildWars Format)
 endif()
