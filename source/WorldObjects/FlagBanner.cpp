@@ -109,10 +109,3 @@ void FlagBanner::updateAnimation(double t, double /*dt*/) {
 }
 
 /*************************  SET UP FOR CURVES  ********************************/
-
-void FlagBanner::init() {
-    m_FlagCPointsFile = "assets/world/flagBanner.csv";
-    glChk();
-    m_WindsCurve.loadFile(m_FlagCPointsFile);
-    glChk();
-}

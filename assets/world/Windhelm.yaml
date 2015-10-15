@@ -39,6 +39,11 @@ FlagBanner:
     points:
         # each point is a flag location x,z. Height (y) is evaluated.
         - [-6, 4.5]
+    windPoints:
+        - [5,0,0]
+        - [1.5,0,20]
+        - [-1.5,0,-10]
+        - [-5,0,0]
 
 Track:
     numberOfPoints: 7

@@ -15,7 +15,10 @@ public:
     // constructors
     FlagBanner() : WorldObject(){};
 
-    void init();
+    void setCurvesCPoints(std::vector<Vec> v) {
+        m_WindsCurve.setVec(v);
+        m_WindsCurve.recomputeCurve(10000);
+    }
     void updateAnimation(double t, double dt);
 
     virtual void draw() const;

@@ -80,6 +80,7 @@ void loadFromFile(std::string file) {
 
     // Last obj for the world, lets get the flag!
     YAML::Node flagBannerCPoints = node["FlagBanner"];
+    // first get it's location
     YAML::Node f_points = flagBannerCPoints["points"];
     if (f_points.size() != flagBannerCPoints["numberOfFlags"].as<size_t>()) {
         fatal("The number of points spesified for the flags does not match");
@@ -92,6 +93,17 @@ void loadFromFile(std::string file) {
         flagsVecPoints.push_back(v);
     }
     flagBanner.moveTo(flagsVecPoints.at(0));
+    // next get it's wind curver controle points
+    YAML::Node fw_points = flagBannerCPoints["windPoints"];
+    std::vector<Vec> flagWindVecPoints;
+    for (std::size_t i = 0; i < fw_points.size(); ++i) {
+        double x = fw_points[i][0].as<double>();
+        double y = fw_points[i][1].as<double>();
+        double z = fw_points[i][2].as<double>();
+        Vec v = Vec(x, y, z);
+        flagWindVecPoints.push_back(v);
+    }
+    flagBanner.setCurvesCPoints(flagWindVecPoints);
 
     // Done with the world surface, Now we need to load the track control points
     YAML::Node trackCPoints = node["Track"];
@@ -296,7 +308,6 @@ void initScene() {
 
     // Objects on the world surface.
     drawn.push_back(&flagBanner);
-    flagBanner.init();
     flagBanner.setUpdateFunc(
         [=](double t, double dt) { flagBanner.updateAnimation(t, dt); });
 
