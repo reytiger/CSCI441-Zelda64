@@ -21,16 +21,18 @@ public:
     virtual void draw() const;
     virtual void update(double t, double dt);
     bool loadControlPoints(string filename);
+    void setControlPoints(std::vector<Vec> v) { m_controlPoints = v; }
+    void setZmaxmin();
 
 private:
-    int m_numberOfCurves;
+    int m_numberOfCurves = 4;
 
     void drawGround() const;
     void drawTree() const;
 
     // set up for control points
     string m_WorldSurfaceCPointsFile;
-    vector<Vec> m_controlPoints;
+    std::vector<Vec> m_controlPoints;
     std::vector<Vec> m_trees;
     // control points
     void drawControlPoints() const;
