@@ -37,13 +37,23 @@ void loadFromFile(std::string file) {
 
     // ok, now lets get all the world Surface infomation and save it
     YAML::Node worldCPoints = node["WorldCPoints"];
-    YAML::Node points = worldCPoints["points"];
-    for (std::size_t i = 0; i < points.size(); i++) {
-        info("Look at a point: %s", points[i][1].as<double>());
+    YAML::Node w_points = worldCPoints["points"];
+    if (w_points.size() != worldCPoints["numberOfPoints"].as<size_t>()) {
+        fatal("The number of points spesified for the world does not match");
     }
-    info("%s", points.size());
-    // info("%s", worldCPoints.Type());
-    // info("%s", worldCPoints["numberOfPoints"].as<int>());
+    std::vector<Vec> worldVecPoints;
+    for (std::size_t i = 0; i < w_points.size(); i++) {
+        double x = w_points[i][0].as<double>();
+        double y = w_points[i][1].as<double>();
+        double z = w_points[i][2].as<double>();
+        Vec v = Vec(x, y, z);
+        worldVecPoints.push_back(v);
+    }
+    worldSurface.setControlPoints(worldVecPoints);
+    worldSurface.setZmaxmin();
+
+    // sweet, time to get the trees
+    // YAML::Node
 }
 
 // This function is expected by PrettyGLUT, because I designed it to get

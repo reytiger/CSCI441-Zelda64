@@ -187,9 +187,48 @@ bool WorldSurface::loadControlPoints(string filename) {
 
         // Point createPoint(x, y, z);
         Vec createVec = Vec(x, y, z);
-        m_controlPoints.push_back(createVec);
+        // m_controlPoints.push_back(createVec);
     }
 
+    // if (m_controlPoints.size() > 0) {
+    //     m_zMin = m_controlPoints.at(0).z;
+    //     m_zMax = m_controlPoints.at(0).z;
+    // }
+
+    // for (int i = 0; i < m_numberOfCurves; ++i) {
+    //     std::vector<Vec> v;
+    //     v.push_back(m_controlPoints.at(i * 4));
+    //     v.push_back(m_controlPoints.at(i * 4 + 1));
+    //     v.push_back(m_controlPoints.at(i * 4 + 2));
+    //     v.push_back(m_controlPoints.at(i * 4 + 3));
+    //     BezierCurve create = BezierCurve(v);
+    //     create.evalMaxMin();
+    //     m_curvesCPoints.push_back(create);
+    //     if (create.getZmin() < m_zMin) {
+    //         m_zMin = create.getZmin();
+    //     }
+    //     if (create.getZmax() > m_zMax) {
+    //         m_zMax = create.getZmax();
+    //     }
+    // }
+
+    // Load in the Trees CPoints
+    getline(file, str);
+    int numOfTrees = atoi(str.c_str());
+    for (int i = 0; i < numOfTrees; ++i) {
+        getline(file, str, ',');
+        float x = static_cast<float>(atoi(str.c_str()));
+
+        getline(file, str, '\n');
+        float z = static_cast<float>(atoi(str.c_str()));
+
+        Vec createVec = Vec(x, 0.0, z);
+        m_trees.push_back(createVec);
+    }
+    return true;
+}
+
+void WorldSurface::setZmaxmin() {
     if (m_controlPoints.size() > 0) {
         m_zMin = m_controlPoints.at(0).z;
         m_zMax = m_controlPoints.at(0).z;
@@ -211,21 +250,6 @@ bool WorldSurface::loadControlPoints(string filename) {
             m_zMax = create.getZmax();
         }
     }
-
-    // Load in the Trees CPoints
-    getline(file, str);
-    int numOfTrees = atoi(str.c_str());
-    for (int i = 0; i < numOfTrees; ++i) {
-        getline(file, str, ',');
-        float x = static_cast<float>(atoi(str.c_str()));
-
-        getline(file, str, '\n');
-        float z = static_cast<float>(atoi(str.c_str()));
-
-        Vec createVec = Vec(x, 0.0, z);
-        m_trees.push_back(createVec);
-    }
-    return true;
 }
 
 Vec WorldSurface::eval(double x, double z) const {

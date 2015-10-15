@@ -1,9 +1,29 @@
-cat:
-    string-proerty: 'this is a test'
-
+# All the controle points for Windhelm.
 WorldCPoints:
     numberOfCurvers: 1
     numberOfPoints: 16
     points: 
+        # first curve
         - [4,0,-4]
         - [2,1,-4]
+        - [-2,1,-4]
+        - [-4,0,-4]
+        # second curve
+        - [4,0,-2]
+        - [2,-5,-2]
+        - [-2,-20,-2]
+        - [-4,-1,-2]
+        # thrid curver
+        - [4,0,2]
+        - [2,0,2]
+        - [-2,0,2]
+        - [-4,0,2]
+        # forth curver
+        - [4,2,4]
+        - [2,1,4]
+        - [-2,2,4]
+        - [-4,1,4]
+
+#
+Trees:
+    numberOfTrees: 4
