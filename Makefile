@@ -38,7 +38,7 @@ all: format depend $(BINARY)
 ext/$(YAML_LIB):
 	@mkdir -p object/yaml/
 	+cd object/yaml/ \
-		&& cmake ../../ext/yaml/ -G $(YAML_CMAKE_GEN) -DYAML_CPP_BUILD_TOOLS=OFF \
+		&& cmake ../../ext/yaml/ -G $(YAML_CMAKE_GEN) -DYAML_CPP_BUILD_TOOLS=OFF -DBoost_INCLUDE_DIR=../../ext\
 		&& make --quiet \
 		&& cp $(YAML_LIB) ../../ext
 
