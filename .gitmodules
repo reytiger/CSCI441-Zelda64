@@ -1,3 +1,6 @@
-[submodule "include/Utils/tinyformat"]
-	path = include/Utils/tinyformat
-	url = git@github.com:c42f/tinyformat.git
+[submodule "ext/tinyformat"]
+	path = ext/tinyformat
+	url = https://github.com/c42f/tinyformat.git
+[submodule "ext/yaml"]
+	path = ext/yaml
+	url = https://github.com/jbeder/yaml-cpp.git
