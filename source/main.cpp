@@ -64,7 +64,38 @@ void loadFromFile(std::string file) {
     worldSurface.setZmaxmin();
 
     // sweet, time to get the trees
-    // YAML::Node
+    YAML::Node treesCPoints = node["Trees"];
+    YAML::Node tre_points = treesCPoints["points"];
+    if (tre_points.size() != treesCPoints["numberOfTrees"].as<size_t>()) {
+        fatal("The number of points spesified for the trees does not match");
+    }
+    std::vector<Vec> treesVecPoints;
+    for (std::size_t i = 0; i < tre_points.size(); ++i) {
+        double x = tre_points[i][0].as<double>();
+        double z = tre_points[i][1].as<double>();
+        Vec v = Vec(x, 0.0, z);
+        treesVecPoints.push_back(v);
+    }
+    worldSurface.setTreesCPoints(treesVecPoints);
+
+    // Last obj for the world, lets get the flag!
+    YAML::Node flagBannerCPoints = node["FlagBanner"];
+    YAML::Node f_points = flagBannerCPoints["points"];
+    if (f_points.size() != flagBannerCPoints["numberOfFlags"].as<size_t>()) {
+        fatal("The number of points spesified for the flags does not match");
+    }
+    std::vector<Vec> flagsVecPoints;
+    for (std::size_t i = 0; i < f_points.size(); ++i) {
+        double x = f_points[i][0].as<double>();
+        double z = f_points[i][1].as<double>();
+        Vec v = Vec(x, worldSurface.eval(x, z).y, z);
+        flagsVecPoints.push_back(v);
+    }
+
+    flagBanner.moveTo(flagsVecPoints.at(0));
+
+
+    // Done with the world surface, Now we need to load the track control points
 }
 
 // TODO: Make these classes
@@ -191,7 +222,6 @@ void initScene() {
     // TODO: draw surface as a callback
     drawn.push_back(&worldSurface);
     worldSurface.moveToY(1.0);
-    worldSurface.loadControlPoints("assets/world/WorldSurfaceCPoints.csv");
     glChk();
 
     // Cameras are important. Note, they are hard-coded in the render loop.
@@ -255,7 +285,6 @@ void initScene() {
     // Objects on the world surface.
     drawn.push_back(&flagBanner);
     flagBanner.init();
-    flagBanner.moveTo(Vec(-2.0, 0.3, 2.0));
     flagBanner.setUpdateFunc(
         [=](double t, double dt) { flagBanner.updateAnimation(t, dt); });
 

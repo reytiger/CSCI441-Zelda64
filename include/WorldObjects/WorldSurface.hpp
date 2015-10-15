@@ -20,9 +20,9 @@ public:
 
     virtual void draw() const;
     virtual void update(double t, double dt);
-    bool loadControlPoints(string filename);
     void setControlPoints(std::vector<Vec> v) { m_controlPoints = v; }
     void setZmaxmin();
+    void setTreesCPoints(std::vector<Vec> v) { m_trees = v; }
 
 private:
     int m_numberOfCurves = 4;

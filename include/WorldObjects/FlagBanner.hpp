@@ -25,11 +25,9 @@ private:
     void drawPole() const;
 
     double m_height = 20;
-
     BezierCurve m_WindsCurve;
 
     // set up for control points
     string m_FlagCPointsFile;
-
     vector<Point> m_controlPoints;
 };
