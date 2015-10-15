@@ -6,11 +6,9 @@ option(AUTO_FORMAT "Use clang-format to automatically format code before buildin
 set(S "${CMAKE_SOURCE_DIR}")
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${S}/cmake")
 
+# OpenGL / GLUT
 find_package(OpenGL)
 include(FindFreeGLUT)
-
-find_package(OpenAL)
-include(FindALUT)
 
 # tinyformat
 include_directories("${S}/ext/")
@@ -18,11 +16,14 @@ include_directories("${S}/ext/")
 # yaml stuff
 include_directories("${S}/ext/yaml/include")
 
+# Boost
+find_package(Boost REQUIRED)
+include_directories(${Boost_INCLUDE_DIRS})
+
+# Not needed. We just want the library.
 set(YAML_CPP_BUILD_TOOLS OFF)
 set(YAML_CPP_BUILD_CONTRIB OFF)
 add_subdirectory("${S}/ext/yaml")
-set_target_properties(yaml-cpp PROPERTIES COMPILE_FLAGS "-w")
-
 
 # CMake must be manually updated anytime a new file is added, when using globs.
 # You can
@@ -83,7 +84,10 @@ else()
   set(Wwarnings "/W3")
 
   # Warnings to turn OFF
-  set(Wno-warnings "")
+  # C4244 and C4305 warn about implicit conversions between doubles, floats, and ints.
+  # 	They're annoying and too much work to keep up with.
+  # C4267 complains about conversions from size_t to int.
+  set(Wno-warnings "/wd4244 /wd4305 /wd4267")
 
   # MSVC provides safe versions of a ton of functions, and then warns if you don't
   # use them.
@@ -103,6 +107,6 @@ target_link_libraries(guildWars
                       yaml-cpp)
 
 if("${AUTO_FORMAT}")
-  add_custom_target(formatting COMMAND clang-format ${sources} ${includes} -i)
-  add_dependencies(guildWars formatting)
+  add_custom_target(Format COMMAND clang-format ${sources} ${includes} -i -style=.clang-format)
+  add_dependencies(guildWars Format)
 endif()

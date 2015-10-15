@@ -1,9 +1,9 @@
 #include "PrettyGLUT.hpp"
 
 #include "WorldObjects.hpp"
-
 #include "yaml-cpp/yaml.h"
-#include <fstream>
+
+#include <array>
 
 FirnensCart firnenCart;
 Track track;
