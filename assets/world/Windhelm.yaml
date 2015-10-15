@@ -40,3 +40,16 @@ FlagBanner:
         # each point is a flag location x,z. Height (y) is evaluated.
         - [-6, 4.5]
 
+Track:
+    numberOfPoints: 7
+    points:
+        # first curve
+        - [-25,0,25]
+        - [5,25,25]
+        - [0,25,-25]
+        - [0,0,-25]
+        # second curve, c1 continuos
+        - [0,-25,-25]
+        - [-25,-25,25]
+        - [-25,0,25]
+

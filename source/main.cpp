@@ -91,11 +91,23 @@ void loadFromFile(std::string file) {
         Vec v = Vec(x, worldSurface.eval(x, z).y, z);
         flagsVecPoints.push_back(v);
     }
-
     flagBanner.moveTo(flagsVecPoints.at(0));
 
-
     // Done with the world surface, Now we need to load the track control points
+    YAML::Node trackCPoints = node["Track"];
+    YAML::Node tra_points = trackCPoints["points"];
+    if (tra_points.size() != trackCPoints["numberOfPoints"].as<size_t>()) {
+        fatal("The number of points spesified for the trees does not match");
+    }
+    std::vector<Vec> trackVecPoints;
+    for (std::size_t i = 0; i < tra_points.size(); ++i) {
+        double x = tra_points[i][0].as<double>();
+        double y = tra_points[i][1].as<double>();
+        double z = tra_points[i][2].as<double>();
+        Vec v = Vec(x, y, z);
+        trackVecPoints.emplace_back(x, y, z);
+    }
+    track.setCurvesCPoints(trackVecPoints);
 }
 
 // TODO: Make these classes

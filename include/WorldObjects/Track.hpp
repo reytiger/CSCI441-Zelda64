@@ -15,6 +15,10 @@ public:
 
     // Point eval(double u, double v) const;
     void init();
+    void setCurvesCPoints(std::vector<Vec> v) {
+        m_halo.setVec(v);
+        m_halo.recomputeCurve(10000);
+    }
 
     Vec eval_t(double t);
     Vec eval_arc(double arc);
@@ -27,12 +31,7 @@ public:
 
 private:
     // set up for control points
-    string m_TrackCPointsFile;
     std::vector<BezierCurve> m_curvesCPoints;
-    // bool loadControlPoints(string filename);
-    // control points
-    // void drawControlPoints() const;
-    // control curves
 
     // TODO: update after calllist works
     void drawTrackBlocks() const;

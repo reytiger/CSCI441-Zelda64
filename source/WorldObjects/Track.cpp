@@ -58,11 +58,6 @@ void Track::drawTrackBlocks() const {
 /*************************  SET UP FOR CURVES  ********************************/
 ////////////////////////////////////////////////////////////////////////////////
 void Track::init() {
-    m_TrackCPointsFile = "assets/world/bezier-halo.csv";
-    glChk();
-    m_halo.loadFile(m_TrackCPointsFile);
-    glChk();
-
     m_trackCallBack = CallListObject([this](GLuint dl) {
         glNewList(dl, GL_COMPILE);
         drawTrackBlocks();
