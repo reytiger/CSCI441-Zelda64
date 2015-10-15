@@ -99,11 +99,9 @@ target_link_libraries(guildWars
                       ${FREEGLUT_LIBRARIES}
                       ${OPENAL_LIBRARIES}
                       ${ALUT_LIBRARIES}
-                      )
+                      yaml-cpp)
 
 if("${AUTO_FORMAT}")
   add_custom_target(formatting COMMAND clang-format ${sources} ${includes} -i)
   add_dependencies(guildWars formatting)
 endif()
-
-
