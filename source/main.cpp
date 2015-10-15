@@ -2,6 +2,8 @@
 
 #include "WorldObjects.hpp"
 
+#include "yaml-cpp/yaml.h"
+
 FirnensCart firnenCart;
 Track track;
 CallListObject roomFloor;
@@ -253,6 +255,8 @@ void initRightClickMenu() {
 int main(int argc, char **argv) {
     errno = 0;
     srand(static_cast<unsigned int>(time(nullptr)));
+
+    YAML::Parser parser;
 
     initGLUT(&argc, argv);
 

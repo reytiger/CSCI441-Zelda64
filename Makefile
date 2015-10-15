@@ -1,5 +1,5 @@
 FLAGS := -std=c++11 -g -Os -fmax-errors=5
-Wwarnings := -Wall -Wextra 
+Wwarnings := -Wall -Wextra
 Wno-warnings := -Wno-char-subscripts
 # Any directory in 'include' is fair game.
 INCPATH := -Iinclude -Iext -Iext/yaml/include
@@ -15,7 +15,7 @@ else ifeq ($(shell uname), Darwin)
 
 # Linux and all other builds
 else
-	LD_FLAGS += $(LIBPATH) -lglut -lGL -lGLU -lm
+	LD_FLAGS += $(LIBPATH) -lglut -lGL -lGLU -lm -L./ext -lyaml-cpp
 endif
 
 # Thanks, SO!
@@ -30,11 +30,18 @@ OBJECTS := $(strip $(addprefix object/, $(SOURCES:source/%.cpp=%.o)))
 
 all: format depend $(BINARY)
 
+ext/libyaml-cpp.a:
+	@mkdir -p object/yaml/
+	cd object/yaml/ \
+		&& cmake ../../ext/yaml/ -G "Unix Makefiles" -DYAML_CPP_BUILD_TOOLS=OFF \
+		&& make -j25 --quiet \
+		&& cp libyaml-cpp.a ../../ext
+
 format:
 	-@clang-format $(HEADERS) -i
 	-@clang-format $(SOURCES) -i
 
-$(BINARY): $(OBJECTS)
+$(BINARY): $(OBJECTS) ext/libyaml-cpp.a
 	$(CXX) -o $@ $(OBJECTS) $(LD_FLAGS)
 
 clean:
