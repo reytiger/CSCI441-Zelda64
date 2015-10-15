@@ -256,10 +256,12 @@ void initGLUT(int *argcp, char **argv) {
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
 
-    // Smooth looks so much better.
-    glShadeModel(GL_SMOOTH);
+    glShadeModel(GL_FLAT);
 
     glDisable(GL_COLOR_MATERIAL);
+
+    // This turns off ambient lighting. :D
+    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, Color(0.15, 0.15, 0.15, 1.0).v);
 }
 
 void startGuildWars() {

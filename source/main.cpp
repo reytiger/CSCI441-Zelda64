@@ -12,7 +12,7 @@ WorldSurface worldSurface;
 FlagBanner flagBanner;
 
 Spotlight spotlight;
-std::array<PointLight, 7> pointLights;
+std::array<PointLight, 3> pointLights;
 
 // Defines the menu options.
 // See handleRightClickMenu() and initRightClickMenu() for details.
@@ -51,12 +51,12 @@ void initScene() {
         drawn.push_back(&light);
 
         light.enable();
-        light.diffuse((0.05 * randColor()).v);
-        light.specular((0.05 * randColor()).v);
+        light.diffuse((0.15 * randColor()).v);
+        light.specular((0.15 * randColor()).v);
 
         double a = 3.0 * getRandd() - 1.0;
         double b = 3.0 * getRandd() - 1.0;
-        double c = 15.0 * getRandd() + 0.5;
+        double c = 5.0 * getRandd() + 0.5;
 
         light.setUpdateFunc([&light, a, b, c](double t, double /*dt*/) {
             auto phi = M_PI / 2.0 * (0.5 * sin(b * t) + 0.5);
@@ -70,15 +70,15 @@ void initScene() {
     spotlight.enable();
     spotlight.diffuse(Color(0.2, 0.2, 0.2).v);
     spotlight.exponent(1.0);
-    spotlight.cutoff(6.0);
+    spotlight.cutoff(12.0);
     // Spin in a circle at Y=10.0.
     spotlight.setUpdateFunc([&](double t, double /*dt*/) {
         auto color
             = 0.05 * Color(cos(3.0 * t), cos(5.0 * t), cos(1.0 * t)) + 0.05;
         spotlight.diffuse(color.v);
 
-        auto vp  = VecPolar(0.68 * t, 0.0, 2.0);
-        auto pos = vp.cart() + Vec(0.0, 50.0, 0.0);
+        auto vp  = VecPolar(0.68 * t, 0.0, 5.0);
+        auto pos = vp.cart() + Vec(0.0, 5.0, 0.0);
         spotlight.moveTo(pos);
         spotlight.lookAt((Vec() - spotlight.pos()));
     });
