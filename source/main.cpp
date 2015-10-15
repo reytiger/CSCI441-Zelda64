@@ -1,5 +1,8 @@
 #include "PrettyGLUT.hpp"
 
+#include "fmod_studio.hpp"
+#include "fmod.hpp"
+
 #include "WorldObjects.hpp"
 #include "yaml-cpp/yaml.h"
 
@@ -267,12 +270,18 @@ void initRightClickMenu() {
     glutAttachMenu(GLUT_RIGHT_BUTTON);
 }
 
+void initFMOD() {
+    FMOD::Studio::System *system = NULL;
+    FMOD::Studio::System::create(&system);
+}
+
 int main(int argc, char **argv) {
     errno = 0;
     srand(static_cast<unsigned int>(time(nullptr)));
 
     loadFromFile("assets/world/Windhelm.yaml");
 
+	initFMOD();
     initGLUT(&argc, argv);
 
     // It looks pretty.

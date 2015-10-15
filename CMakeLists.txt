@@ -20,6 +20,10 @@ include_directories("${S}/ext/yaml/include")
 find_package(Boost REQUIRED)
 include_directories(${Boost_INCLUDE_DIRS})
 
+# FMOD
+find_package(FMOD REQUIRED)
+include_directories("${FMOD_INCLUDE_DIRS}")
+
 # Not needed. We just want the library.
 set(YAML_CPP_BUILD_TOOLS OFF)
 set(YAML_CPP_BUILD_CONTRIB OFF)
@@ -102,8 +106,7 @@ add_executable(guildWars ${sources} ${includes})
 target_link_libraries(guildWars
                       ${OPENGL_LIBRARIES}
                       ${FREEGLUT_LIBRARIES}
-                      ${OPENAL_LIBRARIES}
-                      ${ALUT_LIBRARIES}
+                      ${FMOD_LIBRARIES}
                       yaml-cpp)
 
 if("${AUTO_FORMAT}")
