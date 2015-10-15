@@ -30,6 +30,22 @@ enum MenuOpt {
     Quit,
 };
 
+void loadFromFile(std::string file) {
+
+    // lets first read in the yaml file
+    YAML::Node node = YAML::LoadFile(file);
+
+    // ok, now lets get all the world Surface infomation and save it
+    YAML::Node worldCPoints = node["WorldCPoints"];
+    YAML::Node points = worldCPoints["points"];
+    for (std::size_t i = 0; i < points.size(); i++) {
+        info("Look at a point: %s", points[i][1].as<double>());
+
+    }
+    info("%s", points.size());
+    // info("%s", worldCPoints.Type());
+    // info("%s", worldCPoints["numberOfPoints"].as<int>());
+}
 
 // This function is expected by PrettyGLUT, because I designed it to get
 // done fast, not smart. We can change this later, but this makes sure it
@@ -244,8 +260,7 @@ int main(int argc, char **argv) {
     errno = 0;
     srand(static_cast<unsigned int>(time(nullptr)));
 
-    YAML::Node config = YAML::LoadFile("assets/world/Windhelm.yaml");
-    info("%s", config["cat"]);
+    loadFromFile("assets/world/Windhelm.yaml");
 
     initGLUT(&argc, argv);
 

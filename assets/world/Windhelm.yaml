@@ -1,2 +1,9 @@
 cat:
     string-proerty: 'this is a test'
+
+WorldCPoints:
+    numberOfCurvers: 1
+    numberOfPoints: 16
+    points: 
+        - [4,0,-4]
+        - [2,1,-4]
