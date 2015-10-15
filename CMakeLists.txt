@@ -77,7 +77,7 @@ if (CMAKE_COMPILER_IS_GNUCXX)
   set(Wwarnings "-Wall -Wextra")
 
   # Warnings to turn OFF
-  set(Wno-warnings "-Wno-char-subscripts -Wno-deprecated-declarations -Wno-unused-variable")
+  set(Wno-warnings "-Wno-char-subscripts -Wno-deprecated-declarations -Wno-unused-variable -Wno-narrowing")
 
 # This *might* catch Clang, but pretend it only catches MSVC for now.
 else()
