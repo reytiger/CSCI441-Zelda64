@@ -12,6 +12,17 @@ include(FindFreeGLUT)
 find_package(OpenAL)
 include(FindALUT)
 
+# tinyformat
+include_directories("${S}/ext/")
+
+# yaml stuff
+include_directories("${S}/ext/yaml/include")
+
+set(YAML_CPP_BUILD_TOOLS OFF)
+set(YAML_CPP_BUILD_CONTRIB OFF)
+add_subdirectory("${S}/ext/yaml")
+
+
 # CMake must be manually updated anytime a new file is added, when using globs.
 # You can
 #       (1) update this file's timestamp, or
@@ -87,7 +98,8 @@ target_link_libraries(guildWars
                       ${OPENGL_LIBRARIES}
                       ${FREEGLUT_LIBRARIES}
                       ${OPENAL_LIBRARIES}
-                      ${ALUT_LIBRARIES})
+                      ${ALUT_LIBRARIES}
+                      )
 
 if("${AUTO_FORMAT}")
   add_custom_target(formatting COMMAND clang-format ${sources} ${includes} -i)
