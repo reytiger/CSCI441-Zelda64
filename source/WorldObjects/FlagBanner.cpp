@@ -1,5 +1,7 @@
+#include "WorldObjects.hpp"
+#include "Material.hpp"
+
 #include <fstream>
-#include "WorldObjects/FlagBanner.hpp"
 
 using namespace std;
 
@@ -25,22 +27,36 @@ void FlagBanner::drawFlag() const {
         double stepSize   = 0.1;
         double heightFlag = 5;
         glDisable(GL_CULL_FACE);
-        // glDisable(GL_LIGHTING);
-        glColor3d(210 / 255.0,
-                  40 / 255.0,
-                  45 / 255.0); // nice dark brown for the base
+        Material::CyanRubber.set();
         glBegin(GL_TRIANGLES);
         {
             for (double i = 0; i < 1 - stepSize; i += stepSize) {
                 Vec drawing = m_WindsCurve.eval_t(i);
                 Vec next    = m_WindsCurve.eval_t(i + stepSize);
+
+                drawing.y = m_height - 2.0 * heightFlag;
+                next.y    = m_height - 2.0 * heightFlag;
+
+                auto normal = drawing.cross(next);
+
                 // first triangle
+                glNormal3d(normal.x, normal.y, normal.z);
                 glVertex3d(drawing.x, drawing.y, drawing.z);
+
+                glNormal3d(normal.x, normal.y, normal.z);
                 glVertex3d(drawing.x, drawing.y + heightFlag, drawing.z);
+
+                glNormal3d(normal.x, normal.y, normal.z);
                 glVertex3d(next.x, next.y, next.z);
                 // second trianlge
+
+                glNormal3d(normal.x, normal.y, normal.z);
                 glVertex3d(drawing.x, drawing.y + heightFlag, drawing.z);
+
+                glNormal3d(normal.x, normal.y, normal.z);
                 glVertex3d(next.x, next.y, next.z);
+
+                glNormal3d(normal.x, normal.y, normal.z);
                 glVertex3d(next.x, next.y + heightFlag, next.z);
             }
         };
@@ -57,9 +73,7 @@ void FlagBanner::drawPole() const {
         glTranslated(target.x, 0, target.z);
         // turn so its faccing up
         glRotatef(-90, 1, 0, 0);
-        glColor3d(153 / 255.0,
-                  89 / 255.0,
-                  45 / 255.0); // nice dark brown for the base
+        Material::Bronze.set();
         GLUquadricObj *quadratic;
         quadratic = gluNewQuadric();
         gluCylinder(quadratic, 1, 0.8, m_height, 20, 2);
@@ -68,8 +82,7 @@ void FlagBanner::drawPole() const {
         // Both the top and pole need rotated, either move up with z than rotate
         // each or rotate both and move along the z.
         glTranslated(0.0, 0.0, m_height);
-        glColor3d(
-            153 / 255.0, 153 / 255.0, 0 / 255.0); // nice green for the top
+        Material::Turquoise.set();
         glutSolidCone(1, 2, 20, 2);
     });
 }

@@ -1,5 +1,8 @@
+#include "WorldObjects.hpp"
+
+#include "Material.hpp"
+
 #include <fstream>
-#include "WorldObjects/WorldSurface.hpp"
 
 using namespace std;
 
@@ -7,13 +10,12 @@ void WorldSurface::update(double t, double dt) { WorldObject::update(t, dt); }
 
 /*************************  DRAW WORLD SURFACE  *******************************/
 void WorldSurface::draw() const {
-    // drawControlPoints();
     pushMatrixAnd([&]() {
         // TODO: the first point on a curve seems to return the last point...
         Vec test = eval(3, -2);
         glPushMatrix();
         {
-            glColor3d(200 / 255.0, 10 / 255.0, 10 / 255.0);
+            Material::RedRubber.set();
             glTranslated(test.x, test.y, test.z);
             glScaled(0.2, 0.2, 0.2);
             glutSolidSphere(1, 10, 10);
@@ -23,7 +25,7 @@ void WorldSurface::draw() const {
         test = eval(2, -2);
         glPushMatrix();
         {
-            glColor3d(200 / 255.0, 10 / 255.0, 10 / 255.0);
+            Material::RedRubber.set();
             glTranslated(test.x, test.y, test.z);
             glScaled(0.2, 0.2, 0.2);
             glutSolidSphere(1, 10, 10);
@@ -68,8 +70,7 @@ void WorldSurface::drawGround() const {
     // baised on these values. We could have curves that have different values
     // so each curve should have different logic.
     pushMatrixAnd([&]() {
-        static Color color = randColor();
-        glColor3fv(color.v);
+        Material::WhiteRubber.set();
         double dt = 1.0;
         for (double x = m_curvesCPoints.at(0).getXmin();
              x <= m_curvesCPoints.at(0).getXmax() - 2 * dt;
@@ -133,14 +134,19 @@ void WorldSurface::drawTree() const {
         glRotatef(-90.0, 1.0, 0.0, 0.0);
 
         // base of tree, nice dark brown for the base
-        glColor3f(134 / 255.0, 89 / 255.0, 45 / 255.0);
         GLUquadricObj *quadratic;
         quadratic = gluNewQuadric();
-        gluCylinder(quadratic, 0.2, 0.1, 0.5, 20, 2);
+
+        Material::Brass.set();
+        gluCylinder(quadratic, 0.1, 0.1, 1.0, 20, 2);
+
         // top of tree, nice green for the tops
-        glTranslatef(0, 0, 0.5);
-        glColor3f(100 / 255.0, 200 / 255.0, 100 / 255.0);
-        glutSolidCone(0.15, 0.4, 20, 2);
+        Material::Emerald.set();
+
+        // Shift down to embed them in the hill better.
+        glTranslatef(0, -0.05, 1.0);
+
+        glutSolidCone(0.5, 0.8, 20, 2);
         glEnable(GL_CULL_FACE);
     };
     glPopMatrix();

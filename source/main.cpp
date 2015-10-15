@@ -12,7 +12,7 @@ WorldSurface worldSurface;
 FlagBanner flagBanner;
 
 Spotlight spotlight;
-std::array<PointLight, 6> pointLights;
+std::array<PointLight, 7> pointLights;
 
 // Defines the menu options.
 // See handleRightClickMenu() and initRightClickMenu() for details.
@@ -47,43 +47,38 @@ void updateScene(double t, double dt) {
 }
 
 void initScene() {
-    const Color white = Color(1.0, 1.0, 1.0);
-
     for (PointLight &light : pointLights) {
         drawn.push_back(&light);
 
         light.enable();
-        light.diffuse((0.3f * randColor()).v);
-        light.specular(white.v);
+        light.diffuse((0.05 * randColor()).v);
+        light.specular((0.05 * randColor()).v);
 
         double a = 3.0 * getRandd() - 1.0;
         double b = 3.0 * getRandd() - 1.0;
         double c = 15.0 * getRandd() + 0.5;
 
         light.setUpdateFunc([&light, a, b, c](double t, double /*dt*/) {
-            auto vp = VecPolar(a * t, b * t, c);
-            light.moveTo(vp.cart());
+            auto phi = M_PI / 2.0 * (0.5 * sin(b * t) + 0.5);
+            auto vp  = VecPolar(a * t, phi, c);
+            auto pos = vp.cart() + Vec(0.0, 5.0, 0.0);
+            light.moveTo(pos);
         });
     }
 
-    float diffuseCol[4] = {1.0f, 1.0f, 1.0f, 1.0f};
-
     drawn.push_back(&spotlight);
     spotlight.enable();
-    spotlight.diffuse(diffuseCol);
-    spotlight.exponent(50.0);
-    spotlight.cutoff(23.5);
-    spotlight.setUpdateFunc([&](double t, double /*dt*/) {
-        auto color      = Vec(cos(30.0 * t), cos(50.0 * t), cos(10.0 * t));
-        color           = 0.5 * color + 0.5;
-        float lcolor[4] = {(float)color.x, (float)color.y, (float)color.z};
-        spotlight.diffuse(lcolor);
-    });
-
+    spotlight.diffuse(Color(0.2, 0.2, 0.2).v);
+    spotlight.exponent(1.0);
+    spotlight.cutoff(6.0);
     // Spin in a circle at Y=10.0.
     spotlight.setUpdateFunc([&](double t, double /*dt*/) {
+        auto color
+            = 0.05 * Color(cos(3.0 * t), cos(5.0 * t), cos(1.0 * t)) + 0.05;
+        spotlight.diffuse(color.v);
+
         auto vp  = VecPolar(0.68 * t, 0.0, 2.0);
-        auto pos = vp.cart() + Vec(0.0, 5.0, 0.0);
+        auto pos = vp.cart() + Vec(0.0, 50.0, 0.0);
         spotlight.moveTo(pos);
         spotlight.lookAt((Vec() - spotlight.pos()));
     });
@@ -158,7 +153,7 @@ void initScene() {
     // Objects on the world surface.
     drawn.push_back(&flagBanner);
     flagBanner.init();
-    flagBanner.moveTo(Vec(5.0, 0.0, 0.0));
+    flagBanner.moveTo(Vec(-2.0, 0.3, 2.0));
     flagBanner.setUpdateFunc(
         [=](double t, double dt) { flagBanner.updateAnimation(t, dt); });
 

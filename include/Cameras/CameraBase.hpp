@@ -11,11 +11,15 @@ public:
     static const double s_minPhi;
     static const double s_maxPhi;
 
-    Camera() : WorldObject(), m_up(Vec(0.0, 1.0, 0.0)) { m_radius = 0.05; }
+    Camera() : WorldObject(), m_up(Vec(0.0, 1.0, 0.0)) {
+        m_radius   = 0.05;
+        m_material = Material::YellowRubber;
+    }
     Camera(Vec pos, Vec arc, Vec up = Vec(0.0, 1.0, 0.0))
         : WorldObject(pos), m_up(up) {
-        m_arc    = arc;
-        m_radius = 0.05;
+        m_arc      = arc;
+        m_radius   = 0.05;
+        m_material = Material::YellowRubber;
     }
 
     virtual void adjustGLU() const;

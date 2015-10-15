@@ -15,7 +15,6 @@ void Track::draw() const {
     pushMatrixAnd([&]() {
         m_halo.draw();
         m_trackCallBack.draw();
-        // drawTrackBlocks();
     });
 }
 
@@ -28,11 +27,9 @@ void Track::drawTrackBlocks() const {
             for (double i = 0; i < 1 + stepSize; i += stepSize) {
                 Vec current = m_halo.eval_t(i);
                 Vec target = m_halo.eval_t(i + stepSize);
-                glColor3fv(randColor().v);
+                Material::random().set();
 
-                // glRotatef(evalAngle(i), 0, 1, 0);
-                // glColor3d(0.9, 0.9, 0.9);
-
+                // 1st triangle
                 glNormal3d(0.0, 1.0, 0.0);
                 glVertex3d(current.x, current.y, current.z);
 

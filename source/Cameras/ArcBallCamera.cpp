@@ -10,7 +10,7 @@ void ArcBallCamera::adjustGLU() const {
 }
 
 void ArcBallCamera::draw() const {
-    glColor3fv(m_color.v);
+    m_material.set();
 
     // Draw a sphere where the camera is viewing from.
     pushMatrixAnd([&]() {

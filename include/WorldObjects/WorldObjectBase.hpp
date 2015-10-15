@@ -1,6 +1,8 @@
 #pragma once
 #include "Utils.hpp"
 
+#include "Material.hpp"
+
 #include <functional>
 
 class WorldObject {
@@ -75,10 +77,11 @@ protected:
     Vec m_vel;
     VecPolar m_arc;
     Color m_color;
-    double m_heading = 0.0; // About the Z-axis, for now.
-    double m_radius  = 1.0;
-    double m_height  = 0.0;
-    bool m_visible   = true;
+    Material m_material = Material::WhiteRubber;
+    double m_heading    = 0.0; // About the Z-axis, for now.
+    double m_radius     = 1.0;
+    double m_height     = 0.0;
+    bool m_visible      = true;
 
     // Vec headingToCartesian() { return Vec(cos(m_heading), sin(m_heading)); }
 };

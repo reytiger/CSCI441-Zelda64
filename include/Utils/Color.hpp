@@ -23,3 +23,13 @@ inline Color randColor() { return Color(getRandf(), getRandf(), getRandf()); }
 inline Color operator*(float num, const Color &color) {
     return Color(num * color.r, num * color.g, num * color.b, color.a);
 }
+
+template <typename T>
+inline Color operator+(const Color &color, T num) {
+    return Color(color.r + num, color.g + num, color.b + num, color.a);
+}
+
+template <typename T>
+inline Color operator+(T num, const Color &color) {
+    return Color(num + color.r, num + color.g, num + color.b, color.a);
+}

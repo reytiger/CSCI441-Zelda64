@@ -38,10 +38,10 @@ const Material Material::YellowRubber  = Material(0.05, 0.05, 0.0, 0.5, 0.5, 0.4
 Material Material::random() {
     Material mat;
 
-    mat.m_ambient  = randColor();
-    mat.m_diffuse  = randColor();
-    mat.m_specular = randColor();
-    mat.m_emission = randColor();
+    mat.m_ambient   = randColor();
+    mat.m_diffuse   = randColor();
+    mat.m_specular  = randColor();
+    mat.m_emission  = randColor();
     mat.m_shininess = 128.0 * getRandd();
 
     return mat;

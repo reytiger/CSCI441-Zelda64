@@ -26,7 +26,7 @@ private:
     void drawFlag() const;
     void drawPole() const;
 
-    double m_height = 10;
+    double m_height = 20;
 
     BezierCurve m_WindsCurve;
 
