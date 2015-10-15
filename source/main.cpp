@@ -1,6 +1,5 @@
 #include "PrettyGLUT.hpp"
 
-#include "fmod_studio.hpp"
 #include "fmod.hpp"
 
 #include "WorldObjects.hpp"
@@ -16,6 +15,15 @@ FlagBanner flagBanner;
 
 Spotlight spotlight;
 std::array<PointLight, 3> pointLights;
+
+// FMOD
+FMOD::System *sys = nullptr;
+
+FMOD::Sound *skyrim_theme = nullptr;
+FMOD::Sound *skyrim_shout = nullptr;
+
+FMOD::Channel *channel = nullptr;
+
 
 // Defines the menu options.
 // See handleRightClickMenu() and initRightClickMenu() for details.
@@ -72,6 +80,19 @@ void updateScene(double t, double dt) {
     // Even though they're rendered, the cameras are NOT in the drawn list, so
     // we have to update them manually, if we want them updated at all.
     activeCam->update(t, dt);
+
+    // The internet tutorials said we should.
+    sys->update();
+
+    // Demonstrate your might with the press of the space bar.
+    // TODO: Make this positional.
+    if (keyPressed[' ']) {
+        FMOD::Sound *playing = nullptr;
+        channel->getCurrentSound(&playing);
+        if (playing != skyrim_shout) {
+            sys->playSound(skyrim_shout, nullptr, false, &channel);
+        }
+    }
 }
 
 void initScene() {
@@ -270,9 +291,21 @@ void initRightClickMenu() {
     glutAttachMenu(GLUT_RIGHT_BUTTON);
 }
 
+
+// This blog post was helpful.
+// https://katyscode.wordpress.com/2012/10/05/cutting-your-teeth-on-fmod-part-1-build-environment-initialization-and-playing-sounds/
+// Initalizes FMOD.
 void initFMOD() {
-    FMOD::Studio::System *system = NULL;
-    FMOD::Studio::System::create(&system);
+    FMOD::System_Create(&sys);
+    sys->init(100, FMOD_INIT_NORMAL, nullptr);
+
+    // In their tongue, he is Dovahkiin... DRAGONBORN!
+    sys->createStream(
+        "assets/audio/skyrim-theme.mp3", FMOD_DEFAULT, nullptr, &skyrim_theme);
+	sys->playSound(skyrim_theme, nullptr, false, nullptr);
+
+    sys->createSound(
+        "assets/audio/skyrim-shout.mp3", FMOD_DEFAULT, nullptr, &skyrim_shout);
 }
 
 int main(int argc, char **argv) {
@@ -281,7 +314,7 @@ int main(int argc, char **argv) {
 
     loadFromFile("assets/world/Windhelm.yaml");
 
-	initFMOD();
+    initFMOD();
     initGLUT(&argc, argv);
 
     // It looks pretty.
