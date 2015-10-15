@@ -1,6 +1,6 @@
 FLAGS := -std=c++11 -g -Os -fmax-errors=5
 Wwarnings := -Wall -Wextra
-Wno-warnings := -Wno-char-subscripts
+Wno-warnings := -Wno-char-subscripts -Wno-deprecated-declarations
 # Any directory in 'include' is fair game.
 INCPATH := -Iinclude -Iext -Iext/yaml/include
 CXXFLAGS += $(INCPATH) $(FLAGS) $(Wwarnings) $(Wno-warnings)
