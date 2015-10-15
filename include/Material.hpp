@@ -3,10 +3,45 @@
 
 class Material {
 public:
+    // Create a material where each component is a random color.
+    // This includes emission.
     static Material random();
+
+    // Predefined materials from:
+    //    http://devernay.free.fr/cours/opengl/materials.html
+    static const Material Emerald;
+    static const Material Jade;
+    static const Material Obsidian;
+    static const Material Pearl;
+    static const Material Ruby;
+    static const Material Turquoise;
+    static const Material Brass;
+    static const Material Bronze;
+    static const Material Chrome;
+    static const Material Copper;
+    static const Material Gold;
+    static const Material Silver;
+
+    static const Material BlackPlastic;
+    static const Material CyanPlastic;
+    static const Material GreenPlastic;
+    static const Material RedPlastic;
+    static const Material WhitePlastic;
+    static const Material YellowPlastic;
+
+    static const Material BlackRubber;
+    static const Material CyanRubber;
+    static const Material GreenRubber;
+    static const Material RedRubber;
+    static const Material WhiteRubber;
+    static const Material YellowRubber;
 
     ~Material() = default;
     Material() = default;
+
+    // 10 doubles. 3 3-component colors + shininess.
+    Material(double, double, double, double, double, double, double, double,
+             double, double);
 
     Color ambient() const { return m_ambient; }
     Color diffuse() const { return m_diffuse; }

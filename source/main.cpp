@@ -252,16 +252,6 @@ int main(int argc, char **argv) {
     YAML::Node config = YAML::LoadFile("assets/world/Windhelm.yaml");
     info("%s", config["cat"]);
 
-    // std::ifstream fin("assests/world/Windhelm.yaml");
-    // YAML::Parser parser(fin);
-
-    // YAML::Node doc;
-    // while (parser.GetNextDocument(doc)) {
-    //     // info("%s", doc);
-    // }
-
-
-
     initGLUT(&argc, argv);
 
     // It looks pretty.
