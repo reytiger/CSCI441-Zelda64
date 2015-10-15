@@ -28,7 +28,7 @@ void Track::drawTrackBlocks() const {
             for (double i = 0; i < 1 + stepSize; i += stepSize) {
                 Vec current = m_halo.eval_t(i);
                 Vec target = m_halo.eval_t(i + stepSize);
-                randColor().glSet();
+                glColor3fv(randColor().v);
 
                 // glRotatef(evalAngle(i), 0, 1, 0);
                 // glColor3d(0.9, 0.9, 0.9);

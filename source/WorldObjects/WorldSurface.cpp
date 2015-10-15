@@ -69,7 +69,7 @@ void WorldSurface::drawGround() const {
     // so each curve should have different logic.
     pushMatrixAnd([&]() {
         static Color color = randColor();
-        color.glSet();
+        glColor3fv(color.v);
         double dt = 1.0;
         for (double x = m_curvesCPoints.at(0).getXmin();
              x <= m_curvesCPoints.at(0).getXmax() - 2 * dt;

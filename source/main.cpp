@@ -47,19 +47,14 @@ void updateScene(double t, double dt) {
 }
 
 void initScene() {
-    // const float black[4] = {0.0f, 0.0f, 0.0f, 1.0f};
-    const float white[4] = {1.0f, 0.0f, 1.0f, 1.0f};
+    const Color white = Color(1.0, 1.0, 1.0);
 
     for (PointLight &light : pointLights) {
         drawn.push_back(&light);
 
-        float scale       = 0.3f;
-        float lightCol[4] = {
-            scale * getRandf(), scale * getRandf(), scale * getRandf(), 1.0f};
-
         light.enable();
-        light.diffuse(lightCol);
-        light.specular(white);
+        light.diffuse((0.3f * randColor()).v);
+        light.specular(white.v);
 
         double a = 3.0 * getRandd() - 1.0;
         double b = 3.0 * getRandd() - 1.0;

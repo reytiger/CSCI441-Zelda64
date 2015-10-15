@@ -43,7 +43,7 @@ const float *Camera::get_modelview() const {
 
 void Camera::draw() const {
     pushMatrixAnd([&]() {
-        m_color.glSet();
+        glColor3fv(m_color.v);
         glTranslated(m_pos.x, m_pos.y, m_pos.z);
         glutSolidSphere(m_radius, 10, 10);
     });

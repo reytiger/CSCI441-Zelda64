@@ -3,8 +3,7 @@
 #include "Cameras.hpp"
 
 // We need to know about this. but it's entirely game logic so it's defined
-// in
-// main.cpp.
+// in main.cpp.
 void updateScene(double t, double dt);
 
 // Cameras
@@ -41,7 +40,7 @@ std::vector<WorldObject *> drawn = std::vector<WorldObject *>();
 
 // TODO: Make this stroke.
 void drawText(const std::string &text, Vec pos, Color color) {
-    color.glSet();
+    glColor3fv(color.v);
     glRasterPos3d(pos.x, pos.y + 4.0, pos.z);
     pushMatrixAnd([&]() {
         for (size_t i = 0; i < text.size(); i += 1) {

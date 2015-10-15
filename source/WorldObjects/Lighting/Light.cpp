@@ -18,19 +18,13 @@ void Light::update(double t, double dt) {
     glLightfv(m_lightid, GL_POSITION, lpos);
     glChk();
 
-    float ambient[4]
-        = {(float)m_ambient.r, (float)m_ambient.g, (float)m_ambient.b};
-    glLightfv(m_lightid, GL_AMBIENT, ambient);
+    glLightfv(m_lightid, GL_AMBIENT, m_ambient.v);
     glChk();
 
-    float diffuse[4]
-        = {(float)m_diffuse.r, (float)m_diffuse.g, (float)m_diffuse.b};
-    glLightfv(m_lightid, GL_DIFFUSE, diffuse);
+    glLightfv(m_lightid, GL_DIFFUSE, m_diffuse.v);
     glChk();
 
-    float specular[4]
-        = {(float)m_specular.r, (float)m_specular.g, (float)m_specular.b};
-    glLightfv(m_lightid, GL_SPECULAR, specular);
+    glLightfv(m_lightid, GL_SPECULAR, m_specular.v);
     glChk();
 }
 
