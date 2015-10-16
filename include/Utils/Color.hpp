@@ -12,7 +12,10 @@ struct Color {
         };
     };
     Color() : r(), g(), b(), a(1.0f) {}
-    Color(float r, float g, float b, float a = 1.0) : r(r), g(g), b(b), a(a) {}
+    Color(double r, double g, double b, double a = 1.0)
+        : r(r), g(g), b(b), a(a) {}
+    Color(int r, int g, int b, int a = 255)
+        : r(r / 255.0), g(g / 255.0), b(b / 255.0), a(a / 255.0) {}
 };
 
 inline double getRandd() { return rand() / (double)RAND_MAX; }

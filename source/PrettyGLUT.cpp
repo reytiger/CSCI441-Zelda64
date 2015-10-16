@@ -27,7 +27,7 @@ double live_fps = 0.0;
 int windowWidth  = 1280;
 int windowHeight = 1024;
 
-Color colorClear = Color(0.3f, 0.2f, 0.8f);
+Color colorClear = Color(48, 24, 96);
 
 // Input states
 Vec mouse             = Vec();
@@ -52,7 +52,7 @@ void drawText(const std::string &text, Vec pos, Color color) {
 // TODO: Fix this.
 void drawFPS() {
     auto white = Color(1.0, 1.0, 1.0);
-    auto pos = activeCam->lookTarget();
+    auto pos = activeCam->pos() + 0.1 * activeCam->lookDir();
     drawText(tfm::format("%0.0f", live_fps), pos, white);
 }
 
@@ -267,6 +267,8 @@ void initGLUT(int *argcp, char **argv) {
     glShadeModel(GL_FLAT);
 
     glDisable(GL_COLOR_MATERIAL);
+
+    glClearColor(colorClear.r, colorClear.g, colorClear.b, colorClear.a);
 
     // This turns off ambient lighting. :D
     glLightModelfv(GL_LIGHT_MODEL_AMBIENT, Color(0.15, 0.15, 0.15, 1.0).v);
