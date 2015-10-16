@@ -3,7 +3,9 @@ Author: Chris Butler, Nico Pampe
 
 Midterm project. 3 heros. So many more hours.
 
-///	USAGE	///
+Usage
+=====
+
 Mouse input:
     Right clicking brings up a menu. There are three main options {Switch
     Camera, Switch Hero, Quit}. The two switching option bring up a submenu.
@@ -28,7 +30,8 @@ Keyboard input:
     1-5 controls active camera
     SpaceBar channels the power of the shout.
 
-/// File Format ///
+File Format
+===========
 
 Our format uses [YAML](http://yaml.org/). See the website for a description of how it works. It's convient to think of it as white-space away JSON.
 
@@ -54,7 +57,8 @@ Labels:
                     
 FMOD is pretty flexibile about loading files, so we don't have any kind of rigor for loading audio. Just some mp3s ripped from YouTube in `assets/audio/*.mp3`.
 
-///	NOTES	///
+Notes
+=====
 
 3rd Party Code: All of our third party code is under ext. yaml-cpp and tinyformat as in there as git submodules. boost is dropped in (it's BIG).
 
@@ -99,7 +103,8 @@ cmake .. \
 
 Be sure to change the FMOD_LIBRARY option at the end if you build for something that's not gcc.
 
-///	BUGS	///
+Bugs
+====
 
 Anything involving our Bezier Surface probably has a bug. Same for the curve too. We just didn't get a solid implementation done. It works *mostly*.
 
