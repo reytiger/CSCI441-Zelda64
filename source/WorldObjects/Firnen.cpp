@@ -21,7 +21,7 @@ void Firnen::draw() const {
     if (!m_visible) {
         return;
     }
-    // drawText("Firnen", m_pos, randColor());
+
     glPushMatrix();
     {
         // move all of firnen to there location
@@ -74,7 +74,15 @@ void Firnen::draw() const {
 void Firnen::drawTorso() const {
     glPushMatrix();
     {
+        auto forward = this->lookDir().cart();
+        auto up      = this->up();
+        auto side    = forward.cross(up);
+
+        glRotated(180.0 * m_arc.theta / M_PI, up.x, up.y, up.z);
+        glRotated(180.0 * m_arc.phi / M_PI + 180.0, side.x, side.y, side.z);
+
         glTranslated(0, 0, 2);
+
         // body first
         drawBody();
         // left arm
