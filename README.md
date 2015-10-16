@@ -3,6 +3,12 @@ Author: Chris Butler, Nico Pampe
 
 Midterm project. 3 heros. So many more hours.
 
+Nico: I focused a lot of the surfaces. The track and surface was built by me (with some help from Chris). Getting the objects on the surface was simple once the surface was built. Also, YAML!!!! It's so cool!
+
+Chirs: I was unreasonably particular about build systems and code formatting, we used an inherence heirarchy based off of mine from earlier assignments, I did all of the FMOD stuff in one sitting Wednesday night (thanks for the extension, btw!), and the Skyrim theme was largely Nico's idea. 
+
+To put it simple, a two person team.... we kind of did a bit of everything. You did warn us.... We are sworn to do your assignments.
+
 Usage
 =====
 
@@ -49,7 +55,7 @@ Labels:
         -FlagBanner: The proud flag of the Stormcloaks
                 -numberOfFlags: Self explanatory at this point.
                 -points: locations of the flags, again in x, z.
-                -windPoints: ??? Nico, fill this out
+                -windPoints: loads the starting locations for the bezier control curve for the flag. These points then move from a sin( ) function that moves some of the points to make the flag look like it's blowing in the wind.
                 
         -Track: Describes the track for two heros to race around on (IN THE SKY!)
                 -numberofPoints: Self explanatory at this point.
