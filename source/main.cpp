@@ -33,6 +33,7 @@ enum MenuOpt {
     SwitchToFastFreeCam,
     SwitchToArcBallCam,
     SwitchToFirstCam,
+    SwitchToBackCam,
 
     SwitchToIncallidus,
     SwitchToFirnen,
@@ -261,6 +262,13 @@ void initScene() {
         firstPerson.lookInDir(activeHero->lookAtDir());
     });
 
+    backcam.follow(activeHero);
+    backcam.setUpdateFunc([=](double /*t*/, double /*dt*/) {
+        Vec forward = activeHero->lookAtDir().cart();
+        backcam.lookInDir(-forward);
+    });
+
+
     // Setup controls for freecam.
     freecam.addWASDControls(100.0, keyPressed);
     freecam.moveToY(1.0);
@@ -280,7 +288,8 @@ void initScene() {
     inc.setUpdateFunc([=](double t, double dt) {
         inc.setRadius(0.1 * cos(t) + 0.5);
         if (activeHero == &inc
-            && (activeCam == &arcballcam || activeCam == &firstPerson)) {
+            && (activeCam == &arcballcam || activeCam == &firstPerson
+                || activeCam == &backcam)) {
             inc.addWASDControls(100.0, keyPressed, dt, worldSurface);
         }
     });
@@ -337,6 +346,10 @@ void handleCamerasMenu(int val) {
     case MenuOpt::SwitchToFirstCam:
         switch_cam(firstPerson);
         break;
+    case MenuOpt::SwitchToBackCam:
+        switch_cam(backcam);
+        break;
+
 
     default:
         info("Unhandled menu case: %d", val);
@@ -377,6 +390,7 @@ void initRightClickMenu() {
     glutAddMenuEntry("ArcBall Cam", MenuOpt::SwitchToArcBallCam);
     glutAddMenuEntry("Fast Free Cam", MenuOpt::SwitchToFastFreeCam);
     glutAddMenuEntry("First-Person Cam", MenuOpt::SwitchToFirstCam);
+    glutAddMenuEntry("Rev First-Person Cam", MenuOpt::SwitchToBackCam);
     glutAddMenuEntry("Free Cam", MenuOpt::SwitchToFreeCam);
 
     glutSetMenu(heros);

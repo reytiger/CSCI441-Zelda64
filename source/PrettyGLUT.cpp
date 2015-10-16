@@ -11,6 +11,7 @@ ArcBallCamera arcballcam;
 FreeCamera freecam;
 FreeCamera fastfreecam;
 FreeCamera firstPerson;
+FreeCamera backcam;
 
 // Heros
 Incallidus inc;
@@ -225,6 +226,10 @@ void normalKeysDown(unsigned char key, int, int) {
 
     case '4':
         switch_cam(firstPerson);
+        break;
+
+    case '5':
+        switch_cam(backcam);
         break;
     }
 }
