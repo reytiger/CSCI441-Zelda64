@@ -185,7 +185,7 @@ Vec WorldSurface::eval(double x, double z) const {
     for (size_t i = 0; i < m_curvesCPoints.size(); ++i) {
         BezierCurve currentCurve = m_curvesCPoints.at(i);
 
-        x         = clamp(x, currentCurve.getXmin(), currentCurve.getXmax());
+        x = clamp(x, currentCurve.getXmin(), currentCurve.getXmax());
         double _x = (x - currentCurve.getXmin())
                     / (currentCurve.getXmax() - currentCurve.getXmin());
         _x = clamp(_x, 0.0, 1.0);
@@ -202,9 +202,9 @@ Vec WorldSurface::eval(double x, double z) const {
     // now get the z position.
     BezierCurve uCurve = BezierCurve(tmp);
 
-    z         = clamp(z, uCurve.getZmin(), uCurve.getZmax());
+    z = clamp(z, uCurve.getZmin(), uCurve.getZmax());
     double _z = (z - uCurve.getZmin()) / (uCurve.getZmax() - uCurve.getZmin());
-    _z        = clamp(_z, 0.0, 1.0);
+    _z = clamp(_z, 0.0, 1.0);
 
     Vec test = uCurve.eval_t(_z) + pos();
     return Vec(x, test.y, z);

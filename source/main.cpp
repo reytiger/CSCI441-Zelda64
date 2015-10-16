@@ -49,7 +49,7 @@ void loadFromFile(std::string file) {
 
     // ok, now lets get all the world Surface infomation and save it
     YAML::Node worldCPoints = node["WorldCPoints"];
-    YAML::Node w_points = worldCPoints["points"];
+    YAML::Node w_points     = worldCPoints["points"];
     if (w_points.size() != worldCPoints["numberOfPoints"].as<size_t>()) {
         fatal("The number of points spesified for the world does not match");
     }
@@ -58,7 +58,7 @@ void loadFromFile(std::string file) {
         double x = w_points[i][0].as<double>();
         double y = w_points[i][1].as<double>();
         double z = w_points[i][2].as<double>();
-        Vec v = Vec(x, y, z);
+        Vec v    = Vec(x, y, z);
         worldVecPoints.push_back(v);
     }
     worldSurface.setControlPoints(worldVecPoints);
@@ -69,7 +69,7 @@ void loadFromFile(std::string file) {
 
     // sweet, time to get the trees
     YAML::Node treesCPoints = node["Trees"];
-    YAML::Node tre_points = treesCPoints["points"];
+    YAML::Node tre_points   = treesCPoints["points"];
     if (tre_points.size() != treesCPoints["numberOfTrees"].as<size_t>()) {
         fatal("The number of points spesified for the trees does not match");
     }
@@ -77,7 +77,7 @@ void loadFromFile(std::string file) {
     for (std::size_t i = 0; i < tre_points.size(); ++i) {
         double x = tre_points[i][0].as<double>();
         double z = tre_points[i][1].as<double>();
-        Vec v = Vec(x, 0.0, z);
+        Vec v    = Vec(x, 0.0, z);
         treesVecPoints.push_back(v);
     }
     worldSurface.setTreesCPoints(treesVecPoints);
@@ -104,14 +104,14 @@ void loadFromFile(std::string file) {
         double x = fw_points[i][0].as<double>();
         double y = fw_points[i][1].as<double>();
         double z = fw_points[i][2].as<double>();
-        Vec v = Vec(x, y, z);
+        Vec v    = Vec(x, y, z);
         flagWindVecPoints.push_back(v);
     }
     flagBanner.setCurvesCPoints(flagWindVecPoints);
 
     // Done with the world surface, Now we need to load the track control points
     YAML::Node trackCPoints = node["Track"];
-    YAML::Node tra_points = trackCPoints["points"];
+    YAML::Node tra_points   = trackCPoints["points"];
     if (tra_points.size() != trackCPoints["numberOfPoints"].as<size_t>()) {
         fatal("The number of points spesified for the trees does not match");
     }
@@ -120,7 +120,7 @@ void loadFromFile(std::string file) {
         double x = tra_points[i][0].as<double>();
         double y = tra_points[i][1].as<double>();
         double z = tra_points[i][2].as<double>();
-        Vec v = Vec(x, y, z);
+        Vec v    = Vec(x, y, z);
         trackVecPoints.emplace_back(x, y, z);
     }
     track.setCurvesCPoints(trackVecPoints);

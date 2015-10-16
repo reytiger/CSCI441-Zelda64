@@ -44,7 +44,7 @@ struct VecPolar {
         vec = vec.normalize();
 
         theta = atan2(vec.x, vec.z);
-        phi = asin(vec.y);
+        phi   = asin(vec.y);
         glChk(); // asin sets errno on bad input.
     }
 

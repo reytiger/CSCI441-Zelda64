@@ -49,10 +49,10 @@ void FirnensAkkkin::draw() const {
         glPushMatrix();
         {
             // check which curver we are on and where on that curve
-            Point p0      = m_controlPoints.at(m_currentCurve * 3);
-            Point p1      = m_controlPoints.at((m_currentCurve * 3) + 1);
-            Point p2      = m_controlPoints.at((m_currentCurve * 3) + 2);
-            Point p3      = m_controlPoints.at((m_currentCurve * 3) + 3);
+            Point p0 = m_controlPoints.at(m_currentCurve * 3);
+            Point p1 = m_controlPoints.at((m_currentCurve * 3) + 1);
+            Point p2 = m_controlPoints.at((m_currentCurve * 3) + 2);
+            Point p3 = m_controlPoints.at((m_currentCurve * 3) + 3);
             Point nextPos = evaluateBezierCurve(p0, p1, p2, p3, m_tPos);
             glTranslated(nextPos.getX(), nextPos.getY(), nextPos.getZ());
 
