@@ -268,14 +268,15 @@ void initScene() {
         backcam.lookInDir(-forward);
     });
 
-
     // Setup controls for freecam.
     freecam.addWASDControls(100.0, keyPressed);
-    freecam.moveToY(1.0);
+    freecam.moveTo(Vec(20.0, 20.0, 20.0));
+    freecam.lookAtThing(Vec());
 
     // Cam2 is much faster.
     fastfreecam.addWASDControls(200.0, keyPressed);
-    fastfreecam.moveToY(1.0);
+    fastfreecam.moveTo(Vec(20.0, 20.0, 20.0));
+    fastfreecam.lookAtThing(Vec());
 
     // Arcballs for DAYZ.
     arcballcam.setRadius(5);
