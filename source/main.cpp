@@ -62,6 +62,9 @@ void loadFromFile(std::string file) {
     }
     worldSurface.setControlPoints(worldVecPoints);
     worldSurface.setZmaxmin();
+    worldSurface.setUpdateFunc([&](double t, double /*dt*/) {
+        worldSurface.setRadius(0.1 * cos(0.95 * t) + 0.5);
+    });
 
     // sweet, time to get the trees
     YAML::Node treesCPoints = node["Trees"];
