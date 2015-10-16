@@ -417,7 +417,8 @@ int main(int argc, char **argv) {
     errno = 0;
     srand(static_cast<unsigned int>(time(nullptr)));
 
-    loadFromFile("assets/world/Windhelm.yaml");
+    // loadFromFile("assets/world/Windhelm.yaml");
+    loadFromFile("assets/world/Whiterun.yaml");
 
     initFMOD();
     initGLUT(&argc, argv);
