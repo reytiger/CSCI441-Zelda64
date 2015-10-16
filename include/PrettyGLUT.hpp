@@ -26,7 +26,8 @@ extern std::vector<WorldObject *> drawn;
 extern ArcBallCamera arcballcam;
 extern FreeCamera firstPerson;
 extern FreeCamera freecam;
-extern FreeCamera fastfreecam; // TODO: Make this a first person.
+extern FreeCamera fastfreecam;
+extern FreeCamera backcam;
 
 // Heros
 extern Incallidus inc;
