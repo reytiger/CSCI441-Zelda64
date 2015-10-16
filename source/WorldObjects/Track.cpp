@@ -1,6 +1,5 @@
 #include <fstream>
-#include "WorldObjects/Track.hpp"
-#include "WorldObjects/CallListObject.hpp"
+#include "WorldObjects.hpp"
 
 using namespace std;
 
@@ -26,27 +25,20 @@ void Track::drawTrackBlocks() const {
         {
             for (double i = 0; i < 1 + stepSize; i += stepSize) {
                 Vec current = m_halo.eval_t(i);
-                Vec target = m_halo.eval_t(i + stepSize);
-                Material::random().set();
+                Vec target  = m_halo.eval_t(i + stepSize);
+
+                auto mat = Material::random();
+                mat.emission(mat.diffuse());
+                mat.set();
 
                 // 1st triangle
-                glNormal3d(0.0, 1.0, 0.0);
                 glVertex3d(current.x, current.y, current.z);
-
-                glNormal3d(0.0, 1.0, 0.0);
                 glVertex3d(current.x + 1, current.y, current.z);
-
-                glNormal3d(0.0, 1.0, 0.0);
                 glVertex3d(target.x, target.y, target.z);
 
                 // 2nd triangle
-                glNormal3d(0.0, 1.0, 0.0);
                 glVertex3d(target.x, target.y, target.z);
-
-                glNormal3d(0.0, 1.0, 0.0);
                 glVertex3d(current.x + 1, current.y, current.z);
-
-                glNormal3d(0.0, 1.0, 0.0);
                 glVertex3d(target.x + 1, target.y, target.z);
             }
         };
