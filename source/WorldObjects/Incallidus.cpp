@@ -14,10 +14,10 @@ void Incallidus::addWASDControls(double speedPerSec, bool *pressed, double dt,
     // Basic WASD controls to move forward and sideways, *as seen by the
     // camera*.
     if (pressed['d']) {
-        m_heading += 0.1;
+        m_heading -= 0.1;
     }
     if (pressed['a']) {
-        m_heading -= 0.1;
+        m_heading += 0.1;
     }
     if (pressed['w']) {
         vel -= forward;
@@ -33,8 +33,11 @@ void Incallidus::addWASDControls(double speedPerSec, bool *pressed, double dt,
         vel = speed * vel.normalize();
     }
 
-    m_pos      = world.eval(m_pos.x, m_pos.z);
-    Vec tarPos = world.eval(vel.x + m_pos.x, vel.z + m_pos.z);
+    // Make him float above the surface *just barely*.
+    auto floating = Vec(0.0, 0.5, 0.0);
+
+    m_pos      = world.eval(m_pos.x, m_pos.z) + floating;
+    Vec tarPos = world.eval(vel.x + m_pos.x, vel.z + m_pos.z) + floating;
 
     vel = m_pos - tarPos;
 
