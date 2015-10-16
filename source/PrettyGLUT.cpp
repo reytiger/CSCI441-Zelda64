@@ -166,10 +166,15 @@ void mouseCallback(int button, int state, int x, int y) {
 
 void mouseMotion(int x, int y) {
     if (leftMouse == GLUT_DOWN) {
-        const double fudge = 0.002f;
+        double fudge = 0.002f;
 
         int dx = static_cast<int>(mouse.x) - x;
         int dy = static_cast<int>(mouse.y) - y;
+
+        // Arcball feels more natural with the y inverted and more fudge.
+        if (dynamic_cast<ArcBallCamera *>(activeCam)) {
+            fudge = 0.005f;
+        }
 
         mouse.x = x;
         mouse.y = y;
@@ -181,18 +186,21 @@ void mouseMotion(int x, int y) {
             Vec dist    = Vec(dx, dy);
             auto radius = activeCam->radius();
             if (dy > 0) {
-                radius = radius - fudge * dist.norm();
+                radius = radius - 2.0 * fudge * dist.norm();
             } else {
-                radius = radius + fudge * dist.norm();
+                radius = radius + 2.0 * fudge * dist.norm();
             }
-            radius = clamp(radius, 3.0, 10.0);
+            radius = clamp(radius, 3.0, 100.0);
             activeCam->setRadius(radius);
             return;
         }
 
-        // Adjust the rotation angles by a constant factor of the distance
-        // the mouse moved.
-        activeCam->rotate(fudge * dx, fudge * dy);
+        // Arcball feels more natural with the y inverted and more fudge.
+        if (dynamic_cast<ArcBallCamera *>(activeCam)) {
+            activeCam->rotate(fudge * dx, -fudge * dy);
+        } else {
+            activeCam->rotate(fudge * dx, fudge * dy);
+        }
     }
 }
 

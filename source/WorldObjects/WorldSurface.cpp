@@ -146,7 +146,7 @@ void WorldSurface::drawTree() const {
         // Shift down to embed them in the hill better.
         glTranslatef(0, -0.05, 1.0);
 
-        glutSolidCone(0.5, 0.8, 20, 2);
+        glutSolidCone(m_radius, 0.8, 20, 2);
         glEnable(GL_CULL_FACE);
     };
     glPopMatrix();
