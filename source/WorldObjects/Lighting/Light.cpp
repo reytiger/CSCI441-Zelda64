@@ -42,7 +42,8 @@ void Light::draw() const {
     });
 
     pushMatrixAnd([&]() {
-        glTranslated(lookTarget().x, lookTarget().y, lookTarget().z);
+		auto lookTarget = pos() + lookDir();
+        glTranslated(lookTarget.x, lookTarget.y, lookTarget.z);
         glRotated(45.0, 1.0, 1.0, 1.0);
         glutSolidCube(0.075);
     });

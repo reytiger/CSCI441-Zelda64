@@ -42,7 +42,7 @@ public:
             };
             glPopMatrix();
 
-            glRotated(180.0 / M_PI * m_heading - 90, 0.0, 1.0, 0.0);
+            glRotated(180.0 / M_PI * m_arc.theta - 90, 0.0, 1.0, 0.0);
             glScaled(m_radius, m_radius, m_radius);
 
             glColor3d(color.x, 0.5, 0.5);
