@@ -31,8 +31,6 @@ extern FreeCamera backcam;
 
 // Heros
 extern Incallidus inc;
-extern Firnen firnen;
-extern DragonBorn dragonBorn;
 
 extern Camera *activeCam;
 extern WorldObject *activeHero;
@@ -62,4 +60,4 @@ extern bool keyPressed[256];
 // "public" functions
 void printOpenGLInformation();
 void initGLUT(int *argcp, char **argv);
-void startGuildWars();
+void start();

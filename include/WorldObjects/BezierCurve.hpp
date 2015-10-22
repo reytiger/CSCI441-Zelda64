@@ -3,8 +3,6 @@
 
 #include "WorldObjects/WorldObjectBase.hpp"
 
-#include "WorldObjects/Point.hpp"
-
 #include <vector>
 
 class BezierCurve : public WorldObject {

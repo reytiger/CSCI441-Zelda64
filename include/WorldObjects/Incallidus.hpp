@@ -1,7 +1,6 @@
 #pragma once
 
 #include "WorldObjects/WorldObjectBase.hpp"
-#include "WorldObjects/WorldSurface.hpp"
 
 class Incallidus : public WorldObject {
 public:
@@ -61,9 +60,6 @@ public:
             glutSolidSphere(0.2, 20, 20);
         });
     }
-
-    void addWASDControls(double speedPerSec, bool *pressed, double dt,
-                         WorldSurface world);
 
 private:
     void drawFrontNose() const {

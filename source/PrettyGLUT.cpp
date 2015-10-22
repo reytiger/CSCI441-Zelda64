@@ -15,8 +15,6 @@ FreeCamera backcam;
 
 // Heros
 Incallidus inc;
-Firnen firnen;
-DragonBorn dragonBorn;
 
 // World objects
 Camera *activeCam       = &freecam;
@@ -279,7 +277,7 @@ void initGLUT(int *argcp, char **argv) {
     glLightModelfv(GL_LIGHT_MODEL_AMBIENT, Color(0.15, 0.15, 0.15, 1.0).v);
 }
 
-void startGuildWars() {
+void start() {
     doFrame(0);
 
     glutMainLoop();
