@@ -19,8 +19,6 @@ enum MenuOpt {
     SwitchToBackCam,
 
     SwitchToIncallidus,
-    SwitchToFirnen,
-    SwitchToDragonBorn,
 
     Quit,
 };
@@ -192,7 +190,6 @@ void handleCamerasMenu(int val) {
     case MenuOpt::SwitchToBackCam:
         switch_cam(backcam);
         break;
-
 
     default:
         info("Unhandled menu case: %d", val);
