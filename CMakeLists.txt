@@ -104,7 +104,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${Wwarnings} ${Wno-warnings} ${flags}")
 # This is the main binary we'll eventually turn in. Most assignments have a
 # required name, but that is chosen by the Makefile Dr. Paone runes.
 # We can use anything for CMake, since only Chris uses it.
-set(binary "assignment")
+set(binary "Assignment")
 add_executable(${binary} ${sources} ${includes})
 
 target_link_libraries(${binary}
