@@ -1,14 +1,12 @@
 #include "Cameras.hpp"
 
-void FreeCamera::addWASDControls(double speedPerSec, bool *pressed) {
-    setUpdateFunc([=](double /*t*/, double dt) {
+void FreeCamera::addWASDControls(double speed, bool *pressed) {
+    setUpdateFunc([=](double /*t*/, double /*dt*/) {
         Vec vel;
 
         Vec up      = this->up();
         Vec forward = this->lookDir().cart();
         Vec right   = forward.cross(up);
-
-        auto speed = dt * speedPerSec;
 
         // Basic WASD controls to move forward and sideways, *as seen by the
         // camera*.

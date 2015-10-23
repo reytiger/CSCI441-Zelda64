@@ -85,6 +85,42 @@ void initScene() {
         spotlight.lookInDir((Vec() - spotlight.pos()));
     });
 
+    // Floor
+    drawn.push_back(&roomFloor);
+    roomFloor = CallListObject([&](GLuint dl) {
+        glNewList(dl, GL_COMPILE);
+
+        static const auto size = Vec(20, 20);
+        static const size_t tris
+            = 10; // Triangles on one eddge of the rectangular floor.
+
+        for (int i = -1; i <= size.x + 1; i += 1) {
+            glBegin(GL_TRIANGLE_STRIP);
+            for (int k = -1; k <= size.y; k += 1) {
+                Vec off  = Vec(2.0, 2.0);
+                auto pos = Vec(i, k) * off - Vec(200.0, 200.0) / 2.0;
+
+                Material::GreenRubber.set();
+                glVertex3d(pos.x, 0.0, pos.y);
+                glVertex3d(pos.x, 0.0, pos.y - off.y);
+                glVertex3d(pos.x - off.x, 0.0, pos.y);
+
+                // Skip the second triangle on extreme cases.
+                // TODO: This is probably wrong.
+                if (k == size.y || i == size.x) {
+                    break;
+                }
+
+                glVertex3d(pos.x, 0.0, pos.y);
+                glVertex3d(pos.x, 0.0, pos.y + off.y);
+                glVertex3d(pos.x + off.x, 0.0, pos.y);
+            }
+            glEnd();
+        }
+
+        glEndList();
+    });
+
     // Cameras!
 
     // First Person!
@@ -101,12 +137,12 @@ void initScene() {
     });
 
     // Setup controls for freecam.
-    freecam.addWASDControls(100.0, keyPressed);
+    freecam.addWASDControls(10.0, keyPressed);
     freecam.moveTo(Vec(20.0, 20.0, 20.0));
     freecam.lookAtThing(Vec());
 
     // Cam2 is much faster.
-    fastfreecam.addWASDControls(200.0, keyPressed);
+    fastfreecam.addWASDControls(20.0, keyPressed);
     fastfreecam.moveTo(Vec(20.0, 20.0, 20.0));
     fastfreecam.lookAtThing(Vec());
 
