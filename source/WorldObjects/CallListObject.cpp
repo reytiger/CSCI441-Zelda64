@@ -17,10 +17,7 @@ CallListObject &CallListObject::operator=(CallListObject &&other) {
     return *this;
 }
 
-void CallListObject::draw() const {
-    if (!m_visible) {
-        return;
-    }
+void CallListObject::internalDraw() const {
     glChk();
     pushMatrixAnd([&]() {
         glTranslated(m_pos.x, m_pos.y, m_pos.z);

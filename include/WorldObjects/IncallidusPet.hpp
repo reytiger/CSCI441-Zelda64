@@ -4,11 +4,10 @@
 
 class IncallidusPet : public WorldObject {
 public:
-    virtual void draw() const {
-        if (!m_visible) {
-            return;
-        }
+    // Nothing new here.
 
+protected:
+    virtual void internalDraw() const override {
         static auto mat0 = Material::random();
         static auto mat1 = Material::random();
         static auto mat2 = Material::random();

@@ -17,8 +17,10 @@ public:
     ArcBallCamera() : Camera() {}
     ArcBallCamera(VecPolar arc) : Camera(Vec(), arc) {}
 
-    virtual void adjustGLU() const;
-    virtual void draw() const;
+    virtual void adjustGLU() const override;
+
+protected:
+    virtual void internalDraw() const override;
 
 private:
 };

@@ -21,6 +21,7 @@ Camera *activeCam       = &freecam;
 WorldObject *activeHero = &inc;
 
 double live_fps = 0.0;
+int live_frames = 0;
 
 // Display Settings
 int windowWidth  = 1280;
@@ -40,7 +41,7 @@ std::vector<WorldObject *> drawn = std::vector<WorldObject *>();
 // TODO: Make this stroke.
 void drawText(const std::string &text, Vec pos, Color color) {
     glColor3fv(color.v);
-    glRasterPos3d(pos.x, pos.y + 4.0, pos.z);
+    glRasterPos2d(pos.x, pos.y);
     pushMatrixAnd([&]() {
         for (size_t i = 0; i < text.size(); i += 1) {
             glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, text[i]);
@@ -48,25 +49,49 @@ void drawText(const std::string &text, Vec pos, Color color) {
     });
 }
 
-// TODO: Fix this.
-void drawFPS() {
+void renderHUD() {
+    // Switch to 2D.
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluOrtho2D(0.0, 1.0, 0.0, 1.0);
+
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+
+    // FPS
     auto white = Color(1.0, 1.0, 1.0);
-    auto pos   = activeCam->pos() + 0.1 * activeCam->lookDir();
-    drawText(tfm::format("%0.0f", live_fps), pos, white);
+    auto pos   = Vec(0.005, 1.0 - 0.02);
+    drawText(tfm::format("%.1f FPS", live_fps), pos, white);
+
+    // Frame count
+    pos = pos - Vec(0.0, 0.015);
+    drawText(tfm::format("%d frames", live_frames), pos, white);
+
+    // Frame time
+    auto frame_time = (live_fps == 0 ? 0 : 1e6 / live_fps);
+    // Simple scenes can get INSANE. Adjust the display so it's reasonable.
+    if (frame_time < 1e3) {
+        pos = pos - Vec(0.0, 0.015);
+        drawText(tfm::format("%.2f us", frame_time), pos, white);
+    } else {
+        frame_time /= 1e3;
+        pos = pos - Vec(0.0, 0.015);
+        drawText(tfm::format("%.2f ms", frame_time), pos, white);
+    }
 }
+
+void resize(int w, int h);
 
 void render() {
     // clear the render buffer
     glDrawBuffer(GL_BACK);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    // update the modelview matrix based on the camera's position
+    resize(windowWidth, windowHeight);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
     activeCam->adjustGLU();
-
-    drawFPS();
 
     for (WorldObject *wo : drawn) {
         glChk();
@@ -79,6 +104,8 @@ void render() {
     freecam.draw();
     fastfreecam.draw();
     arcballcam.draw();
+
+    renderHUD();
 
     // push the back buffer to the screen
     glutSwapBuffers();
@@ -137,11 +164,9 @@ void doFrame(int) {
     then       = now;
 
     // Keep a live, running average FPS counter.
-    if (now - last_fps_update > 3.0) {
-        live_fps = frames / (now - last_fps_update);
-
-        // We really only need two figures, but everyone likes seeing decimals.
-        info("Average FPS: %0.1f", live_fps);
+    if (now - last_fps_update > FPS_update_delay) {
+        live_fps    = frames / (now - last_fps_update);
+        live_frames = frames;
 
         // Reset everything.
         last_fps_update = now;
@@ -190,7 +215,7 @@ void mouseMotion(int x, int y) {
                 radius = radius + 2.0 * fudge * dist.norm();
             }
             radius = clamp(radius, 3.0, 100.0);
-            activeCam->setRadius(radius);
+            activeCam->radius(radius);
             return;
         }
 

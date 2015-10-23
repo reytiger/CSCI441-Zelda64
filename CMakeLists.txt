@@ -112,7 +112,7 @@ target_link_libraries(${binary}
                                             "${GLUT_LIBRARIES}"
                                             "${FMOD_LIBRARIES}")
 
-if("${AUTO_FORMAT}")
+if("${USE_CLANG_FORMAT}")
     # TODO: Maybe use git-clang-format?
     # I'm not entirely sure what the difference is.
     add_custom_target(Format COMMAND clang-format ${sources} ${includes} -i)

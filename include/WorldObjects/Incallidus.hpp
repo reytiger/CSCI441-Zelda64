@@ -6,10 +6,8 @@ class Incallidus : public WorldObject {
 public:
     Incallidus() : WorldObject() {}
 
-    virtual void draw() const {
-        if (!m_visible) {
-            return;
-        }
+protected:
+    virtual void internalDraw() const override {
         // The top of the hills are at 25.8.
         // This effectively gives color as a ratio of where you are in the map.
         auto color = m_pos / Vec(100.0, 100.0, 25.8);

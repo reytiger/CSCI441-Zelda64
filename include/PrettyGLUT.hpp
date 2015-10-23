@@ -36,13 +36,16 @@ extern Camera *activeCam;
 extern WorldObject *activeHero;
 
 extern double live_fps;
+extern int live_frames;
 
 // Display settings.
 // For more detailed settings, see initGLUT in PrettyGLUT.cpp.
-constexpr const char *windowTitle = "Skyrim belongs to the Nords!";
+constexpr const char *windowTitle = "Do you actually read these?";
 
-constexpr double FPS = 60.0;
-constexpr double FOV = 60.0;
+// This effectively removes any limit on rendering frames.
+constexpr double FPS              = 9001.0;
+constexpr double FOV              = 60.0;
+constexpr double FPS_update_delay = 0.5;
 
 extern int windowWidth;
 extern int windowHeight;

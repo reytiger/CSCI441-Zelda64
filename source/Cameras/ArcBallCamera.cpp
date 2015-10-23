@@ -9,7 +9,7 @@ void ArcBallCamera::adjustGLU() const {
     // clang-format on
 }
 
-void ArcBallCamera::draw() const {
+void ArcBallCamera::internalDraw() const {
     if (!m_visible) {
         return;
     }

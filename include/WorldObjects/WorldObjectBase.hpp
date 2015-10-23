@@ -24,10 +24,12 @@ public:
     // ==== Public Interface Methods ==========================================
 
     // Draw the object by calling the virtual method internalDraw().
+    // This acts as a wrapper around it, to ensure things are always done.
+    //     e.g. a no-op if m_visible is false.
     void draw() const;
 
     // Called every frame to update logical components of the object.
-    void update(double t, double dt);
+    virtual void update(double t, double dt);
 
     // ==== Motion related methods ============================================
 
@@ -48,6 +50,10 @@ public:
     void setVelocityY(double dy) { m_vel.y = dy; }
     void setVelocityZ(double dz) { m_vel.z = dz; }
 
+    // Cameras need to clamp their rotation. There is probably a better way to
+    // to do this.
+    virtual void rotate(double dtheta, double dphi);
+
     // ==== Getters and Setters ===============================================
 
     // Look at specified position.
@@ -59,7 +65,7 @@ public:
         m_arc = dir.normalize().polar();
     }
 
-    // The direction in which the object looks.
+    // The direction in which the object is looking.
     VecPolar lookDir() const { return m_arc; }
 
     Vec pos() const { return m_pos; }
@@ -67,6 +73,12 @@ public:
 
     void follow(WorldObject *wo);
     void setUpdateFunc(UpdateFunc func) { m_update = func; }
+
+    double radius() const { return m_radius; }
+    void radius(double rad) { m_radius = rad; }
+
+    Material material() const { return m_material; }
+    void material(const Material &mat) { m_material = mat; }
 
     bool visible() const { return m_visible; }
     void hide() { m_visible = false; }
@@ -77,6 +89,7 @@ protected:
 
     // TODO: Revamp the follow-system.
     WorldObject *m_follow = nullptr;
+
     // Keep track of the last place the follow was,
     // so we can undo it before updating.
     Vec m_old_follow_pos;
@@ -96,16 +109,9 @@ protected:
 
     bool m_visible = true;
 
-private:
-    // ==== Private Virtual Methods ===========================================
+    // ==== Protected Virtual Methods
+    // ===========================================
 
-    // The method which describes how to render the image.
+    // How the object is rendered. TODO: Take in a Renderer of some sort?
     virtual void internalDraw() const = 0;
 };
-
-// Inlined functions are good. Clobbering the definition... no so much.
-void WorldObject::draw() const {
-    if (this->visible()) {
-        this->internalDraw();
-    }
-}

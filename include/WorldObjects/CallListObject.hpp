@@ -12,14 +12,13 @@ public:
     CallListObject(const CallListObject &) = default;
     CallListObject &operator               =(CallListObject &&other);
 
-    virtual void draw() const;
-
     // 'count' is how many CallLists are create
     // 'makeit' is a function taking a single GLuint (the return value of
     // glGenLists), which does the initialization.
     CallListObject(std::function<void(GLuint)> makeit);
 
-    GLuint handle() { return m_handle; }
+protected:
+    virtual void internalDraw() const override;
 
 private:
     GLuint m_handle = 0;

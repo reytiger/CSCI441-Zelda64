@@ -12,8 +12,7 @@ public:
         evalMaxMin();
     }
 
-    virtual void draw() const;
-    virtual void drawCurve() const;
+    void drawCurve() const;
 
     Vec eval_arc(double arc) const;
     Vec eval_t(double t) const;
@@ -36,6 +35,9 @@ public:
     std::vector<Vec> getVec() const { return m_points; }
 
     void recomputeCurve(int resolution) const;
+
+protected:
+    virtual void internalDraw() const override;
 
 private:
     std::vector<Vec> m_points;

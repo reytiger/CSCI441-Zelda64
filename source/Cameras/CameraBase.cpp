@@ -1,8 +1,5 @@
 #include "Cameras.hpp"
 
-const double Camera::s_minPhi = -0.5 * M_PI + 1e-5;
-const double Camera::s_maxPhi = 0.5 * M_PI - 1e-5;
-
 void Camera::adjustGLU() const {
     glChk();
     Vec lookat = m_pos + m_arc.cart();
@@ -12,12 +9,6 @@ void Camera::adjustGLU() const {
               m_up.x,   m_up.y,   m_up.z);
     // clang-format on
     glChk();
-}
-
-void Camera::rotate(double dtheta, double dphi) {
-    m_arc.theta += dtheta;
-    m_arc.phi += dphi;
-    m_arc.phi = clamp(m_arc.phi, s_minPhi, s_maxPhi);
 }
 
 // Debugging the ModelView matrix can be helpful.
@@ -41,7 +32,7 @@ const float *Camera::get_modelview() const {
     return mvm;
 }
 
-void Camera::draw() const {
+void Camera::internalDraw() const {
     if (!m_visible) {
         return;
     }

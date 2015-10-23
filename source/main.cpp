@@ -91,12 +91,12 @@ void initScene() {
     // FirstPerson has to be picture-in-picture viewport.
     firstPerson.follow(activeHero);
     firstPerson.setUpdateFunc([=](double /*t*/, double /*dt*/) {
-        firstPerson.lookInDir(activeHero->lookAtDir());
+        firstPerson.lookInDir(activeHero->lookDir());
     });
 
     backcam.follow(activeHero);
     backcam.setUpdateFunc([=](double /*t*/, double /*dt*/) {
-        Vec forward = activeHero->lookAtDir().cart();
+        Vec forward = activeHero->lookDir().cart();
         backcam.lookInDir(-forward);
     });
 
@@ -111,17 +111,16 @@ void initScene() {
     fastfreecam.lookAtThing(Vec());
 
     // Arcballs for DAYZ.
-    arcballcam.setRadius(5);
+    arcballcam.radius(5);
     arcballcam.follow(&inc);
 
     // Action? (Our Hero!)
 
     // Load up Incallidus!
     drawn.push_back(&inc);
-    inc.setRadius(0.2);
-    inc.setUpdateFunc([=](double t, double dt) {
-        inc.setRadius(0.1 * cos(t) + 0.5);
-    });
+    inc.radius(0.2);
+    inc.setUpdateFunc(
+        [=](double t, double dt) { inc.radius(0.1 * cos(t) + 0.5); });
 }
 
 void handleMainMenu(int val) {

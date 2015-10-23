@@ -91,7 +91,7 @@ void BezierCurve::loadFile(const std::string &filename) {
     recomputeCurve(10000);
 }
 
-void BezierCurve::draw() const {
+void BezierCurve::internalDraw() const {
     glLineWidth(5.0f);
     if (drawCage) {
         // Draw the m_points
