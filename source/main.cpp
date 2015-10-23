@@ -38,6 +38,14 @@ void updateScene(double t, double dt) {
     // Even though they're rendered, the cameras are NOT in the drawn list, so
     // we have to update them manually, if we want them updated at all.
     activeCam->update(t, dt);
+
+    if (activeCam == &fastfreecam) {
+        activeCam->doWASDControls(20.0, keyPressed, true);
+    } else if (activeCam == &freecam) {
+        activeCam->doWASDControls(10.0, keyPressed, true);
+    } else {
+        activeHero->doWASDControls(5.0, keyPressed);
+    }
 }
 
 void initScene() {
@@ -137,12 +145,10 @@ void initScene() {
     });
 
     // Setup controls for freecam.
-    freecam.addWASDControls(10.0, keyPressed);
     freecam.moveTo(Vec(20.0, 20.0, 20.0));
     freecam.lookAtThing(Vec());
 
     // Cam2 is much faster.
-    fastfreecam.addWASDControls(20.0, keyPressed);
     fastfreecam.moveTo(Vec(20.0, 20.0, 20.0));
     fastfreecam.lookAtThing(Vec());
 

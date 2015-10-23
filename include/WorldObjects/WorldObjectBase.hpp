@@ -31,6 +31,10 @@ public:
     // Called every frame to update logical components of the object.
     virtual void update(double t, double dt);
 
+    // Helper function to give objects easy WASD control.
+    // Q and E move up and down.
+    void doWASDControls(double speed, bool *pressed, bool use_QE = false);
+
     // ==== Motion related methods ============================================
 
     // Relative motion
