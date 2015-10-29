@@ -3,7 +3,7 @@
 #include <fstream>
 #include <vector>
 
-Vec BezierCurve::evalCubic(Vec p0, Vec p1, Vec p2, Vec p3, double t) const {
+Vec BezierCurve::evalCubic(Vec p0, Vec p1, Vec p2, Vec p3, float t) const {
     auto b0 = (1 - t) * (1 - t) * (1 - t);
     auto b1 = 3 * (1 - t) * (1 - t) * t;
     auto b2 = 3 * (1 - t) * t * t;
@@ -11,8 +11,7 @@ Vec BezierCurve::evalCubic(Vec p0, Vec p1, Vec p2, Vec p3, double t) const {
     return m_pos + (b0 * p0) + (b1 * p1) + (b2 * p2) + (b3 * p3);
 }
 
-Vec BezierCurve::evalCubicDeriv(Vec p0, Vec p1, Vec p2, Vec p3,
-                                double t) const {
+Vec BezierCurve::evalCubicDeriv(Vec p0, Vec p1, Vec p2, Vec p3, float t) const {
     auto b0 = 3 * (1 - t) * (1 - t);
     auto b1 = 6 * (1 - t) * t;
     auto b2 = 3 * t * t;
@@ -57,16 +56,16 @@ void BezierCurve::loadFile(const std::string &filename) {
         std::string str;
 
         getline(fi, str, ',');
-        double x = strtod(str.c_str(), nullptr);
+        float x = strtof(str.c_str(), nullptr);
         check();
 
         getline(fi, str, ',');
-        double y = strtod(str.c_str(), nullptr);
+        float y = strtof(str.c_str(), nullptr);
         check();
 
         // The third value isn't delimited by a comma, but rather a newline.
         getline(fi, str, '\n');
-        double z = strtod(str.c_str(), nullptr);
+        float z = strtof(str.c_str(), nullptr);
         check();
 
         m_points.emplace_back(x, y, z);
@@ -76,11 +75,11 @@ void BezierCurve::loadFile(const std::string &filename) {
 
     if (expected_count != m_points.size()) {
         // The standard way to print type size_t is to use %zu, but Windows
-        // doesn't support it. Instead, we cast to a double. (Which is portable
+        // doesn't support it. Instead, we cast to a float. (Which is portable
         // and
         // hard to break.)
         printf("Read in %.0f control m_points from \"%s\", but expected %d.\n",
-               (double)m_points.size(),
+               (float)m_points.size(),
                filename.c_str(),
                expected_count);
         for (Vec pt : m_points) {
@@ -127,9 +126,9 @@ void BezierCurve::internalDraw() const {
     if (drawPath) {
         glDisable(GL_LIGHTING);
         glColor3d(0.0, 0.0, 1.0);
-        double dt = 1.0 / 45;
+        float dt = 1.0f / 45;
         glBegin(GL_LINES);
-        for (double t = 0; t <= 1.0; t += dt) {
+        for (float t = 0; t <= 1.0; t += dt) {
             auto point = eval_t(t);
             glVertex3d(point.x, point.y, point.z);
         }
@@ -141,10 +140,10 @@ void BezierCurve::internalDraw() const {
 void BezierCurve::drawCurve() const {
     glDisable(GL_LIGHTING);
     glColor3d(0.0, 0.0, 1.0);
-    double dt = 1.0 / 45;
+    float dt = 1.0f / 45;
     glBegin(GL_LINES);
     // TODO: draw the vec as well.
-    for (double t = 0; t <= 1.0; t += dt) {
+    for (float t = 0; t <= 1.0; t += dt) {
         auto point = eval_t(t);
         glVertex3d(point.x, point.y, point.z);
     }
@@ -152,7 +151,7 @@ void BezierCurve::drawCurve() const {
     glEnable(GL_LIGHTING);
 }
 
-Vec BezierCurve::eval_arc(double arc) const {
+Vec BezierCurve::eval_arc(float arc) const {
     if (m_cache_arc.size() == 0) {
         recomputeCurve(100);
     }
@@ -171,12 +170,12 @@ Vec BezierCurve::eval_arc(double arc) const {
     return lerp(ratio, m_cache_pos[idx], m_cache_pos[idx - 1]) + m_pos;
 }
 
-Vec BezierCurve::eval_t(double t) const {
+Vec BezierCurve::eval_t(float t) const {
     if (m_cache_t.size() == 0) {
         recomputeCurve(100);
     }
 
-    t = fmod(t, 1.0);
+    t = fmod(t, 1.0f);
 
     size_t idx = 1;
     while (idx < m_cache_t.size() && m_cache_t[idx] < t) {
@@ -189,7 +188,7 @@ Vec BezierCurve::eval_t(double t) const {
     return lerp(ratio, m_cache_pos[idx], m_cache_pos[idx - 1]) + m_pos;
 }
 
-Vec BezierCurve::eval_deriv_arc(double arc) const {
+Vec BezierCurve::eval_deriv_arc(float arc) const {
     if (m_cache_arc.size() == 0) {
         recomputeCurve(100);
     }
@@ -208,12 +207,12 @@ Vec BezierCurve::eval_deriv_arc(double arc) const {
     return lerp(ratio, m_cache_deriv[idx], m_cache_deriv[idx - 1]);
 }
 
-Vec BezierCurve::eval_deriv_t(double t) const {
+Vec BezierCurve::eval_deriv_t(float t) const {
     if (m_cache_t.size() == 0) {
         recomputeCurve(100);
     }
 
-    t = fmod(t, 1.0);
+    t = fmod(t, 1.0f);
 
     size_t idx = 1;
     while (idx < m_cache_t.size() && m_cache_t[idx] < t) {
@@ -234,13 +233,13 @@ void BezierCurve::recomputeCurve(int resolution) const {
     m_cache_pos.clear();
     m_cache_arc.clear();
 
-    const double dt     = 1.0 / resolution;
+    const float dt      = 1.0f / resolution;
     const size_t cubics = (m_points.size() + 1) / 3;
 
     for (size_t i = 0; i + 3 < m_points.size(); i += 3) {
         Vec last;
-        double arc;
-        for (double t = 0; t <= 1.0 + dt; t += dt) {
+        float arc;
+        for (float t = 0; t <= 1.0 + dt; t += dt) {
             auto pt = evalCubic(m_points[i],
                                 m_points[i + 1],
                                 m_points[i + 2],
@@ -273,8 +272,8 @@ void BezierCurve::recomputeCurve(int resolution) const {
 }
 
 void BezierCurve::evalMaxMin() {
-    double xMin = m_points.at(0).x;
-    double xMax = m_points.at(0).x;
+    float xMin = m_points.at(0).x;
+    float xMax = m_points.at(0).x;
     for (size_t i = 0; i < m_points.size(); ++i) {
         if (m_points.at(i).x < xMin) {
             xMin = m_points.at(i).x;
@@ -283,8 +282,8 @@ void BezierCurve::evalMaxMin() {
             xMax = m_points.at(i).x;
         }
     }
-    double zMin = m_points.at(0).z;
-    double zMax = m_points.at(0).z;
+    float zMin = m_points.at(0).z;
+    float zMax = m_points.at(0).z;
     for (size_t i = 0; i < m_points.size(); ++i) {
         if (m_points.at(i).z < zMin) {
             zMin = m_points.at(i).z;

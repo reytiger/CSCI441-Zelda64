@@ -26,7 +26,7 @@ enum MenuOpt {
 // builds.
 // It takes in t and dt, the time and time since the last updateScene was
 // called.
-void updateScene(double t, double dt) {
+void updateScene(float t, float dt) {
     for (WorldObject *wo : drawn) {
         wo->update(t, dt);
     }
@@ -51,17 +51,17 @@ void initScene() {
         drawn.push_back(&light);
 
         light.enable();
-        light.diffuse((0.15 * randColor()).v);
-        light.specular((0.15 * randColor()).v);
+        light.diffuse((0.15f * randColor()).v);
+        light.specular((0.15f * randColor()).v);
 
-        double a = 3.0 * getRandd() - 1.0;
-        double b = 3.0 * getRandd() - 1.0;
-        double c = 5.0 * getRandd() + 0.5;
+        float a = 3.0f * getRand() - 1.0f;
+        float b = 3.0f * getRand() - 1.0f;
+        float c = 5.0f * getRand() + 0.5f;
 
-        light.setUpdateFunc([&light, a, b, c](double t, double /*dt*/) {
-            auto phi = M_PI / 2.0 * (0.5 * sin(b * t) + 0.5);
+        light.setUpdateFunc([&light, a, b, c](float t, float /*dt*/) {
+            auto phi = PI / 2.0f * (0.5f * sinf(b * t) + 0.5f);
             auto vp  = VecPolar(a * t, phi, c);
-            auto pos = vp.cart() + Vec(0.0, 5.0, 0.0);
+            auto pos = vp.cart() + Vec(0, 5, 0);
             light.moveTo(pos);
         });
     }
@@ -76,14 +76,15 @@ void initScene() {
     spotlight.cutoff(12.0);
 
     // Spin in a circle at Y=10.0.
-    spotlight.setUpdateFunc([&](double t, double /*dt*/) {
+    spotlight.setUpdateFunc([&](float t, float /*dt*/) {
         auto color
-            = 0.05 * Color(cos(3.0 * t), cos(5.0 * t), cos(1.0 * t)) + 0.05;
+            = 0.05f * Color(cosf(3.0f * t), cosf(5.0f * t), cosf(1.0f * t))
+              + 0.05f;
         spotlight.ambient(color.v);
         spotlight.diffuse(color.v);
         spotlight.specular(color.v);
 
-        auto vp  = VecPolar(0.68 * t, 0.0, 5.0);
+        auto vp  = VecPolar(0.68f * t, 0.0f, 5.0f);
         auto pos = vp.cart() + Vec(0.0, 5.0, 0.0);
         spotlight.moveTo(pos);
         spotlight.lookInDir((Vec() - spotlight.pos()));
@@ -133,12 +134,12 @@ void initScene() {
     // First Person!
     // FirstPerson has to be picture-in-picture viewport.
     firstPerson.follow(activeHero);
-    firstPerson.setUpdateFunc([=](double /*t*/, double /*dt*/) {
+    firstPerson.setUpdateFunc([=](float /*t*/, float /*dt*/) {
         firstPerson.lookInDir(activeHero->lookDir());
     });
 
     backcam.follow(activeHero);
-    backcam.setUpdateFunc([=](double /*t*/, double /*dt*/) {
+    backcam.setUpdateFunc([=](float /*t*/, float /*dt*/) {
         Vec forward = activeHero->lookDir().cart();
         backcam.lookInDir(-forward);
     });
@@ -159,9 +160,9 @@ void initScene() {
 
     // Load up Incallidus!
     drawn.push_back(&inc);
-    inc.radius(0.2);
+    inc.radius(0.2f);
     inc.setUpdateFunc(
-        [=](double t, double dt) { inc.radius(0.1 * cos(t) + 0.5); });
+        [=](float t, float dt) { inc.radius(0.1f * cosf(t) + 0.5f); });
 }
 
 void handleMainMenu(int val) {

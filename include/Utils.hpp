@@ -31,9 +31,3 @@ static bool kDrawLookAtTargets = false;
 #else
 static bool kDrawLookAtTargets = true;
 #endif
-
-
-// Windows needs to suck a dick.
-#ifndef M_PI
-#define M_PI 3.14159265358979323846
-#endif

@@ -1,6 +1,6 @@
 #include "WorldObjects/WorldObjectBase.hpp"
 
-void WorldObject::update(double t, double dt) {
+void WorldObject::update(float t, float dt) {
     m_pos += dt * m_vel;
     m_pos -= m_old_follow_pos;
     if (m_update) {
@@ -27,12 +27,12 @@ void WorldObject::draw() const {
     }
 }
 
-void WorldObject::rotate(double dtheta, double dphi) {
+void WorldObject::rotate(float dtheta, float dphi) {
     m_arc.theta += dtheta;
     m_arc.phi += dphi;
 }
 
-void WorldObject::doWASDControls(double speed, bool *pressed, bool use_QE) {
+void WorldObject::doWASDControls(float speed, bool *pressed, bool use_QE) {
     Vec vel;
 
     Vec up      = this->up();

@@ -35,7 +35,7 @@ extern Incallidus inc;
 extern Camera *activeCam;
 extern WorldObject *activeHero;
 
-extern double live_fps;
+extern float live_fps;
 extern int live_frames;
 
 // Display settings.
@@ -43,15 +43,13 @@ extern int live_frames;
 constexpr const char *windowTitle = "Do you actually read these?";
 
 // This effectively removes any limit on rendering frames.
-constexpr double FPS              = 9001.0;
-constexpr double FOV              = 60.0;
-constexpr double FPS_update_delay = 0.5;
+constexpr float FPS              = 9001.0;
+constexpr float FOV              = 60.0;
+constexpr float FPS_update_delay = 0.5;
 
 extern int windowWidth;
 extern int windowHeight;
-static inline double aspectRatio() {
-    return (double)windowWidth / windowHeight;
-}
+static inline float aspectRatio() { return (float)windowWidth / windowHeight; }
 
 extern Color colorClear;
 

@@ -24,3 +24,9 @@ static inline void pushMatrixAnd(std::function<void(void)> body) {
     glPopMatrix();
     glChk();
 }
+
+// Lazyman's static_cast. Now with 88% fewer characters!
+template <typename T, typename U>
+T as(const U &other) {
+    return static_cast<T>(other);
+}

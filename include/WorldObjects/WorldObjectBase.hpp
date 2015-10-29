@@ -13,7 +13,7 @@ public:
     // and the change in time since the last update.
     // TODO: Do pass in *this - we don't right now so it'll still build.
     // TODO: Don't pass in time - nothing should need it.
-    typedef std::function<void(/*WorldObject &,*/ double, double)> UpdateFunc;
+    typedef std::function<void(/*WorldObject &,*/ float, float)> UpdateFunc;
 
     // ==== Constructors and Desctructors =====================================
     // Nothing much to see here. They're all defaulted.
@@ -29,34 +29,34 @@ public:
     void draw() const;
 
     // Called every frame to update logical components of the object.
-    virtual void update(double t, double dt);
+    virtual void update(float t, float dt);
 
     // Helper function to give objects easy WASD control.
     // Q and E move up and down.
-    void doWASDControls(double speed, bool *pressed, bool use_QE = false);
+    void doWASDControls(float speed, bool *pressed, bool use_QE = false);
 
     // ==== Motion related methods ============================================
 
     // Relative motion
     void moveBy(Vec ds) { m_pos += ds; }
-    void moveByX(double dx) { m_pos.x += dx; }
-    void moveByY(double dy) { m_pos.y += dy; }
-    void moveByZ(double dz) { m_pos.z += dz; }
+    void moveByX(float dx) { m_pos.x += dx; }
+    void moveByY(float dy) { m_pos.y += dy; }
+    void moveByZ(float dz) { m_pos.z += dz; }
 
     // Absolute motion
     void moveTo(Vec pos) { m_pos = pos; }
-    void moveToX(double x) { m_pos.x = x; }
-    void moveToY(double y) { m_pos.y = y; }
-    void moveToZ(double z) { m_pos.z = z; }
+    void moveToX(float x) { m_pos.x = x; }
+    void moveToY(float y) { m_pos.y = y; }
+    void moveToZ(float z) { m_pos.z = z; }
 
     void setVelocity(Vec ds) { m_vel = ds; }
-    void setVelocityX(double dx) { m_vel.x = dx; }
-    void setVelocityY(double dy) { m_vel.y = dy; }
-    void setVelocityZ(double dz) { m_vel.z = dz; }
+    void setVelocityX(float dx) { m_vel.x = dx; }
+    void setVelocityY(float dy) { m_vel.y = dy; }
+    void setVelocityZ(float dz) { m_vel.z = dz; }
 
     // Cameras need to clamp their rotation. There is probably a better way to
     // to do this.
-    virtual void rotate(double dtheta, double dphi);
+    virtual void rotate(float dtheta, float dphi);
 
     // ==== Getters and Setters ===============================================
 
@@ -78,8 +78,8 @@ public:
     void follow(WorldObject *wo);
     void setUpdateFunc(UpdateFunc func) { m_update = func; }
 
-    double radius() const { return m_radius; }
-    void radius(double rad) { m_radius = rad; }
+    float radius() const { return m_radius; }
+    void radius(float rad) { m_radius = rad; }
 
     Material material() const { return m_material; }
     void material(const Material &mat) { m_material = mat; }
@@ -108,8 +108,8 @@ protected:
 
     Material m_material = Material::WhiteRubber;
 
-    double m_radius = 1.0;
-    double m_height = 0.0;
+    float m_radius = 1.0;
+    float m_height = 0.0;
 
     bool m_visible = true;
 

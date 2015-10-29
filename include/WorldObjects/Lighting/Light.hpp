@@ -11,7 +11,7 @@ public:
     Light() = default;
     virtual ~Light() override { glDisable(m_lightid); }
 
-    virtual void update(double t, double dt) override;
+    virtual void update(float t, float dt) override;
     void enable();
 
     Color ambient() { return m_ambient; }

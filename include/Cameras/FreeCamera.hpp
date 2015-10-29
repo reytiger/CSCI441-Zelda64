@@ -11,5 +11,5 @@ public:
     FreeCamera(Vec pos, VecPolar arc) : Camera(pos, arc) {}
 
     // Gives the camera predictable WASD controls, with Q-up and E-down too.
-    void addWASDControls(double speed, bool *pressed);
+    void addWASDControls(float speed, bool *pressed);
 };

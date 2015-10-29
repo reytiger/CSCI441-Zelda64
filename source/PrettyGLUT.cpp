@@ -4,7 +4,7 @@
 
 // We need to know about this. but it's entirely game logic so it's defined
 // in main.cpp.
-void updateScene(double t, double dt);
+void updateScene(float t, float dt);
 
 // Cameras
 ArcBallCamera arcballcam;
@@ -20,7 +20,7 @@ Incallidus inc;
 Camera *activeCam       = &freecam;
 WorldObject *activeHero = &inc;
 
-double live_fps = 0.0;
+float live_fps  = 0.0;
 int live_frames = 0;
 
 // Display Settings
@@ -61,14 +61,14 @@ void renderHUD() {
     glLoadIdentity();
 
     // These two come from us using GLUT_BITMAP_9_BY_15 in drawText().
-    static const int charWidth  = 9;
-    static const int charHeight = 15;
+    static const size_t charWidth  = 9;
+    static const size_t charHeight = 15;
 
-    static const int numLength = 10;
-    static const int pixelsFromRight
+    static const size_t numLength = 10;
+    static const size_t pixelsFromRight
         = (numLength + std::string(" us / frame").size() + 1) * charWidth;
 
-    static const int lineSpacing = charHeight;
+    static const size_t lineSpacing = charHeight;
 
     // FPS
     auto white = Color(1.0, 1.0, 1.0);
@@ -81,18 +81,18 @@ void renderHUD() {
     auto frame_time = (live_fps == 0 ? 0 : 1e6 / live_fps);
     // Simple scenes can get INSANE. Adjust the display so it's reasonable.
     if (frame_time < 1e3) {
-        pos = pos - Vec(0.0, lineSpacing);
+        pos = pos - Vec(0, lineSpacing);
         drawText(
             tfm::format("%*.2f us / frame", numLength, frame_time), pos, white);
     } else {
         frame_time /= 1e3;
-        pos = pos - Vec(0.0, lineSpacing);
+        pos = pos - Vec(0, lineSpacing);
         drawText(
             tfm::format("%*.2f ms / frame", numLength, frame_time), pos, white);
     }
 
     // Frame count
-    pos = pos - Vec(0.0, lineSpacing);
+    pos = pos - Vec(0, lineSpacing);
     drawText(tfm::format("%*d frames", numLength, live_frames), pos, white);
 
     glEnable(GL_LIGHTING);
@@ -168,9 +168,9 @@ void printOpenGLInformation() {
 void doFrame(int) {
     static constexpr unsigned int delay
         = static_cast<unsigned int>(1000.0 / FPS);
-    static double then            = now_secs();
-    static double last_fps_update = now_secs();
-    static int frames             = 0;
+    static float then            = now_secs();
+    static float last_fps_update = now_secs();
+    static int frames            = 0;
 
     // Register the next update ASAP. We want this timing to be as consistent
     // as we can get it to be.
@@ -178,9 +178,9 @@ void doFrame(int) {
     // Keep track of the total number of frames we have ever rendered.
     frames += 1;
 
-    double now = now_secs();
-    double dt  = now - then;
-    then       = now;
+    float now = now_secs();
+    float dt  = now - then;
+    then      = now;
 
     // Keep a live, running average FPS counter.
     if (now - last_fps_update > FPS_update_delay) {
@@ -197,7 +197,7 @@ void mouseCallback(int button, int state, int x, int y) {
     // update the left mouse button states, if applicable
     switch (button) {
     case GLUT_LEFT_BUTTON:
-        mouse           = Vec(x, y, 0.0);
+        mouse           = Vec(x, y, 0);
         leftMouse       = state;
         modifiersButton = glutGetModifiers();
         break;
@@ -206,7 +206,7 @@ void mouseCallback(int button, int state, int x, int y) {
 
 void mouseMotion(int x, int y) {
     if (leftMouse == GLUT_DOWN) {
-        double fudge = 0.002f;
+        float fudge = 0.002f;
 
         int dx = static_cast<int>(mouse.x) - x;
         int dy = static_cast<int>(mouse.y) - y;
@@ -216,8 +216,8 @@ void mouseMotion(int x, int y) {
             fudge = 0.005f;
         }
 
-        mouse.x = x;
-        mouse.y = y;
+        mouse.x = as<float>(x);
+        mouse.y = as<float>(y);
 
         // Adjust the radius of the active cam. Moves by a constant factor of
         // the idstance of the mouse moved.
@@ -226,11 +226,11 @@ void mouseMotion(int x, int y) {
             Vec dist    = Vec(dx, dy);
             auto radius = activeCam->radius();
             if (dy > 0) {
-                radius = radius - 2.0 * fudge * dist.norm();
+                radius = radius - 2.0f * fudge * dist.norm();
             } else {
-                radius = radius + 2.0 * fudge * dist.norm();
+                radius = radius + 2.0f * fudge * dist.norm();
             }
-            radius = clamp(radius, 3.0, 100.0);
+            radius = clamp(radius, 3.0f, 100.0f);
             activeCam->radius(radius);
             return;
         }

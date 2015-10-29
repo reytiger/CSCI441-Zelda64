@@ -15,7 +15,7 @@ public:
     }
 
     virtual void adjustGLU() const;
-    virtual void rotate(double dtheta, double dphi) override {
+    virtual void rotate(float dtheta, float dphi) override {
         WorldObject::rotate(dtheta, dphi);
         m_arc.phi = clamp(m_arc.phi, -0.5 * M_PI + 1e-5, 0.5 * M_PI - 1e-5);
     }

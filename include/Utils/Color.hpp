@@ -13,15 +13,14 @@ struct Color {
     };
     Color() : r(), g(), b(), a(1.0f) {}
     Color(double r, double g, double b, double a = 1.0)
-        : r(r), g(g), b(b), a(a) {}
+        : r(as<float>(r)), g(as<float>(g)), b(as<float>(b)), a(as<float>(a)) {}
     Color(int r, int g, int b, int a = 255)
-        : r(r / 255.0), g(g / 255.0), b(b / 255.0), a(a / 255.0) {}
+        : r(r / 255.0f), g(g / 255.0f), b(b / 255.0f), a(a / 255.0f) {}
 };
 
-inline double getRandd() { return rand() / (double)RAND_MAX; }
-inline float getRandf() { return rand() / (float)RAND_MAX; }
+inline float getRand() { return rand() / (float)RAND_MAX; }
 
-inline Color randColor() { return Color(getRandf(), getRandf(), getRandf()); }
+inline Color randColor() { return Color(getRand(), getRand(), getRand()); }
 
 inline Color operator*(float num, const Color &color) {
     return Color(num * color.r, num * color.g, num * color.b, color.a);
