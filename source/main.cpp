@@ -18,8 +18,6 @@ enum MenuOpt {
     SwitchToFirstCam,
     SwitchToBackCam,
 
-    SwitchToIncallidus,
-
     Quit,
 };
 
@@ -96,17 +94,20 @@ void initScene() {
     roomFloor = CallListObject([&](GLuint dl) {
         glNewList(dl, GL_COMPILE);
 
-        static const auto size = Vec(20, 20);
+        static const auto size = Vec(100, 100);
         static const size_t tris
             = 10; // Triangles on one eddge of the rectangular floor.
 
         for (int i = -1; i <= size.x + 1; i += 1) {
             glBegin(GL_TRIANGLE_STRIP);
+            // The terrain is flat. All of the normals are straight up.
+            glNormal3f(0.0, 1.0, 0.0);
             for (int k = -1; k <= size.y; k += 1) {
                 Vec off  = Vec(2.0, 2.0);
                 auto pos = Vec(i, k) * off - Vec(200.0, 200.0) / 2.0;
 
                 Material::GreenRubber.set();
+
                 glVertex3d(pos.x, 0.0, pos.y);
                 glVertex3d(pos.x, 0.0, pos.y - off.y);
                 glVertex3d(pos.x - off.x, 0.0, pos.y);

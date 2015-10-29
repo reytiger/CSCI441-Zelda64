@@ -44,40 +44,58 @@ void drawText(const std::string &text, Vec pos, Color color) {
     glRasterPos2d(pos.x, pos.y);
     pushMatrixAnd([&]() {
         for (size_t i = 0; i < text.size(); i += 1) {
-            glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, text[i]);
+            glutBitmapCharacter(GLUT_BITMAP_9_BY_15, text[i]);
         }
     });
 }
 
 void renderHUD() {
+    glDisable(GL_LIGHTING);
     // Switch to 2D.
+    // TODO: Preserve matrices properly.
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluOrtho2D(0.0, 1.0, 0.0, 1.0);
+    gluOrtho2D(0.0, windowWidth, 0.0, windowHeight);
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
+    // These two come from us using GLUT_BITMAP_9_BY_15 in drawText().
+    static const int charWidth  = 9;
+    static const int charHeight = 15;
+
+    static const int numLength = 10;
+    static const int pixelsFromRight
+        = (numLength + std::string(" us / frame").size() + 1) * charWidth;
+
+    static const int lineSpacing = charHeight;
+
     // FPS
     auto white = Color(1.0, 1.0, 1.0);
-    auto pos   = Vec(0.005, 1.0 - 0.02);
-    drawText(tfm::format("%.1f FPS", live_fps), pos, white);
+    auto pos   = Vec(windowWidth - pixelsFromRight, windowHeight - lineSpacing);
+    drawText(tfm::format("%*.1f FPS", numLength, live_fps), pos, white);
 
-    // Frame count
-    pos = pos - Vec(0.0, 0.015);
-    drawText(tfm::format("%d frames", live_frames), pos, white);
+    info("%s\n%s\n\n", charWidth, windowWidth);
 
     // Frame time
     auto frame_time = (live_fps == 0 ? 0 : 1e6 / live_fps);
     // Simple scenes can get INSANE. Adjust the display so it's reasonable.
     if (frame_time < 1e3) {
-        pos = pos - Vec(0.0, 0.015);
-        drawText(tfm::format("%.2f us", frame_time), pos, white);
+        pos = pos - Vec(0.0, lineSpacing);
+        drawText(
+            tfm::format("%*.2f us / frame", numLength, frame_time), pos, white);
     } else {
         frame_time /= 1e3;
-        pos = pos - Vec(0.0, 0.015);
-        drawText(tfm::format("%.2f ms", frame_time), pos, white);
+        pos = pos - Vec(0.0, lineSpacing);
+        drawText(
+            tfm::format("%*.2f ms / frame", numLength, frame_time), pos, white);
     }
+
+    // Frame count
+    pos = pos - Vec(0.0, lineSpacing);
+    drawText(tfm::format("%*d frames", numLength, live_frames), pos, white);
+
+    glEnable(GL_LIGHTING);
 }
 
 void resize(int w, int h);
@@ -157,6 +175,7 @@ void doFrame(int) {
     // Register the next update ASAP. We want this timing to be as consistent
     // as we can get it to be.
     glutTimerFunc(delay, doFrame, 0);
+    // Keep track of the total number of frames we have ever rendered.
     frames += 1;
 
     double now = now_secs();
@@ -165,12 +184,9 @@ void doFrame(int) {
 
     // Keep a live, running average FPS counter.
     if (now - last_fps_update > FPS_update_delay) {
-        live_fps    = frames / (now - last_fps_update);
-        live_frames = frames;
-
-        // Reset everything.
+        live_fps        = frames / (now - last_fps_update);
+        live_frames     = frames;
         last_fps_update = now;
-        frames          = 0;
     }
     updateScene(now, dt);
 
