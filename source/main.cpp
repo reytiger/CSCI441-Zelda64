@@ -31,8 +31,6 @@ void updateScene(double t, double dt) {
         wo->update(t, dt);
     }
 
-    info("t: %s\ndt: %s\n", t, dt);
-
     // Even though they're rendered, the cameras are NOT in the drawn list, so
     // we have to update them manually, if we want them updated at all.
     activeCam->update(t, dt);
