@@ -128,6 +128,7 @@ void initScene() {
         glEndList();
     });
 
+
     // Cameras!
 
     // First Person!
@@ -160,7 +161,7 @@ void initScene() {
     // Load up Incallidus!
     drawn.push_back(&inc);
     inc.radius(0.2f);
-    inc.setUpdateFunc([=](double t, double dt) {
+    inc.setUpdateFunc([=](double t, double /*dt*/) {
         inc.radius(0.1f * as<float>(cos(t)) + 0.5f);
     });
 }

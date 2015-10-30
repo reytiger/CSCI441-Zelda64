@@ -22,11 +22,9 @@ void ArcBallCamera::internalDraw() const {
         glutSolidSphere(0.1, 10, 10);
     });
 
-    if (kDrawLookAtTargets) {
-        // And a cube where it "is".
-        pushMatrixAnd([&]() {
-            glTranslated(m_pos.x, m_pos.y, m_pos.z);
-            glutSolidCube(0.1);
-        });
-    }
+    // And a cube where it "is".
+    pushMatrixAnd([&]() {
+        glTranslated(m_pos.x, m_pos.y, m_pos.z);
+        glutSolidCube(0.1);
+    });
 }
