@@ -18,5 +18,5 @@ protected:
     float m_spot_exp    = 1.0;
     float m_spot_cutoff = 45.0;
 
-    virtual void update(float t, float dt) override;
+    virtual void update(double t, float dt) override;
 };

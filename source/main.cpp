@@ -26,10 +26,12 @@ enum MenuOpt {
 // builds.
 // It takes in t and dt, the time and time since the last updateScene was
 // called.
-void updateScene(float t, float dt) {
+void updateScene(double t, double dt) {
     for (WorldObject *wo : drawn) {
         wo->update(t, dt);
     }
+
+    info("t: %s\ndt: %s\n", t, dt);
 
     // Even though they're rendered, the cameras are NOT in the drawn list, so
     // we have to update them manually, if we want them updated at all.

@@ -35,17 +35,19 @@ extern Incallidus inc;
 extern Camera *activeCam;
 extern WorldObject *activeHero;
 
-extern float live_fps;
+extern double live_fps;
+extern double live_frametime;
 extern int live_frames;
 
 // Display settings.
 // For more detailed settings, see initGLUT in PrettyGLUT.cpp.
 constexpr const char *windowTitle = "Do you actually read these?";
 
+constexpr float FOV = 60.0;
+
 // This effectively removes any limit on rendering frames.
-constexpr float FPS              = 9001.0;
-constexpr float FOV              = 60.0;
-constexpr float FPS_update_delay = 0.5;
+constexpr size_t FPS            = 9001;
+constexpr auto FPS_update_delay = std::chrono::milliseconds(500);
 
 extern int windowWidth;
 extern int windowHeight;

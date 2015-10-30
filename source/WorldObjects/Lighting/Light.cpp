@@ -10,7 +10,7 @@ void Light::enable() {
     glEnable(m_lightid);
 }
 
-void Light::update(float t, float dt) {
+void Light::update(double t, float dt) {
     WorldObject::update(t, dt);
     glChk();
 

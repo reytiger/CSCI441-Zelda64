@@ -29,7 +29,7 @@ public:
     void draw() const;
 
     // Called every frame to update logical components of the object.
-    virtual void update(float t, float dt);
+    virtual void update(double t, float dt);
 
     // Helper function to give objects easy WASD control.
     // Q and E move up and down.

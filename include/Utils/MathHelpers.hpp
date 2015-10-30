@@ -11,11 +11,7 @@
 
 #define PI (as<float>(M_PI))
 
-inline float now_secs() {
-    auto now = std::chrono::system_clock::now().time_since_epoch();
-    return std::chrono::duration_cast<std::chrono::milliseconds>(now).count()
-           / 1000.0f;
-}
+using timer_clock = std::chrono::high_resolution_clock;
 
 template <typename T, typename U, typename V>
 T clamp(const T &thing, const U &lo, const V &hi) {

@@ -4,7 +4,7 @@
 
 // We need to know about this. but it's entirely game logic so it's defined
 // in main.cpp.
-void updateScene(float t, float dt);
+void updateScene(double t, double dt);
 
 // Cameras
 ArcBallCamera arcballcam;
@@ -20,8 +20,9 @@ Incallidus inc;
 Camera *activeCam       = &freecam;
 WorldObject *activeHero = &inc;
 
-float live_fps  = 0.0;
-int live_frames = 0;
+double live_fps       = 0.0;
+double live_frametime = 0.0;
+int live_frames       = 0;
 
 // Display Settings
 int windowWidth  = 1280;
@@ -64,9 +65,11 @@ void renderHUD() {
     static const size_t charWidth  = 9;
     static const size_t charHeight = 15;
 
+    // 10 digits seems reasonable for "What's the largest number we ever hope to
+    // see?".
     static const size_t numLength = 10;
     static const size_t pixelsFromRight
-        = (numLength + std::string(" us / frame").size() + 1) * charWidth;
+        = (numLength + std::string(" ms / frame").size() + 1) * charWidth;
 
     static const size_t lineSpacing = charHeight;
 
@@ -75,21 +78,24 @@ void renderHUD() {
     auto pos   = Vec(windowWidth - pixelsFromRight, windowHeight - lineSpacing);
     drawText(tfm::format("%*.1f FPS", numLength, live_fps), pos, white);
 
-    info("%s\n%s\n\n", charWidth, windowWidth);
-
     // Frame time
-    auto frame_time = (live_fps == 0 ? 0 : 1e6 / live_fps);
-    // Simple scenes can get INSANE. Adjust the display so it's reasonable.
-    if (frame_time < 1e3) {
-        pos = pos - Vec(0, lineSpacing);
-        drawText(
-            tfm::format("%*.2f us / frame", numLength, frame_time), pos, white);
-    } else {
-        frame_time /= 1e3;
-        pos = pos - Vec(0, lineSpacing);
-        drawText(
-            tfm::format("%*.2f ms / frame", numLength, frame_time), pos, white);
+    pos               = pos - Vec(0, lineSpacing);
+    std::string units = "??";
+    auto frametime    = live_frametime;
+    if (frametime < 1e-6) {
+        units = "ns";
+        frametime *= 1e9;
+    } else if (frametime < 1e-3) {
+        units = "us";
+        frametime *= 1e6;
+    } else if (frametime < 1) {
+        units = "ms";
+        frametime *= 1e3;
     }
+
+    std::string frametime_text
+        = tfm::format("%*.2f %s / frame", numLength, frametime, units);
+    drawText(frametime_text, pos, white);
 
     // Frame count
     pos = pos - Vec(0, lineSpacing);
@@ -97,8 +103,18 @@ void renderHUD() {
 
     glEnable(GL_LIGHTING);
 }
+void resize(int w, int h) {
+    windowWidth  = w;
+    windowHeight = h;
 
-void resize(int w, int h);
+    // update the viewport to fill the window
+    glViewport(0, 0, w, h);
+
+    // update the projection matrix with the new window properties
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluPerspective(FOV, aspectRatio(), 0.1, 100000.0);
+}
 
 void render() {
     // clear the render buffer
@@ -129,19 +145,6 @@ void render() {
     glutSwapBuffers();
 }
 
-void resize(int w, int h) {
-    windowWidth  = w;
-    windowHeight = h;
-
-    // update the viewport to fill the window
-    glViewport(0, 0, w, h);
-
-    // update the projection matrix with the new window properties
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    gluPerspective(FOV, aspectRatio(), 0.1, 100000.0);
-}
-
 void printOpenGLInformation() {
     info(
         // We don't want to break this string across lines.
@@ -166,29 +169,36 @@ void printOpenGLInformation() {
 
 // The int is requied, but unused.
 void doFrame(int) {
-    static constexpr unsigned int delay
-        = static_cast<unsigned int>(1000.0 / FPS);
-    static float then            = now_secs();
-    static float last_fps_update = now_secs();
-    static int frames            = 0;
+    using namespace std::chrono;
+
+    static const auto delay  = milliseconds(1000 / FPS);
+    static auto last_updated = timer_clock::now();
+    static auto then         = timer_clock::now();
+    static int frames        = 0;
 
     // Register the next update ASAP. We want this timing to be as consistent
     // as we can get it to be.
-    glutTimerFunc(delay, doFrame, 0);
-    // Keep track of the total number of frames we have ever rendered.
+    glutTimerFunc(delay.count(), doFrame, 0);
+    // frames += 1;
+
     frames += 1;
 
-    float now = now_secs();
-    float dt  = now - then;
-    then      = now;
+    auto now = timer_clock::now();
+    auto dt  = now - then;
+    then     = now;
 
     // Keep a live, running average FPS counter.
-    if (now - last_fps_update > FPS_update_delay) {
-        live_fps        = frames / (now - last_fps_update);
-        live_frames     = frames;
-        last_fps_update = now;
+    if (now - last_updated > FPS_update_delay) {
+        live_fps       = frames / duration<double>(FPS_update_delay).count();
+        live_frametime = duration<double>(dt).count() / frames;
+        live_frames    = frames;
+
+        last_updated = now;
+        frames       = 0;
     }
-    updateScene(now, dt);
+
+    updateScene(duration<double>(now.time_since_epoch()).count(),
+                duration<double>(dt).count());
 
     glutPostRedisplay();
 }
