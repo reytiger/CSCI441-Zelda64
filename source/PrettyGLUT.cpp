@@ -75,13 +75,13 @@ void renderHUD() {
 
     // FPS
     auto white = Color(1.0, 1.0, 1.0);
-    auto pos   = Vec(windowWidth - pixelsFromRight, windowHeight - lineSpacing);
+    auto pos = Vec(windowWidth - pixelsFromRight, windowHeight - lineSpacing);
     drawText(tfm::format("%*.1f FPS", numLength, live_fps), pos, white);
 
     // Frame time
     pos               = pos - Vec(0, lineSpacing);
     std::string units = "??";
-    auto frametime    = live_frametime;
+    auto frametime = live_frametime;
     if (frametime < 1e-6) {
         units = "ns";
         frametime *= 1e9;
