@@ -1,17 +1,10 @@
 FLAGS := -std=c++11 -g -Os -fmax-errors=5
 Wwarnings := -Wall -Wextra
-Wno_warnings := -Wno-char-subscripts -Wno-deprecated-declarations -Wno-unused-variable -Wno-narrowing
+Wno_warnings := -Wno-char-subscripts -Wno-deprecated-declarations
 
-# Any directory in 'include' is fair game.
-INCPATH := -Iinclude -Iext -Iext/yaml/include -Iext/fmod/inc
-LIBPATH := -Lext/fmod/lib/x86_64
+INCPATH := -Iinclude -Iext/include
 
 CXXFLAGS += $(INCPATH) $(FLAGS) $(Wwarnings) $(Wno_warnings)
-
-YAML_LIB=libyaml-cpp.a
-
-# This needs to be a MinGW or Visual Studio generator on Windows.
-YAML_CMAKE_GEN="Unix Makefiles"
 
 # Windows builds
 ifeq ($(OS), Windows_NT)
@@ -23,7 +16,7 @@ else ifeq ($(shell uname), Darwin)
 
 # Linux and all other builds
 else
-	LD_FLAGS += $(LIBPATH) -lglut -lGL -lGLU -lm -L./ext -lyaml-cpp -lfmod
+	LD_FLAGS += $(LIBPATH) -lglut -lGL -lGLU -lm
 endif
 
 # Thanks, SO!
@@ -31,19 +24,12 @@ endif
 # Make does not offer a recursive wildcard function, so here's one:
 rwildcard=$(wildcard $1$2) $(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2))
 
-BINARY  := guildWars
+BINARY  := a5
 SOURCES := $(strip $(call rwildcard, source/,*.cpp))
 HEADERS := $(strip $(call rwildcard, include/,*.hpp))
 OBJECTS := $(strip $(addprefix object/, $(SOURCES:source/%.cpp=%.o)))
 
 all: format depend $(BINARY)
-
-ext/$(YAML_LIB):
-	@mkdir -p object/yaml/
-	+cd object/yaml/ \
-		&& cmake ../../ext/yaml/ -G $(YAML_CMAKE_GEN) -DYAML_CPP_BUILD_TOOLS=OFF -DBoost_INCLUDE_DIR=../../ext\
-		&& make --quiet \
-		&& cp $(YAML_LIB) ../../ext
 
 format:
 	-@clang-format $(HEADERS) -i

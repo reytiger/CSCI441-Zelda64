@@ -29,6 +29,7 @@
 
 # Binary names
 guildWars
+a[0-9]
 
 # Our Makefile's dependency list
 depend.mk
