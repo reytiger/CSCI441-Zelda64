@@ -95,8 +95,6 @@ void initScene() {
         glNewList(dl, GL_COMPILE);
 
         static const auto size = Vec(100, 100);
-        static const size_t tris
-            = 10; // Triangles on one eddge of the rectangular floor.
 
         for (int i = -1; i <= size.x + 1; i += 1) {
             glBegin(GL_TRIANGLE_STRIP);
