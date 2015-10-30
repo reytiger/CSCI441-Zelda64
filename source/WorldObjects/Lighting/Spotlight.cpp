@@ -1,6 +1,6 @@
 #include "WorldObjects/Lighting/Spotlight.hpp"
 
-void Spotlight::update(double t, float dt) {
+void Spotlight::update(double t, double dt) {
     Light::update(t, dt);
 
     auto ldir_vec = lookDir().cart();

@@ -22,16 +22,17 @@ inline float getRand() { return rand() / (float)RAND_MAX; }
 
 inline Color randColor() { return Color(getRand(), getRand(), getRand()); }
 
-inline Color operator*(float num, const Color &color) {
+template <typename Num>
+inline Color operator*(Num num, const Color &color) {
     return Color(num * color.r, num * color.g, num * color.b, color.a);
 }
 
-template <typename T>
-inline Color operator+(const Color &color, T num) {
+template <typename Num>
+inline Color operator+(const Color &color, Num num) {
     return Color(color.r + num, color.g + num, color.b + num, color.a);
 }
 
-template <typename T>
-inline Color operator+(T num, const Color &color) {
+template <typename Num>
+inline Color operator+(Num num, const Color &color) {
     return Color(num + color.r, num + color.g, num + color.b, color.a);
 }

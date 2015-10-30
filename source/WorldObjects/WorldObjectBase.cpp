@@ -1,6 +1,6 @@
 #include "WorldObjects/WorldObjectBase.hpp"
 
-void WorldObject::update(double t, float dt) {
+void WorldObject::update(double t, double dt) {
     m_pos += dt * m_vel;
     m_pos -= m_old_follow_pos;
     if (m_update) {

@@ -38,8 +38,15 @@ struct VecPolar {
 
     ~VecPolar() = default;
     VecPolar() = default;
-    VecPolar(float theta, float phi, float r = 1.0)
-        : theta(theta), phi(phi), r(r) {}
+
+    template <typename Theta, typename Phi>
+    VecPolar(Theta theta, Phi phi)
+        : theta(as<float>(theta)), phi(as<float>(phi)), r(1.0f) {}
+
+    template <typename Theta, typename Phi, typename R>
+    VecPolar(Theta theta, Phi phi, R r)
+        : theta(as<float>(theta)), phi(as<float>(phi)), r(as<float>(r)) {}
+
     explicit VecPolar(Vec vec) {
         r = vec.norm();
         if (r == 0.0) {
@@ -89,16 +96,16 @@ def_op_by_components(Vec, *, Vec, Vec);
 def_op_by_components(Vec, /, Vec, Vec);
 
 // Vectors can be scaled.
-def_op_by_scalar(Vec, +, float);
-def_op_by_scalar(Vec, -, float);
-def_op_by_scalar(Vec, *, float);
-def_op_by_scalar(Vec, /, float);
+def_op_by_scalar(Vec, +, double);
+def_op_by_scalar(Vec, -, double);
+def_op_by_scalar(Vec, *, double);
+def_op_by_scalar(Vec, /, double);
 
 // Compund operators!
-def_compound_ops(Vec, +, +=, float);
-def_compound_ops(Vec, -, -=, float);
-def_compound_ops(Vec, *, *=, float);
-def_compound_ops(Vec, /, /=, float);
+def_compound_ops(Vec, +, +=, double);
+def_compound_ops(Vec, -, -=, double);
+def_compound_ops(Vec, *, *=, double);
+def_compound_ops(Vec, /, /=, double);
 
 def_compound_ops(Vec, +, +=, Vec);
 def_compound_ops(Vec, -, -=, Vec);

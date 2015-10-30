@@ -178,7 +178,7 @@ void doFrame(int) {
 
     // Register the next update ASAP. We want this timing to be as consistent
     // as we can get it to be.
-    glutTimerFunc(delay.count(), doFrame, 0);
+    glutTimerFunc(as<int>(delay.count()), doFrame, 0);
     // frames += 1;
 
     frames += 1;

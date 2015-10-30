@@ -13,7 +13,7 @@ public:
     // and the change in time since the last update.
     // TODO: Do pass in *this - we don't right now so it'll still build.
     // TODO: Don't pass in time - nothing should need it.
-    typedef std::function<void(/*WorldObject &,*/ float, float)> UpdateFunc;
+    typedef std::function<void(/*WorldObject &,*/ double, double)> UpdateFunc;
 
     // ==== Constructors and Desctructors =====================================
     // Nothing much to see here. They're all defaulted.
@@ -29,7 +29,7 @@ public:
     void draw() const;
 
     // Called every frame to update logical components of the object.
-    virtual void update(double t, float dt);
+    virtual void update(double t, double dt);
 
     // Helper function to give objects easy WASD control.
     // Q and E move up and down.
