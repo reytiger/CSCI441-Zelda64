@@ -28,7 +28,7 @@ void Light::update(double t, double dt) {
     glChk();
 }
 
-void Light::draw() const {
+void Light::internalDraw() const {
     auto mat = Material::WhiteRubber;
     mat.emission(m_diffuse);
 
@@ -42,16 +42,14 @@ void Light::draw() const {
     });
 
     pushMatrixAnd([&]() {
-        glTranslated(lookTarget().x, lookTarget().y, lookTarget().z);
+        auto lookTarget = pos() + lookDir();
+        glTranslated(lookTarget.x, lookTarget.y, lookTarget.z);
         glRotated(45.0, 1.0, 1.0, 1.0);
         glutSolidCube(0.075);
     });
 }
 
 void Light::ambient(const float *colorv) {
-    assert(colorv != nullptr);
-    assert(GL_LIGHT0 <= m_lightid);
-    assert(m_lightid <= GL_LIGHT7);
 
     m_ambient = Color(colorv[0], colorv[1], colorv[2]);
 }
@@ -70,4 +68,9 @@ void Light::specular(const float *colorv) {
     assert(m_lightid <= GL_LIGHT7);
 
     m_specular = Color(colorv[0], colorv[1], colorv[2]);
+}
+
+void Light::sanity_check() const {
+    assert(GL_LIGHT0 <= m_lightid);
+    assert(m_lightid <= GL_LIGHT7);
 }

@@ -3,22 +3,25 @@
 #include <chrono>
 
 #include <cassert>
+#include <cmath>
 
-inline double now_secs() {
-    auto now = std::chrono::system_clock::now().time_since_epoch();
-    return std::chrono::duration_cast<std::chrono::milliseconds>(now).count()
-           / 1000.0;
-}
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
 
-template <typename T>
-T clamp(const T &thing, const T &lo, const T &hi) {
+#define PI (as<float>(M_PI))
+
+using timer_clock = std::chrono::high_resolution_clock;
+
+template <typename T, typename U, typename V>
+T clamp(const T &thing, const U &lo, const V &hi) {
     assert(lo <= hi);
     T res = thing;
-    if (res < lo) {
-        res = lo;
+    if (res < T(lo)) {
+        res = T(lo);
     }
-    if (res > hi) {
-        res = hi;
+    if (res > T(hi)) {
+        res = T(hi);
     }
     return res;
 }

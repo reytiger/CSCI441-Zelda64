@@ -7,29 +7,18 @@
 
 class Camera : public WorldObject {
 public:
-    // Bounds on Phi to prevent the camera from wrapping around.
-    static const double s_minPhi;
-    static const double s_maxPhi;
-
-    Camera() : WorldObject(), m_up(Vec(0.0, 1.0, 0.0)) {
-        m_radius   = 0.05;
-        m_material = Material::YellowRubber;
-        m_visible  = false;
-    }
-    Camera(Vec pos, VecPolar arc, Vec up = Vec(0.0, 1.0, 0.0))
-        : WorldObject(pos), m_up(up) {
-        m_arc      = arc;
-        m_radius   = 0.05;
-        m_material = Material::YellowRubber;
-        m_visible  = false;
+    Camera() : WorldObject() { init(); }
+    Camera(Vec pos, VecPolar arc) : WorldObject() {
+        this->init();
+        this->moveTo(pos);
+        this->lookInDir(arc);
     }
 
     virtual void adjustGLU() const;
-
-    virtual void draw() const;
-
-    // TODO: Rethink the naming of this member.
-    virtual void rotate(double dtheta, double dphi);
+    virtual void rotate(float dtheta, float dphi) override {
+        WorldObject::rotate(dtheta, dphi);
+        m_arc.phi = clamp(m_arc.phi, -0.5 * M_PI + 1e-5, 0.5 * M_PI - 1e-5);
+    }
 
     Vec up() const { return m_up; }
 
@@ -37,5 +26,11 @@ public:
     const float *get_modelview() const;
 
 protected:
-    Vec m_up;
+    virtual void internalDraw() const override;
+
+private:
+    void init() {
+        this->material(Material::YellowRubber);
+        this->hide(); // Don't draw cameras by default.
+    }
 };

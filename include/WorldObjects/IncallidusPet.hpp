@@ -4,18 +4,17 @@
 
 class IncallidusPet : public WorldObject {
 public:
-    virtual void draw() const {
-        if (!m_visible) {
-            return;
-        }
+    // Nothing new here.
 
+protected:
+    virtual void internalDraw() const override {
         static auto mat0 = Material::random();
         static auto mat1 = Material::random();
         static auto mat2 = Material::random();
 
         pushMatrixAnd([&]() {
             glTranslated(m_pos.x, m_pos.y, m_pos.z);
-            glRotated(180.0 / M_PI * m_heading, 0.0, 0.0, 1.0);
+            glRotated(180.0 / M_PI * m_arc.theta, 0.0, 0.0, 1.0);
             glScaled(m_radius, m_radius, m_radius);
 
             mat0.set();

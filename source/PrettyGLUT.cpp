@@ -15,14 +15,14 @@ FreeCamera backcam;
 
 // Heros
 Incallidus inc;
-Firnen firnen;
-DragonBorn dragonBorn;
 
 // World objects
 Camera *activeCam       = &freecam;
 WorldObject *activeHero = &inc;
 
-double live_fps = 0.0;
+double live_fps       = 0.0;
+double live_frametime = 0.0;
+int live_frames       = 0;
 
 // Display Settings
 int windowWidth  = 1280;
@@ -42,19 +42,78 @@ std::vector<WorldObject *> drawn = std::vector<WorldObject *>();
 // TODO: Make this stroke.
 void drawText(const std::string &text, Vec pos, Color color) {
     glColor3fv(color.v);
-    glRasterPos3d(pos.x, pos.y + 4.0, pos.z);
+    glRasterPos2d(pos.x, pos.y);
     pushMatrixAnd([&]() {
         for (size_t i = 0; i < text.size(); i += 1) {
-            glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, text[i]);
+            glutBitmapCharacter(GLUT_BITMAP_9_BY_15, text[i]);
         }
     });
 }
 
-// TODO: Fix this.
-void drawFPS() {
+void renderHUD() {
+    glDisable(GL_LIGHTING);
+    // Switch to 2D.
+    // TODO: Preserve matrices properly.
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluOrtho2D(0.0, windowWidth, 0.0, windowHeight);
+
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+
+    // These two come from us using GLUT_BITMAP_9_BY_15 in drawText().
+    static const size_t charWidth  = 9;
+    static const size_t charHeight = 15;
+
+    // 10 digits seems reasonable for "What's the largest number we ever hope to
+    // see?".
+    static const size_t numLength = 10;
+    static const size_t pixelsFromRight
+        = (numLength + std::string(" ms / frame").size() + 1) * charWidth;
+
+    static const size_t lineSpacing = charHeight;
+
+    // FPS
     auto white = Color(1.0, 1.0, 1.0);
-    auto pos   = activeCam->pos() + 0.1 * activeCam->lookDir();
-    drawText(tfm::format("%0.0f", live_fps), pos, white);
+    auto pos = Vec(windowWidth - pixelsFromRight, windowHeight - lineSpacing);
+    drawText(tfm::format("%*.1f FPS", numLength, live_fps), pos, white);
+
+    // Frame time
+    pos               = pos - Vec(0, lineSpacing);
+    std::string units = "??";
+    auto frametime = live_frametime;
+    if (frametime < 1e-6) {
+        units = "ns";
+        frametime *= 1e9;
+    } else if (frametime < 1e-3) {
+        units = "us";
+        frametime *= 1e6;
+    } else if (frametime < 1) {
+        units = "ms";
+        frametime *= 1e3;
+    }
+
+    std::string frametime_text
+        = tfm::format("%*.2f %s / frame", numLength, frametime, units);
+    drawText(frametime_text, pos, white);
+
+    // Frame count
+    pos = pos - Vec(0, lineSpacing);
+    drawText(tfm::format("%*d frames", numLength, live_frames), pos, white);
+
+    glEnable(GL_LIGHTING);
+}
+void resize(int w, int h) {
+    windowWidth  = w;
+    windowHeight = h;
+
+    // update the viewport to fill the window
+    glViewport(0, 0, w, h);
+
+    // update the projection matrix with the new window properties
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluPerspective(FOV, aspectRatio(), 0.1, 100000.0);
 }
 
 void render() {
@@ -62,13 +121,11 @@ void render() {
     glDrawBuffer(GL_BACK);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    // update the modelview matrix based on the camera's position
+    resize(windowWidth, windowHeight);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
     activeCam->adjustGLU();
-
-    drawFPS();
 
     for (WorldObject *wo : drawn) {
         glChk();
@@ -82,21 +139,10 @@ void render() {
     fastfreecam.draw();
     arcballcam.draw();
 
+    renderHUD();
+
     // push the back buffer to the screen
     glutSwapBuffers();
-}
-
-void resize(int w, int h) {
-    windowWidth  = w;
-    windowHeight = h;
-
-    // update the viewport to fill the window
-    glViewport(0, 0, w, h);
-
-    // update the projection matrix with the new window properties
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    gluPerspective(FOV, aspectRatio(), 0.1, 100000.0);
 }
 
 void printOpenGLInformation() {
@@ -123,33 +169,36 @@ void printOpenGLInformation() {
 
 // The int is requied, but unused.
 void doFrame(int) {
-    static constexpr unsigned int delay
-        = static_cast<unsigned int>(1000.0 / FPS);
-    static double then            = now_secs();
-    static double last_fps_update = now_secs();
-    static int frames             = 0;
+    using namespace std::chrono;
+
+    static const auto delay  = milliseconds(1000 / FPS);
+    static auto last_updated = timer_clock::now();
+    static auto then         = timer_clock::now();
+    static int frames        = 0;
 
     // Register the next update ASAP. We want this timing to be as consistent
     // as we can get it to be.
-    glutTimerFunc(delay, doFrame, 0);
+    glutTimerFunc(as<int>(delay.count()), doFrame, 0);
+    // frames += 1;
+
     frames += 1;
 
-    double now = now_secs();
-    double dt  = now - then;
-    then       = now;
+    auto now = timer_clock::now();
+    auto dt  = now - then;
+    then     = now;
 
     // Keep a live, running average FPS counter.
-    if (now - last_fps_update > 3.0) {
-        live_fps = frames / (now - last_fps_update);
+    if (now - last_updated > FPS_update_delay) {
+        live_fps       = frames / duration<double>(FPS_update_delay).count();
+        live_frametime = duration<double>(dt).count() / frames;
+        live_frames    = frames;
 
-        // We really only need two figures, but everyone likes seeing decimals.
-        info("Average FPS: %0.1f", live_fps);
-
-        // Reset everything.
-        last_fps_update = now;
-        frames          = 0;
+        last_updated = now;
+        frames       = 0;
     }
-    updateScene(now, dt);
+
+    updateScene(duration<double>(now.time_since_epoch()).count(),
+                duration<double>(dt).count());
 
     glutPostRedisplay();
 }
@@ -158,7 +207,7 @@ void mouseCallback(int button, int state, int x, int y) {
     // update the left mouse button states, if applicable
     switch (button) {
     case GLUT_LEFT_BUTTON:
-        mouse           = Vec(x, y, 0.0);
+        mouse           = Vec(x, y, 0);
         leftMouse       = state;
         modifiersButton = glutGetModifiers();
         break;
@@ -167,7 +216,7 @@ void mouseCallback(int button, int state, int x, int y) {
 
 void mouseMotion(int x, int y) {
     if (leftMouse == GLUT_DOWN) {
-        double fudge = 0.002f;
+        float fudge = 0.002f;
 
         int dx = static_cast<int>(mouse.x) - x;
         int dy = static_cast<int>(mouse.y) - y;
@@ -177,8 +226,8 @@ void mouseMotion(int x, int y) {
             fudge = 0.005f;
         }
 
-        mouse.x = x;
-        mouse.y = y;
+        mouse.x = as<float>(x);
+        mouse.y = as<float>(y);
 
         // Adjust the radius of the active cam. Moves by a constant factor of
         // the idstance of the mouse moved.
@@ -187,12 +236,12 @@ void mouseMotion(int x, int y) {
             Vec dist    = Vec(dx, dy);
             auto radius = activeCam->radius();
             if (dy > 0) {
-                radius = radius - 2.0 * fudge * dist.norm();
+                radius = radius - 2.0f * fudge * dist.norm();
             } else {
-                radius = radius + 2.0 * fudge * dist.norm();
+                radius = radius + 2.0f * fudge * dist.norm();
             }
-            radius = clamp(radius, 3.0, 100.0);
-            activeCam->setRadius(radius);
+            radius = clamp(radius, 3.0f, 100.0f);
+            activeCam->radius(radius);
             return;
         }
 
@@ -279,7 +328,7 @@ void initGLUT(int *argcp, char **argv) {
     glLightModelfv(GL_LIGHT_MODEL_AMBIENT, Color(0.15, 0.15, 0.15, 1.0).v);
 }
 
-void startGuildWars() {
+void start() {
     doFrame(0);
 
     glutMainLoop();

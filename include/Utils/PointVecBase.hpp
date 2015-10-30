@@ -9,33 +9,46 @@ struct Vec;
 struct VecPolar;
 
 struct Vec {
-    double x = 0.0;
-    double y = 0.0;
-    double z = 0.0;
+    float x = 0.0;
+    float y = 0.0;
+    float z = 0.0;
 
     ~Vec() = default;
 
     Vec() = default;
-    // Make it easy to fake a 2D vector.
-    Vec(double x, double y, double z = 0.0) : x(x), y(y), z(z) {}
+
+    template <typename X, typename Y>
+    Vec(X x, Y y)
+        : x(as<float>(x)), y(as<float>(y)), z(0.0f) {}
+
+    template <typename X, typename Y, typename Z>
+    Vec(X x, Y y, Z z)
+        : x(as<float>(x)), y(as<float>(y)), z(as<float>(z)) {}
 
     VecPolar polar() const;
 
-    double dot(const Vec &other) const;
-    double norm() const;
+    float dot(const Vec &other) const;
+    float norm() const;
     Vec normalize() const;
     Vec cross(const Vec &other) const;
 };
 
 struct VecPolar {
-    double theta = 0.0;
-    double phi   = 0.0;
-    double r     = 1.0;
+    float theta = 0.0;
+    float phi   = 0.0;
+    float r     = 1.0;
 
     ~VecPolar() = default;
     VecPolar() = default;
-    VecPolar(double theta, double phi, double r = 1.0)
-        : theta(theta), phi(phi), r(r) {}
+
+    template <typename Theta, typename Phi>
+    VecPolar(Theta theta, Phi phi)
+        : theta(as<float>(theta)), phi(as<float>(phi)), r(1.0f) {}
+
+    template <typename Theta, typename Phi, typename R>
+    VecPolar(Theta theta, Phi phi, R r)
+        : theta(as<float>(theta)), phi(as<float>(phi)), r(as<float>(r)) {}
+
     explicit VecPolar(Vec vec) {
         r = vec.norm();
         if (r == 0.0) {
@@ -44,15 +57,15 @@ struct VecPolar {
         vec = vec.normalize();
 
         theta = atan2(vec.x, vec.z);
-        phi   = asin(vec.y);
+        phi = asin(vec.y);
         glChk(); // asin sets errno on bad input.
     }
 
     // Convert to cartesian, aka Vec.
     Vec cart() const {
-        double x = r * sin(theta) * cos(phi);
-        double y = r * sin(phi);
-        double z = r * cos(theta) * cos(phi);
+        float x = r * sin(theta) * cos(phi);
+        float y = r * sin(phi);
+        float z = r * cos(theta) * cos(phi);
         return Vec(x, y, z);
     }
     operator Vec() const { return cart(); }
@@ -106,12 +119,12 @@ def_compound_ops(Vec, /, /=, Vec);
 #undef compound
 
 // Polar coordinates are not done component wise.
-static inline VecPolar operator*(const VecPolar &polar, double scalar) {
+static inline VecPolar operator*(const VecPolar &polar, float scalar) {
     auto res = polar;
     res.r *= scalar;
     return res;
 }
-static inline VecPolar operator/(const VecPolar &polar, double scalar) {
+static inline VecPolar operator/(const VecPolar &polar, float scalar) {
     auto res = polar;
     res.r /= scalar;
     return res;
@@ -119,16 +132,16 @@ static inline VecPolar operator/(const VecPolar &polar, double scalar) {
 
 // Clamping can be done component wise.
 static inline Vec clamp(const Vec &a, const Vec &lo, const Vec &hi) {
-    return Vec(clamp<double>(a.x, lo.x, hi.x),
-               clamp<double>(a.y, lo.y, hi.y),
-               clamp<double>(a.z, lo.z, hi.z));
+    return Vec(clamp<float>(a.x, lo.x, hi.x),
+               clamp<float>(a.y, lo.y, hi.y),
+               clamp<float>(a.z, lo.z, hi.z));
 }
 
 static inline VecPolar clamp(const VecPolar &a, const VecPolar &lo,
                              const VecPolar &hi) {
-    return VecPolar(clamp<double>(a.theta, lo.theta, hi.theta),
-                    clamp<double>(a.phi, lo.phi, hi.phi),
-                    clamp<double>(a.r, lo.r, hi.r));
+    return VecPolar(clamp<float>(a.theta, lo.theta, hi.theta),
+                    clamp<float>(a.phi, lo.phi, hi.phi),
+                    clamp<float>(a.r, lo.r, hi.r));
 }
 
 // + and - are usually pretty ubiquitous.
@@ -154,11 +167,11 @@ static inline std::ostream &operator<<(std::ostream &os, const VecPolar &vec) {
 
 inline VecPolar Vec::polar() const { return VecPolar(*this); }
 
-inline double Vec::dot(const Vec &other) const {
+inline float Vec::dot(const Vec &other) const {
     return x * other.x + y * other.y + z * other.z;
 }
 
-inline double Vec::norm() const { return sqrt(this->dot(*this)); }
+inline float Vec::norm() const { return sqrt(this->dot(*this)); }
 
 inline Vec Vec::normalize() const {
     assert(norm() != 0);

@@ -11,9 +11,8 @@ public:
     Light() = default;
     virtual ~Light() override { glDisable(m_lightid); }
 
-    virtual void draw() const override;
     virtual void update(double t, double dt) override;
-    virtual void enable();
+    void enable();
 
     Color ambient() { return m_ambient; }
     Color diffuse() { return m_diffuse; }
@@ -37,4 +36,7 @@ protected:
     // and we take advantage of that.
     // This value is safe to pass to OpenGL calls like glLightfv().
     GLint m_lightid = 0;
+
+    void sanity_check() const;
+    virtual void internalDraw() const override;
 };

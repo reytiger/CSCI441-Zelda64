@@ -1,49 +1,33 @@
 cmake_minimum_required(VERSION 2.8)
-project(GuildWars)
 
-option(AUTO_FORMAT "Use clang-format to automatically format code before building" OFF)
+project(csci441-Graphics-Project)
+
+# Only Chris uses CMake, so we might as well have this on by default.
+option(USE_CLANG_FORMAT
+    "Use clang-format to automatically format code before building"
+    ON)
 
 set(S "${CMAKE_SOURCE_DIR}")
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${S}/cmake")
 
-# OpenGL / GLUT
-find_package(OpenGL REQUIRED)
-find_package(GLUT)
+# Add tinyformat (and eventually, other external libraries?)
+include_directories("${S}/ext/include")
 
-# If we can't find GLUT, look for FreeGLUT.
-if (NOT GLUT_FOUND)
-  include(FindFreeGLUT)
-  if (NOT ${FREEGLUT_LIBRARIES})
-    message(FATAL "Cannot find FREEGLUT.")
-  endif()
-  set(GLUT_LIBRARIES ${FREEGLUT_LIBRARIES})
-  set(GLUT_INCLUDE_DIR ${FREEGLUT_INCLUDE_DIRS})
-endif()
+# OpenGL
+find_package(OpenGL REQUIRED)
+
+# GLUT
+# TODO: Remove GLUT, use GLEW.
+find_package(GLUT REQUIRED)
 include_directories("${GLUT_INCLUDE_DIR}")
 
-# tinyformat
-include_directories("${S}/ext/")
-
-# yaml stuff
-include_directories("${S}/ext/yaml/include")
-
-# Boost
-find_package(Boost REQUIRED)
-include_directories(${Boost_INCLUDE_DIRS})
-
-# FMOD
-find_package(FMOD REQUIRED)
-include_directories("${FMOD_INCLUDE_DIRS}")
-
-# Not needed. We just want the library.
-set(YAML_CPP_BUILD_TOOLS OFF)
-set(YAML_CPP_BUILD_CONTRIB OFF)
-add_subdirectory("${S}/ext/yaml")
+# TODO: Add FMOD back, but use a more up-to-date FindFMOD.cmake.
 
 # CMake must be manually updated anytime a new file is added, when using globs.
 # You can
 #       (1) update this file's timestamp, or
 #       (2) re-run 'cmake' manually
+
 # We do it this way instead of recurisve globs to preserve the file structure in
 # projects like Visual Studio.
 file(GLOB sources              "${S}/source/*.cpp")
@@ -80,46 +64,53 @@ source_group("Source Files\\WorldObjects" FILES ${sources_worldobjects})
 include_directories("${S}/include")
 
 if (CMAKE_COMPILER_IS_GNUCXX)
-  # Misc flags
-  set(flags "-std=c++11 -fmax-errors=5 -fdiagnostics-color")
+    # Misc flags
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fmax-errors=5")
+    # This doesn't work on older versions of GCC. Instead, they error.
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fdiagnostics-color")
 
-  # Warnings to turn ON
-  set(Wwarnings "-Wall -Wextra")
+    # Warnings to turn ON
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wextra")
 
-  # Warnings to turn OFF
-  set(Wno-warnings "-Wno-char-subscripts -Wno-deprecated-declarations -Wno-unused-variable -Wno-narrowing")
+    # Warnings to turn OFF
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-char-subscripts")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-deprecated-declarations")
 
 # This *might* catch Clang, but pretend it only catches MSVC for now.
 else()
-  # Misc flags
-  set(flags "")
+    # Misc flags
+    # None atm.
 
-  # Warnings to turn ON
-  set(Wwarnings "/W3")
+    # Warnings to turn ON
+    set(Wwarnings "/W3")
 
-  # Warnings to turn OFF
-  # C4244 and C4305 warn about implicit conversions between doubles, floats, and ints.
-  # 	They're annoying and too much work to keep up with.
-  # C4267 complains about conversions from size_t to int.
-  set(Wno-warnings "/wd4244 /wd4305 /wd4267")
+    # Warnings to turn OFF
+    # Things go here if there's no way around them,
+    #     or if we think we know better.
+    set(Wno-warnings "")
 
-  # MSVC provides safe versions of a ton of functions, and then warns if you don't
-  # use them.
-  # We're not using them, so disable the warnings.
-  add_definitions("-D_CRT_SECURE_NO_WARNINGS")
+    # MSVC provides safe versions of a ton of functions, and then warns if you don't
+    # use them.
+    # We're not using them, so disable the warnings.
+    add_definitions("-D_CRT_SECURE_NO_WARNINGS")
 endif()
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${Wwarnings} ${Wno-warnings} ${flags}")
+# This is the main binary we'll eventually turn in. Most assignments have a
+# required name, but that is chosen by the Makefile Dr. Paone runes.
+# We can use anything for CMake, since only Chris uses it.
+set(binary "Assignment")
+add_executable(${binary} ${sources} ${includes})
 
-add_executable(guildWars ${sources} ${includes})
+target_link_libraries(${binary}
+                                            "${OPENGL_LIBRARIES}"
+                                            "${GLUT_LIBRARIES}"
+                                            "${FMOD_LIBRARIES}")
 
-target_link_libraries(guildWars
-                      "${OPENGL_LIBRARIES}"
-                      "${GLUT_LIBRARIES}"
-                      "${FMOD_LIBRARIES}"
-                      yaml-cpp)
-
-if("${AUTO_FORMAT}")
-  add_custom_target(Format COMMAND clang-format ${sources} ${includes} -i)
-  add_dependencies(guildWars Format)
+if("${USE_CLANG_FORMAT}")
+    # TODO: Maybe use git-clang-format?
+    # I'm not entirely sure what the difference is.
+    add_custom_target(Format COMMAND clang-format ${sources} ${includes} -i)
+    add_dependencies(${binary} Format)
 endif()
