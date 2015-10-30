@@ -65,25 +65,23 @@ include_directories("${S}/include")
 
 if (CMAKE_COMPILER_IS_GNUCXX)
     # Misc flags
-    set(flags "")
-    list(APPEND "-std=c++11")
-    list(APPEND "-fmax-errors=5")
-    list(APPEND "-fdiagnostics-color")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fmax-errors=5")
+    # This doesn't work on older versions of GCC. Instead, they error.
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fdiagnostics-color")
 
     # Warnings to turn ON
-    set(Wwarnings "")
-    list(APPEND Warnings "-Wall")
-    list(APPEND Warnings "-Wextra")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wextra")
 
     # Warnings to turn OFF
-    set(Wno-warnings "")
-    list(APPEND Wno-warnings "-Wno-char-subscripts")
-    list(APPEND Wno-warnings "-Wno-deprecated-declarations")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-char-subscripts")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-deprecated-declarations")
 
 # This *might* catch Clang, but pretend it only catches MSVC for now.
 else()
     # Misc flags
-    set(flags "")
+    # None atm.
 
     # Warnings to turn ON
     set(Wwarnings "/W3")
@@ -98,8 +96,6 @@ else()
     # We're not using them, so disable the warnings.
     add_definitions("-D_CRT_SECURE_NO_WARNINGS")
 endif()
-
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${Wwarnings} ${Wno-warnings} ${flags}")
 
 # This is the main binary we'll eventually turn in. Most assignments have a
 # required name, but that is chosen by the Makefile Dr. Paone runes.
