@@ -50,22 +50,22 @@ void Light::internalDraw() const {
 }
 
 void Light::ambient(const float *colorv) {
+    assert(colorv != nullptr);
+    sanity_check();
 
     m_ambient = Color(colorv[0], colorv[1], colorv[2]);
 }
 
 void Light::diffuse(const float *colorv) {
     assert(colorv != nullptr);
-    assert(GL_LIGHT0 <= m_lightid);
-    assert(m_lightid <= GL_LIGHT7);
+    sanity_check();
 
     m_diffuse = Color(colorv[0], colorv[1], colorv[2]);
 }
 
 void Light::specular(const float *colorv) {
     assert(colorv != nullptr);
-    assert(GL_LIGHT0 <= m_lightid);
-    assert(m_lightid <= GL_LIGHT7);
+    sanity_check();
 
     m_specular = Color(colorv[0], colorv[1], colorv[2]);
 }

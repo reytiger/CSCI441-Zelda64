@@ -7,18 +7,10 @@
 void updateScene(double t, double dt);
 
 // Cameras
-ArcBallCamera arcballcam;
 FreeCamera freecam;
-FreeCamera fastfreecam;
-FreeCamera firstPerson;
-FreeCamera backcam;
-
-// Heros
-Incallidus inc;
 
 // World objects
-Camera *activeCam       = &freecam;
-WorldObject *activeHero = &inc;
+Camera *activeCam = &freecam;
 
 double live_fps       = 0.0;
 double live_frametime = 0.0;
@@ -103,6 +95,7 @@ void renderHUD() {
 
     glEnable(GL_LIGHTING);
 }
+
 void resize(int w, int h) {
     windowWidth  = w;
     windowHeight = h;
@@ -113,7 +106,7 @@ void resize(int w, int h) {
     // update the projection matrix with the new window properties
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluPerspective(FOV, aspectRatio(), 0.1, 100000.0);
+    gluPerspective(FOV, aspectRatio(), 0.1, 1e6);
 }
 
 void render() {
@@ -132,12 +125,6 @@ void render() {
         wo->draw();
         glChk();
     }
-
-    // Draw each camera out of the drawn vector.
-    // If we don't want it rendered, we can toggle its visibility.
-    freecam.draw();
-    fastfreecam.draw();
-    arcballcam.draw();
 
     renderHUD();
 
@@ -260,26 +247,6 @@ void normalKeysDown(unsigned char key, int, int) {
     switch (key) {
     case 27: // escape
         exit(0);
-
-    case '1':
-        switch_cam(freecam);
-        break;
-
-    case '2':
-        switch_cam(fastfreecam);
-        break;
-
-    case '3':
-        switch_cam(arcballcam);
-        break;
-
-    case '4':
-        switch_cam(firstPerson);
-        break;
-
-    case '5':
-        switch_cam(backcam);
-        break;
     }
 }
 
@@ -309,7 +276,8 @@ void initGLUT(int *argcp, char **argv) {
 
     // Misc. options
     glEnable(GL_DEPTH_TEST);
-    // Since we keep track of whether keys are up or down, we don't want to spam
+    // Since we keep track of whether keys are up or down, we don't want to
+    // spam
     // the event.
     glutSetKeyRepeat(GLUT_KEY_REPEAT_OFF);
 
