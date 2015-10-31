@@ -7,6 +7,8 @@
 // in main.cpp.
 void updateScene(double t, double dt);
 
+ShaderProgram shaderDemo;
+
 // Cameras
 FreeCamera freecam;
 ArcBallCamera arcballcam;
@@ -281,8 +283,7 @@ void render() {
     }
 
     glChk();
-    Material::Bronze.set();
-    // TODO: Use custom shaders here.
+    shaderDemo.use();
     model.draw();
     glChk();
 

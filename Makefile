@@ -2,22 +2,22 @@ FLAGS := -std=c++11 -g -O2
 Wwarnings := -Wall -Wextra
 Wno_warnings := -Wno-char-subscripts -Wno-deprecated-declarations
 
-INCPATH := -Iinclude -Iext/tinyformat-include -Iext/objectLoader -Iext/SOIL-include
+INCPATH := -Iinclude -Iext/tinyformat-include -Iext/objectLoader -Iext/include
 LIBPATH := -Lobject/
 
 CXXFLAGS += $(INCPATH) $(FLAGS) $(Wwarnings) $(Wno_warnings)
 
 # Windows builds
 ifeq ($(OS), Windows_NT)
-	LD_FLAGS += $(LIBPATH) -lglut -lopengl32 -lglu32 -lSOIL
+	LD_FLAGS += $(LIBPATH) -lglut -lopengl32 -lglu32 -lSOIL -lGLEW
 
 # Mac builds
 else ifeq ($(shell uname), Darwin)
-	LD_FLAGS += $(LIBPATH) -framework GLUT -framework OpenGL -framework Cocoa -lSOIL
+	LD_FLAGS += $(LIBPATH) -framework GLUT -framework OpenGL -framework Cocoa -lSOIL -lGLEW
 
 # Linux and all other builds
 else
-	LD_FLAGS += $(LIBPATH) -lglut -lGL -lGLU -lm ~/lib/libSOIL.a
+	LD_FLAGS += $(LIBPATH) -lglut -lGL -lGLU -lm ~/lib/libSOIL.a -lGLEW
 endif
 
 # Thanks, SO!
