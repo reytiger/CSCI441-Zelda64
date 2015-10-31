@@ -1,6 +1,7 @@
 #pragma once
 
-#include <glew.h>
+#define GLEW_STATIC
+#include <GL/glew.h>
 
 #ifdef __APPLE__
 #include <GLUT/glut.h>

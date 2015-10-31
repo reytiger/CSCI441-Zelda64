@@ -2,6 +2,7 @@
 
 #include <fstream>
 #include <sstream>
+#include <vector>
 
 void Shader::loadFromFile(const std::string &filename, GLenum kind) {
     std::ifstream fi;
