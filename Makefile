@@ -2,7 +2,8 @@ FLAGS := -std=c++11 -g -Os -fmax-errors=5
 Wwarnings := -Wall -Wextra
 Wno_warnings := -Wno-char-subscripts -Wno-deprecated-declarations
 
-INCPATH := -Iinclude -Iext/include
+INCPATH := -Iinclude -Iext/tinyformat-include -Iext/objectLoader
+LIBPATH := -Lobject/
 
 CXXFLAGS += $(INCPATH) $(FLAGS) $(Wwarnings) $(Wno_warnings)
 
@@ -35,8 +36,8 @@ format:
 	-@clang-format $(HEADERS) -i
 	-@clang-format $(SOURCES) -i
 
-$(BINARY): $(OBJECTS) ext/$(YAML_LIB)
-	$(CXX) -o $@ $(OBJECTS) $(LD_FLAGS)
+$(BINARY): $(OBJECTS) object/ObjectLoader.a
+	$(CXX) -o $@  $(OBJECTS) $(LD_FLAGS) object/ObjectLoader.a
 
 clean:
 	@rm -vf $(YAML_LIB)
@@ -45,6 +46,11 @@ clean:
 	@rm -vf $(OBJECTS) $(BINARY) depend.mk
 	@rm -vfr object
 	@echo
+	@make --quiet -C ext/objectLoader/ clean
+
+object/ObjectLoader.a:
+	@+make -C ext/objectLoader/ objectLoader.a
+	@cp ext/objectLoader/objectLoader.a $@ -v
 
 object/%.o: source/%.cpp
 	@mkdir -p $(dir $@)

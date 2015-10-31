@@ -4,7 +4,7 @@
 #include <array>
 
 CallListObject roomFloor;
-
+paone::Object model;
 PointLight light;
 
 // Defines the menu options.
@@ -88,8 +88,11 @@ void initScene() {
 
         glEndList();
     });
+    roomFloor.moveToY(-4.7);
 
     activeCam->moveToY(20.0f);
+
+    model.loadObjectFile("assets/venus.obj");
 }
 
 int main(int argc, char **argv) {

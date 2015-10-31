@@ -2,7 +2,6 @@
 *.slo
 *.lo
 *.o
-*.obj
 
 # Precompiled Headers
 *.gch
@@ -29,7 +28,7 @@
 
 # Binary names
 guildWars
-a[0-9]
+a5
 
 # Our Makefile's dependency list
 depend.mk

@@ -4,6 +4,8 @@
 #include "Cameras.hpp"
 #include "WorldObjects.hpp"
 
+#include "ObjectLoader.hpp"
+
 #include <vector>
 
 // Things to draw
@@ -14,6 +16,8 @@ extern std::vector<WorldObject *> drawn;
 extern FreeCamera freecam;
 
 extern Camera *activeCam;
+
+extern paone::Object model;
 
 extern double live_fps;
 extern double live_frametime;

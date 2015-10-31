@@ -126,6 +126,10 @@ void render() {
         glChk();
     }
 
+    glChk();
+    model.draw();
+    glChk();
+
     renderHUD();
 
     // push the back buffer to the screen
