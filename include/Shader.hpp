@@ -8,9 +8,8 @@ public:
         return m_handle;
     }
 
-    void loadFromFile(const std::string &filename);
-    void loadFromString(const std::string &str);
-    void compile();
+    void loadFromFile(const std::string &filename, GLenum kind);
+    void loadFromString(const std::string &str, GLenum kind);
 
     // TODO: attributes and uniform setters and stuff.
 
@@ -22,6 +21,12 @@ private:
 struct ShaderProgram {
 public:
     static void useFFS() { glUseProgram(0); }
+
+    void create() {
+        glChk();
+        m_handle = glCreateProgram();
+        glChk();
+    }
 
     GLint handle() const {
         assert(m_handle != -1);

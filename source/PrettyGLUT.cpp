@@ -277,19 +277,20 @@ void render() {
 
     ShaderProgram::useFFS();
     for (WorldObject *wo : drawn) {
-        // Material::random().set(); // Disco floor.
         wo->draw();
         glChk();
     }
 
     glChk();
     shaderDemo.use();
+    glChk();
     model.draw();
     glChk();
 
+    ShaderProgram::useFFS();
+
     glChk();
-    // TODO: Apply texture
-    Material::Jade.set();
+    Material::Emerald.set();
     model2.draw();
     glChk();
 

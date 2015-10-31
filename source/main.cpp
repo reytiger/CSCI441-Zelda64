@@ -101,13 +101,13 @@ void initScene() {
     inc.moveToY(roomFloor.pos().y + 0.1);
 
     activeCam->follow(&inc);
+    activeCam->radius(50.0);
 
     model.loadObjectFile("assets/venus.obj");
 
     auto pt = model2.getLocation();
     assert(pt);
-    pt->setX(20);
-    pt->setZ(20);
+    pt->setX(3);
     model2.loadObjectFile("assets/venus.obj");
 }
 
@@ -173,6 +173,20 @@ void initTextures() {
     registerOpenGLTexture(skybox);
 }
 
+void initShaders(const std::string &vertFilename,
+                 const std::string &fragFilename) {
+    Shader vert;
+    vert.loadFromFile(vertFilename, GL_VERTEX_SHADER);
+
+    Shader frag;
+    frag.loadFromFile(fragFilename, GL_FRAGMENT_SHADER);
+
+    shaderDemo.create();
+    shaderDemo.link(vert, frag);
+
+    glChk();
+}
+
 int main(int argc, char **argv) {
     errno = 0;
     srand(static_cast<unsigned int>(time(nullptr)));
@@ -180,6 +194,16 @@ int main(int argc, char **argv) {
     initGLUT(&argc, argv);
     glewInit();
     printOpenGLInformation();
+
+    // Handle shader filenames.
+    std::string file1 = argc >= 2 ? argv[1] : "glsl/pass_through.v.glsl";
+    std::string file2 = argc >= 3 ? argv[2] : "glsl/pass_through.f.glsl";
+
+    if (argc < 2) {
+        warn("Expected filenames, defaulting to '%s' and '%s'.", file1, file2);
+    }
+    initShaders(file1, file2);
+
 
     initTextures();
     initScene();

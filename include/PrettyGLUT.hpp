@@ -2,6 +2,7 @@
 #include "Utils.hpp"
 
 #include "Cameras.hpp"
+#include "Shader.hpp"
 #include "WorldObjects.hpp"
 
 #include "ObjectLoader.hpp"
@@ -58,3 +59,6 @@ struct Texture {
 };
 extern Texture pattern;
 extern Texture skybox;
+
+
+extern ShaderProgram shaderDemo;
