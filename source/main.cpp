@@ -10,6 +10,8 @@ paone::Object model;
 paone::Object model2;
 PointLight light;
 
+Incallidus inc;
+
 Texture pattern;
 Texture skybox;
 
@@ -39,7 +41,7 @@ void updateScene(double t, double dt) {
     // Even though they're rendered, the cameras are NOT in the drawn list, so
     // we have to update them manually, if we want them updated at all.
     activeCam->update(t, dt);
-    activeCam->doWASDControls(25.0, keyPressed, true);
+    // activeCam->doWASDControls(25.0, keyPressed, true);
 }
 
 void initScene() {
@@ -92,7 +94,13 @@ void initScene() {
     glChk();
     roomFloor.moveToY(-4.7); // About half the height of the Venus statue.
 
-    activeCam->moveToY(20.0f);
+    drawn.push_back(&inc);
+    inc.setUpdateFunc([&](double /*t*/, double /*dt*/) {
+        inc.doWASDControls(15.0, keyPressed, false);
+    });
+    inc.moveToY(roomFloor.pos().y + 0.1);
+
+    activeCam->follow(&inc);
 
     model.loadObjectFile("assets/venus.obj");
 

@@ -9,9 +9,10 @@ void updateScene(double t, double dt);
 
 // Cameras
 FreeCamera freecam;
+ArcBallCamera arcballcam;
 
 // World objects
-Camera *activeCam = &freecam;
+Camera *activeCam = &arcballcam;
 
 double live_fps       = 0.0;
 double live_frametime = 0.0;
