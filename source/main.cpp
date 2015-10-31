@@ -59,44 +59,33 @@ void initScene() {
     });
 
     // Floor
-    // drawn.push_back(&roomFloor);
+    drawn.push_back(&roomFloor);
     roomFloor = CallListObject([&](GLuint dl) {
         glNewList(dl, GL_COMPILE);
 
         glEnable(GL_TEXTURE_2D);
         glBindTexture(GL_TEXTURE_2D, pattern.handle);
 
-        static const auto size = Vec(50, 50);
+        static const auto halfsize = Vec(100, 100);
 
-        for (int i = -1; i <= size.x + 1; i += 1) {
-            glBegin(GL_TRIANGLE_STRIP);
-            // The terrain is flat. All of the normals are straight up.
-            glNormal3f(0.0, 1.0, 0.0);
-            for (int k = -1; k <= size.y; k += 1) {
-                Vec off  = Vec(2.0, 2.0);
-                auto pos = Vec(i, k) * off - 0.5 * size;
+        glBegin(GL_QUADS);
 
-                glTexCoord2f(pos.x, pos.y);
-                glVertex3d(pos.x, 0.0, pos.y);
+        glNormal3f(0.0f, 1.0f, 0.0f);
 
-                glTexCoord2f(pos.x, pos.y - off.y);
-                glVertex3d(pos.x, 0.0, pos.y - off.y);
+        glTexCoord2f(-halfsize.x, halfsize.y);
+        glVertex3d(-halfsize.x, 0, halfsize.y);
 
-                glTexCoord2f(pos.x - off.x, pos.y);
-                glVertex3d(pos.x - off.x, 0.0, pos.y);
+        glTexCoord2f(halfsize.x, halfsize.y);
+        glVertex3d(halfsize.x, 0, halfsize.y);
 
-                // Second half.
-                glTexCoord2f(pos.x, pos.y);
-                glVertex3d(pos.x, 0.0, pos.y);
+        glTexCoord2f(halfsize.x, -halfsize.y);
+        glVertex3d(halfsize.x, 0, -halfsize.y);
 
-                glTexCoord2f(pos.x, pos.y + off.y);
-                glVertex3d(pos.x, 0.0, pos.y + off.y);
+        glTexCoord2f(-halfsize.x, -halfsize.y);
+        glVertex3d(-halfsize.x, 0, -halfsize.y);
 
-                glTexCoord2f(pos.x + off.x, pos.y);
-                glVertex3d(pos.x + off.x, 0.0, pos.y);
-            }
-            glEnd();
-        }
+        glEnd();
+
         glDisable(GL_TEXTURE_2D);
         glEndList();
     });

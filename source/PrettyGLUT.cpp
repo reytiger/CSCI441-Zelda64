@@ -267,7 +267,7 @@ void render() {
 
     ShaderProgram::useFFS();
     pushMatrixAnd([&]() {
-        auto scale = 200.0f;
+        auto scale = 1000.0f;
         glScalef(scale, scale, scale);
         renderSkybox();
     });
