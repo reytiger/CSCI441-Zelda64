@@ -175,9 +175,9 @@ bool Object::loadObject() {
             if (z > maxZ)
                 maxZ = z;
 
-            vertices.push_back(x);
-            vertices.push_back(y);
-            vertices.push_back(z);
+            vertices.push_back(x + _location->at(0));
+            vertices.push_back(y + _location->at(1));
+            vertices.push_back(z + _location->at(2));
         } else if (!tokens.at(0).compare("vn")) { // vertex normal
             vertexNormals.push_back(atof(tokens[1].c_str()));
             vertexNormals.push_back(atof(tokens[2].c_str()));
@@ -348,7 +348,7 @@ bool Object::loadObject() {
     cout << "[.obj]: " << (maxX - minX) << " units across in X, "
          << (maxY - minY) << " units across in Y, " << (maxZ - minZ)
          << " units across in Z." << endl;
-
+    cout << "[.obj]: CallListHandle: " << _objectDisplayList << endl;
     return result;
 }
 

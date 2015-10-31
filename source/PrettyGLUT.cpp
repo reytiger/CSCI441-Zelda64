@@ -1,6 +1,7 @@
 #include "PrettyGLUT.hpp"
 
 #include "Cameras.hpp"
+#include "Shader.hpp"
 
 // We need to know about this. but it's entirely game logic so it's defined
 // in main.cpp.
@@ -109,6 +110,150 @@ void resize(int w, int h) {
     gluPerspective(FOV, aspectRatio(), 0.1, 1e6);
 }
 
+void renderSkybox() {
+// Coordinates for each face of the skybox within the skybox texture.
+// "Forward" is the leftmost square in the texture and "bottom" is the one
+// immediately to the right.
+#define _(q, t) Vec(q / 4.0, t / 3.0)
+    auto bot   = _(1, 1);
+    auto left  = _(1, 0);
+    auto right = _(1, 2);
+    auto top   = _(3, 1);
+    auto front = _(0, 1);
+    auto back  = _(2, 1);
+#undef _
+
+    const auto q = 1 / 4.0;
+    const auto t = 1 / 3.0;
+
+    glEnable(GL_TEXTURE_2D);
+    glDisable(GL_LIGHTING);
+    glBindTexture(GL_TEXTURE_2D, skybox.handle);
+
+    pushMatrixAnd([&]() {
+        glBegin(GL_QUADS);
+
+        auto src = top;
+
+        glTexCoord2f(src.x, src.y);
+        glVertex3d(-1, 1, -1);
+
+        glTexCoord2f(src.x + q, src.y);
+        glVertex3d(1, 1, -1);
+
+        glTexCoord2f(src.x + q, src.y + t);
+        glVertex3d(1, 1, 1);
+
+        glTexCoord2f(src.x, src.y + t);
+        glVertex3d(-1, 1, 1);
+
+        glEnd();
+    });
+
+    pushMatrixAnd([&]() {
+        glBegin(GL_QUADS);
+
+        auto src = bot;
+
+        glTexCoord2f(src.x, src.y + t);
+        glVertex3d(-1, -1, 1);
+
+        glTexCoord2f(src.x, src.y);
+        glVertex3d(1, -1, 1);
+
+        glTexCoord2f(src.x + q, src.y);
+        glVertex3d(1, -1, -1);
+
+        glTexCoord2f(src.x + q, src.y + t);
+        glVertex3d(-1, -1, -1);
+
+        glEnd();
+    });
+
+    pushMatrixAnd([&]() {
+        glBegin(GL_QUADS);
+
+        auto src = right;
+
+        glTexCoord2f(src.x, src.y);
+        glVertex3d(-1, 1, -1);
+
+        glTexCoord2f(src.x + q, src.y);
+        glVertex3d(-1, 1, 1);
+
+        glTexCoord2f(src.x + q, src.y + t);
+        glVertex3d(-1, -1, 1);
+
+        glTexCoord2f(src.x, src.y + t);
+        glVertex3d(-1, -1, -1);
+
+        glEnd();
+    });
+
+    pushMatrixAnd([&]() {
+        glBegin(GL_QUADS);
+
+        auto src = back;
+
+        glTexCoord2f(src.x, src.y);
+        glVertex3d(1, -1, -1);
+
+        glTexCoord2f(src.x + q, src.y);
+        glVertex3d(1, 1, -1);
+
+        glTexCoord2f(src.x + q, src.y + t);
+        glVertex3d(-1, 1, -1);
+
+        glTexCoord2f(src.x, src.y + t);
+        glVertex3d(-1, -1, -1);
+
+        glEnd();
+    });
+
+    pushMatrixAnd([&]() {
+        glBegin(GL_QUADS);
+
+        auto src = front;
+
+        glTexCoord2f(src.x + q, src.y);
+        glVertex3d(-1, -1, 1);
+
+        glTexCoord2f(src.x, src.y);
+        glVertex3d(-1, 1, 1);
+
+        glTexCoord2f(src.x, src.y + t);
+        glVertex3d(1, 1, 1);
+
+        glTexCoord2f(src.x + q, src.y + t);
+        glVertex3d(1, -1, 1);
+
+        glEnd();
+    });
+
+    pushMatrixAnd([&]() {
+        glBegin(GL_QUADS);
+
+        auto src = left;
+
+        glTexCoord2f(src.x, src.y + t);
+        glVertex3d(1, -1, -1);
+
+        glTexCoord2f(src.x + q, src.y + t);
+        glVertex3d(1, -1, 1);
+
+        glTexCoord2f(src.x + q, src.y);
+        glVertex3d(1, 1, 1);
+
+        glTexCoord2f(src.x, src.y);
+        glVertex3d(1, 1, -1);
+
+        glEnd();
+    });
+
+    glEnable(GL_LIGHTING);
+    glDisable(GL_TEXTURE_2D);
+}
+
 void render() {
     // clear the render buffer
     glDrawBuffer(GL_BACK);
@@ -120,17 +265,33 @@ void render() {
 
     activeCam->adjustGLU();
 
+    ShaderProgram::useFFS();
+    pushMatrixAnd([&]() {
+        auto scale = 200.0f;
+        glScalef(scale, scale, scale);
+        renderSkybox();
+    });
+
+    ShaderProgram::useFFS();
     for (WorldObject *wo : drawn) {
-        glChk();
+        // Material::random().set(); // Disco floor.
         wo->draw();
         glChk();
     }
 
     glChk();
     Material::Bronze.set();
+    // TODO: Use custom shaders here.
     model.draw();
     glChk();
 
+    glChk();
+    // TODO: Apply texture
+    Material::Jade.set();
+    model2.draw();
+    glChk();
+
+    ShaderProgram::useFFS();
     renderHUD();
 
     // push the back buffer to the screen
@@ -298,7 +459,7 @@ void initGLUT(int *argcp, char **argv) {
     glClearColor(colorClear.r, colorClear.g, colorClear.b, colorClear.a);
 
     // This turns off ambient lighting. :D
-    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, Color(0.15, 0.15, 0.15, 1.0).v);
+    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, Color(0.8, 0.8, 0.8, 1.0).v);
 }
 
 void start() {

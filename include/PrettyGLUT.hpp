@@ -18,6 +18,7 @@ extern FreeCamera freecam;
 extern Camera *activeCam;
 
 extern paone::Object model;
+extern paone::Object model2;
 
 extern double live_fps;
 extern double live_frametime;
@@ -48,3 +49,12 @@ extern bool keyPressed[256];
 void printOpenGLInformation();
 void initGLUT(int *argcp, char **argv);
 void start();
+
+struct Texture {
+    unsigned char *data = nullptr;
+    int width           = 0;
+    int height          = 0;
+    GLuint handle       = 0;
+};
+extern Texture pattern;
+extern Texture skybox;

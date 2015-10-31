@@ -1,11 +1,17 @@
 #include "PrettyGLUT.hpp"
 #include "WorldObjects.hpp"
 
+#include "SOIL/SOIL.h"
+
 #include <array>
 
 CallListObject roomFloor;
 paone::Object model;
+paone::Object model2;
 PointLight light;
+
+Texture pattern;
+Texture skybox;
 
 // Defines the menu options.
 // See handleRightClickMenu() and initRightClickMenu() for details.
@@ -53,11 +59,14 @@ void initScene() {
     });
 
     // Floor
-    drawn.push_back(&roomFloor);
+    // drawn.push_back(&roomFloor);
     roomFloor = CallListObject([&](GLuint dl) {
         glNewList(dl, GL_COMPILE);
 
-        static const auto size = Vec(100, 100);
+        glEnable(GL_TEXTURE_2D);
+        glBindTexture(GL_TEXTURE_2D, pattern.handle);
+
+        static const auto size = Vec(50, 50);
 
         for (int i = -1; i <= size.x + 1; i += 1) {
             glBegin(GL_TRIANGLE_STRIP);
@@ -65,34 +74,106 @@ void initScene() {
             glNormal3f(0.0, 1.0, 0.0);
             for (int k = -1; k <= size.y; k += 1) {
                 Vec off  = Vec(2.0, 2.0);
-                auto pos = Vec(i, k) * off - Vec(200.0, 200.0) / 2.0;
+                auto pos = Vec(i, k) * off - 0.5 * size;
 
-                Material::GreenRubber.set();
-
+                glTexCoord2f(pos.x, pos.y);
                 glVertex3d(pos.x, 0.0, pos.y);
+
+                glTexCoord2f(pos.x, pos.y - off.y);
                 glVertex3d(pos.x, 0.0, pos.y - off.y);
+
+                glTexCoord2f(pos.x - off.x, pos.y);
                 glVertex3d(pos.x - off.x, 0.0, pos.y);
 
-                // Skip the second triangle on extreme cases.
-                // TODO: This is probably wrong.
-                if (k == size.y || i == size.x) {
-                    break;
-                }
-
+                // Second half.
+                glTexCoord2f(pos.x, pos.y);
                 glVertex3d(pos.x, 0.0, pos.y);
+
+                glTexCoord2f(pos.x, pos.y + off.y);
                 glVertex3d(pos.x, 0.0, pos.y + off.y);
+
+                glTexCoord2f(pos.x + off.x, pos.y);
                 glVertex3d(pos.x + off.x, 0.0, pos.y);
             }
             glEnd();
         }
-
+        glDisable(GL_TEXTURE_2D);
         glEndList();
     });
-    roomFloor.moveToY(-4.7);
+    glChk();
+    roomFloor.moveToY(-4.7); // About half the height of the Venus statue.
 
     activeCam->moveToY(20.0f);
 
     model.loadObjectFile("assets/venus.obj");
+
+    auto pt = model2.getLocation();
+    assert(pt);
+    pt->setX(20);
+    pt->setZ(20);
+    model2.loadObjectFile("assets/venus.obj");
+}
+
+// I found this site helpful for this:
+// http://www.nullterminator.net/gltexture.html
+bool registerOpenGLTexture(Texture &tex) {
+    glChk();
+
+    glBindTexture(GL_TEXTURE_2D, tex.handle);
+    glChk();
+
+    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+    glChk();
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glChk();
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glChk();
+
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glChk();
+
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glChk();
+
+    if (tex.data) {
+        glTexImage2D(GL_TEXTURE_2D,
+                     0,
+                     GL_RGB,
+                     tex.width,
+                     tex.height,
+                     0, // "Because it says so"
+                     GL_RGB,
+                     GL_UNSIGNED_BYTE,
+                     tex.data);
+        glChk();
+    }
+
+    return true;
+}
+
+void initTextures() {
+    pattern.handle = SOIL_load_OGL_texture(
+        "assets/textures/minecraft.jpg",
+        SOIL_LOAD_AUTO,
+        SOIL_CREATE_NEW_ID,
+        SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB
+            | SOIL_FLAG_COMPRESS_TO_DXT);
+    info("%s\n", SOIL_last_result());
+    glChk();
+    registerOpenGLTexture(pattern);
+
+    // Ancient aliens are REAL. REAL I TELL YOU!
+    skybox.handle = SOIL_load_OGL_texture(
+        "assets/textures/WhereThePyramidsCameFrom.png",
+        SOIL_LOAD_AUTO,
+        SOIL_CREATE_NEW_ID,
+        SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB
+            | SOIL_FLAG_COMPRESS_TO_DXT);
+    info("%s\n", SOIL_last_result());
+    glChk();
+    registerOpenGLTexture(skybox);
 }
 
 int main(int argc, char **argv) {
@@ -100,9 +181,9 @@ int main(int argc, char **argv) {
     srand(static_cast<unsigned int>(time(nullptr)));
 
     initGLUT(&argc, argv);
-
     printOpenGLInformation();
 
+    initTextures();
     initScene();
 
     start();
