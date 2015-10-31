@@ -127,6 +127,7 @@ void render() {
     }
 
     glChk();
+    Material::Bronze.set();
     model.draw();
     glChk();
 
