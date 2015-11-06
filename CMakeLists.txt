@@ -10,18 +10,26 @@ option(USE_CLANG_FORMAT
 set(S "${CMAKE_SOURCE_DIR}")
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${S}/cmake")
 
-# Add tinyformat (and eventually, other external libraries?)
-include_directories("${S}/ext/include")
-
 # OpenGL
 find_package(OpenGL REQUIRED)
 
 # GLUT
-# TODO: Remove GLUT, use GLEW.
 find_package(GLUT REQUIRED)
 include_directories("${GLUT_INCLUDE_DIR}")
 
+# SOIL
+find_package(SOIL REQUIRED)
+include_directories("${SOIL_INCLUDE_DIR}")
+
+# GLEW
+find_package(GLEW REQUIRED)
+include_directories("${GLEW_INCLUDE_DIR}")
+
 # TODO: Add FMOD back, but use a more up-to-date FindFMOD.cmake.
+
+# External libraries
+include_directories("${S}/ext/tinyformat-include")
+include_directories("${S}/ext/objectLoader")
 
 # CMake must be manually updated anytime a new file is added, when using globs.
 # You can
@@ -106,7 +114,8 @@ add_executable(${binary} ${sources} ${includes})
 target_link_libraries(${binary}
                                             "${OPENGL_LIBRARIES}"
                                             "${GLUT_LIBRARIES}"
-                                            "${FMOD_LIBRARIES}")
+                                            "${GLEW_LIBRARIES}"
+                                            "${SOIL_LIBRARIES}")
 
 if("${USE_CLANG_FORMAT}")
     # TODO: Maybe use git-clang-format?
