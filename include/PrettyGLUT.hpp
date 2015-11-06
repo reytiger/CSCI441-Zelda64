@@ -59,6 +59,6 @@ struct Texture {
 };
 extern Texture pattern;
 extern Texture skybox;
-
+extern Texture loading;
 
 extern ShaderProgram shaderDemo;

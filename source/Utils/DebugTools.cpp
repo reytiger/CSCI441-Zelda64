@@ -84,7 +84,17 @@ void check_errno(const char *file, int line) {
     }
 }
 
+void check_SOIL(const char *file, int line) {
+    std::string err = SOIL_last_result();
+    if (err == "Image loaded as an OpenGL texture"
+        || err == "SOIL initialized") {
+        return;
+    }
+    error("%s:%d\t%s", file, line, err);
+}
+
 void check_helper(const char *file, int line) {
     check_errno(file, line);
     check_opengl(file, line);
+    check_SOIL(file, line);
 }

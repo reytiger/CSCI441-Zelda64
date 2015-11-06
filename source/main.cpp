@@ -116,7 +116,6 @@ void initTextures() {
         SOIL_CREATE_NEW_ID,
         SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB
             | SOIL_FLAG_COMPRESS_TO_DXT);
-    warn("%s\n", SOIL_last_result());
     glChk();
     {
         glBindTexture(GL_TEXTURE_2D, pattern.handle);
@@ -130,14 +129,12 @@ void initTextures() {
     }
     glChk();
 
-    // Ancient aliens are REAL. REAL I TELL YOU!
     skybox.handle = SOIL_load_OGL_texture("assets/textures/clouds-skybox.jpg",
                                           SOIL_LOAD_AUTO,
                                           SOIL_CREATE_NEW_ID,
                                           SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y
                                               | SOIL_FLAG_NTSC_SAFE_RGB
                                               | SOIL_FLAG_COMPRESS_TO_DXT);
-    warn("%s\n", SOIL_last_result());
     glChk();
     {
         glBindTexture(GL_TEXTURE_2D, skybox.handle);
@@ -182,7 +179,6 @@ int main(int argc, char **argv) {
         warn("Expected filenames, defaulting to '%s' and '%s'.", file1, file2);
     }
     initShaders(file1, file2);
-
 
     initTextures();
     initScene();

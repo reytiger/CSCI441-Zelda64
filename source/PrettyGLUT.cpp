@@ -7,6 +7,7 @@
 // in main.cpp.
 void updateScene(double t, double dt);
 
+Texture loading;
 ShaderProgram shaderDemo;
 
 // Cameras
@@ -320,6 +321,75 @@ void printOpenGLInformation() {
         glGetString(GL_VENDOR));
 }
 
+void loadLoadingScreen() {
+    glChk();
+    loading.handle = SOIL_load_OGL_texture(
+        "assets/textures/dont_panic.jpg",
+        SOIL_LOAD_AUTO,
+        SOIL_CREATE_NEW_ID,
+        SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB
+            | SOIL_FLAG_COMPRESS_TO_DXT);
+    glChk();
+    {
+        glBindTexture(GL_TEXTURE_2D, loading.handle);
+        glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    }
+    glChk();
+}
+
+void renderLoadingScreen() {
+    if (loading.handle == 0) {
+        info("Loading 'loading screen'.");
+        loadLoadingScreen();
+    }
+    glChk();
+    glDisable(GL_LIGHTING);
+
+    glDrawBuffer(GL_FRONT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glChk();
+
+    glMatrixMode(GL_PROJECTION);
+    pushMatrixAnd([&]() {
+        glLoadIdentity();
+        gluOrtho2D(0.0, 1.0, 0.0, 1.0);
+
+        glEnable(GL_TEXTURE_2D);
+        glBindTexture(GL_TEXTURE_2D, loading.handle);
+        glChk();
+
+        glMatrixMode(GL_MODELVIEW);
+        pushMatrixAnd([&]() {
+            glLoadIdentity();
+            glColor3f(1.0f, 1.0f, 1.0f);
+            glBegin(GL_QUADS);
+
+            glTexCoord2f(0.0f, 0.0f);
+            glVertex2f(0.0f, 0.0f);
+
+            glTexCoord2f(1.0f, 0.0f);
+            glVertex2f(1.0f, 0.0f);
+
+            glTexCoord2f(1.0f, 1.0f);
+            glVertex2f(1.0f, 1.0f);
+
+            glTexCoord2f(0.0f, 1.0f);
+            glVertex2f(0.0f, 1.0f);
+
+            glEnd();
+        });
+
+        glMatrixMode(GL_PROJECTION);
+    });
+    glChk();
+}
+
 //
 // It's all callbacks from here.
 //
@@ -389,13 +459,16 @@ void mouseMotion(int x, int y) {
         // Adjust the radius of the active cam. Moves by a constant factor of
         // the idstance of the mouse moved.
         if (modifiersButton == GLUT_ACTIVE_CTRL) {
+            // Different controls, different fudge factor.
+            fudge *= 15.0f;
+
             // info("%s", dx);
             Vec dist    = Vec(dx, dy);
             auto radius = activeCam->radius();
             if (dy > 0) {
-                radius = radius - 2.0f * fudge * dist.norm();
+                radius = radius - fudge * dist.norm();
             } else {
-                radius = radius + 2.0f * fudge * dist.norm();
+                radius = radius + fudge * dist.norm();
             }
             radius = clamp(radius, 3.0f, 100.0f);
             activeCam->radius(radius);
@@ -434,7 +507,11 @@ void initGLUT(int *argcp, char **argv) {
     glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
     glutInitWindowPosition(0, 0);
     glutInitWindowSize(windowWidth, windowHeight);
+
     glutCreateWindow(windowTitle);
+
+    // Display this until we start rendering "for real".
+    renderLoadingScreen();
 
     // Our boat-load of callbacks.
     glutKeyboardFunc(normalKeysDown);
@@ -447,8 +524,7 @@ void initGLUT(int *argcp, char **argv) {
     // Misc. options
     glEnable(GL_DEPTH_TEST);
     // Since we keep track of whether keys are up or down, we don't want to
-    // spam
-    // the event.
+    // spam the event.
     glutSetKeyRepeat(GLUT_KEY_REPEAT_OFF);
 
     // Lighting
