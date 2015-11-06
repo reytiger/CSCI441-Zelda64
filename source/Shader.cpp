@@ -84,6 +84,6 @@ void ShaderProgram::link(const Shader &vert, const Shader &frag) {
     glDetachShader(handle(), vert.handle());
     glChk();
 
-    glDetachShader(handle(), vert.handle());
+    glDetachShader(handle(), frag.handle());
     glChk();
 }
