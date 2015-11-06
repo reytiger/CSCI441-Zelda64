@@ -13,6 +13,8 @@
 #include <GL/glu.h>
 #endif
 
+#include "SOIL/SOIL.h"
+
 #include "Utils/DebugTools.hpp"
 
 #include <functional>

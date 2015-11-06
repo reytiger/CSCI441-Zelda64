@@ -36,6 +36,7 @@ depend.mk
 # in-tree CMake build
 build
 msvc64
+_msvc64
 perf-stats
 
 # graphviz!

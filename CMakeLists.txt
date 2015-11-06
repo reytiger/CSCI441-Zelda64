@@ -27,9 +27,14 @@ include_directories("${GLEW_INCLUDE_DIR}")
 
 # TODO: Add FMOD back, but use a more up-to-date FindFMOD.cmake.
 
-# External libraries
+## External libraries
+
+# C style printf made with with C++ templates. Just a single header.
 include_directories("${S}/ext/tinyformat-include")
+
+# Dr. Paone's object loader class and company. We embed a custom CMake project.
 include_directories("${S}/ext/objectLoader")
+add_subdirectory("${S}/ext/objectLoader")
 
 # CMake must be manually updated anytime a new file is added, when using globs.
 # You can
@@ -73,31 +78,22 @@ include_directories("${S}/include")
 
 if (CMAKE_COMPILER_IS_GNUCXX)
     # Misc flags
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fmax-errors=5")
+    add_compile_options("-std=c++11")
+    add_compile_options("-fmax-errors=5")
     # This doesn't work on older versions of GCC. Instead, they error.
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fdiagnostics-color")
+    add_compile_options("-fdiagnostics-color")
 
     # Warnings to turn ON
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wextra")
+    add_compile_options("-Wall")
+    add_compile_options("-Wextra")
 
     # Warnings to turn OFF
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-char-subscripts")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-deprecated-declarations")
+    add_compile_options("-Wno-char-subscripts")
+    add_compile_options("-Wno-deprecated-declarations")
 
 # This *might* catch Clang, but pretend it only catches MSVC for now.
 else()
-    # Misc flags
-    # None atm.
-
-    # Warnings to turn ON
-    set(Wwarnings "/W3")
-
-    # Warnings to turn OFF
-    # Things go here if there's no way around them,
-    #     or if we think we know better.
-    set(Wno-warnings "")
+    # MSVC ships with reasonable defaults for compile options.
 
     # MSVC provides safe versions of a ton of functions, and then warns if you don't
     # use them.
@@ -106,16 +102,22 @@ else()
 endif()
 
 # This is the main binary we'll eventually turn in. Most assignments have a
-# required name, but that is chosen by the Makefile Dr. Paone runes.
+# required name, but that is chosen by the Makefile Dr. Paone runs.
 # We can use anything for CMake, since only Chris uses it.
 set(binary "Assignment")
-add_executable(${binary} ${sources} ${includes})
+add_executable("${binary}"
+               ${sources}
+               ${includes})
 
 target_link_libraries(${binary}
-                                            "${OPENGL_LIBRARIES}"
-                                            "${GLUT_LIBRARIES}"
-                                            "${GLEW_LIBRARIES}"
-                                            "${SOIL_LIBRARIES}")
+                      "${OPENGL_LIBRARIES}"
+                      "${GLUT_LIBRARIES}"
+                      "${GLEW_LIBRARIES}"
+                      "${SOIL_LIBRARIES}"
+
+                      # Dr Paone's wavfront object loader.
+                      objectLoader)
+
 
 if("${USE_CLANG_FORMAT}")
     # TODO: Maybe use git-clang-format?
