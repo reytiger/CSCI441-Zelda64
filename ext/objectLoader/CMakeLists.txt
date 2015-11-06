@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 2.8)
 
 project("Object Loader")
 
@@ -23,5 +23,5 @@ foreach(SOURCE ${OBJLOADER_SOURCES})
 endforeach()
 
 add_library(objectLoader STATIC
-            "${OBJLOADER_SOURCES}"
-            "${OBJLOADER_HEADERS}")
+            ${OBJLOADER_SOURCES}
+            ${OBJLOADER_HEADERS})

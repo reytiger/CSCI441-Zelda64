@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 2.8)
 
 project(csci441-Graphics-Project)
 
@@ -106,8 +106,8 @@ endif()
 # We can use anything for CMake, since only Chris uses it.
 set(binary "Assignment")
 add_executable("${binary}"
-               "${sources}"
-               "${includes}")
+               ${sources}
+               ${includes})
 
 target_link_libraries(${binary}
                       "${OPENGL_LIBRARIES}"
