@@ -118,12 +118,12 @@ void renderSkybox() {
 // "Forward" is the leftmost square in the texture and "bottom" is the one
 // immediately to the right.
 #define _(q, t) Vec(q / 4.0, t / 3.0)
-    auto bot   = _(1, 1);
-    auto left  = _(1, 0);
-    auto right = _(1, 2);
-    auto top   = _(3, 1);
-    auto front = _(0, 1);
-    auto back  = _(2, 1);
+    auto left   = _(0, 1);
+    auto front  = _(1, 1);
+    auto right  = _(2, 1);
+    auto back   = _(3, 1);
+    auto top    = _(1, 2);
+    auto bottom = _(1, 0);
 #undef _
 
     const auto q = 1 / 4.0;
@@ -156,7 +156,7 @@ void renderSkybox() {
     pushMatrixAnd([&]() {
         glBegin(GL_QUADS);
 
-        auto src = bot;
+        auto src = bottom;
 
         glTexCoord2f(src.x, src.y + t);
         glVertex3d(-1, -1, 1);
@@ -168,6 +168,26 @@ void renderSkybox() {
         glVertex3d(1, -1, -1);
 
         glTexCoord2f(src.x + q, src.y + t);
+        glVertex3d(-1, -1, -1);
+
+        glEnd();
+    });
+
+    pushMatrixAnd([&]() {
+        glBegin(GL_QUADS);
+
+        auto src = left;
+
+        glTexCoord2f(src.x + q, src.y + t);
+        glVertex3d(-1, 1, -1);
+
+        glTexCoord2f(src.x, src.y + t);
+        glVertex3d(-1, 1, 1);
+
+        glTexCoord2f(src.x, src.y);
+        glVertex3d(-1, -1, 1);
+
+        glTexCoord2f(src.x + q, src.y);
         glVertex3d(-1, -1, -1);
 
         glEnd();
@@ -179,36 +199,16 @@ void renderSkybox() {
         auto src = right;
 
         glTexCoord2f(src.x, src.y);
-        glVertex3d(-1, 1, -1);
-
-        glTexCoord2f(src.x + q, src.y);
-        glVertex3d(-1, 1, 1);
-
-        glTexCoord2f(src.x + q, src.y + t);
-        glVertex3d(-1, -1, 1);
-
-        glTexCoord2f(src.x, src.y + t);
-        glVertex3d(-1, -1, -1);
-
-        glEnd();
-    });
-
-    pushMatrixAnd([&]() {
-        glBegin(GL_QUADS);
-
-        auto src = back;
-
-        glTexCoord2f(src.x, src.y);
         glVertex3d(1, -1, -1);
 
         glTexCoord2f(src.x + q, src.y);
-        glVertex3d(1, 1, -1);
+        glVertex3d(1, -1, 1);
 
         glTexCoord2f(src.x + q, src.y + t);
-        glVertex3d(-1, 1, -1);
+        glVertex3d(1, 1, 1);
 
         glTexCoord2f(src.x, src.y + t);
-        glVertex3d(-1, -1, -1);
+        glVertex3d(1, 1, -1);
 
         glEnd();
     });
@@ -219,16 +219,17 @@ void renderSkybox() {
         auto src = front;
 
         glTexCoord2f(src.x + q, src.y);
-        glVertex3d(-1, -1, 1);
-
-        glTexCoord2f(src.x, src.y);
-        glVertex3d(-1, 1, 1);
-
-        glTexCoord2f(src.x, src.y + t);
-        glVertex3d(1, 1, 1);
+        glVertex3d(1, -1, -1);
 
         glTexCoord2f(src.x + q, src.y + t);
-        glVertex3d(1, -1, 1);
+        glVertex3d(1, 1, -1);
+
+        glTexCoord2f(src.x, src.y + t);
+        glVertex3d(-1, 1, -1);
+
+        glTexCoord2f(src.x, src.y);
+
+        glVertex3d(-1, -1, -1);
 
         glEnd();
     });
@@ -236,19 +237,19 @@ void renderSkybox() {
     pushMatrixAnd([&]() {
         glBegin(GL_QUADS);
 
-        auto src = left;
-
-        glTexCoord2f(src.x, src.y + t);
-        glVertex3d(1, -1, -1);
-
-        glTexCoord2f(src.x + q, src.y + t);
-        glVertex3d(1, -1, 1);
+        auto src = back;
 
         glTexCoord2f(src.x + q, src.y);
+        glVertex3d(-1, -1, 1);
+
+        glTexCoord2f(src.x + q, src.y + t);
+        glVertex3d(-1, 1, 1);
+
+        glTexCoord2f(src.x, src.y + t);
         glVertex3d(1, 1, 1);
 
         glTexCoord2f(src.x, src.y);
-        glVertex3d(1, 1, -1);
+        glVertex3d(1, -1, 1);
 
         glEnd();
     });

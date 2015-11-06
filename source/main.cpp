@@ -109,45 +109,6 @@ void initScene() {
     model2.loadObjectFile("assets/venus.obj");
 }
 
-// I found this site helpful for this:
-// http://www.nullterminator.net/gltexture.html
-bool registerOpenGLTexture(Texture &tex) {
-    glChk();
-
-    glBindTexture(GL_TEXTURE_2D, tex.handle);
-    glChk();
-
-    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-    glChk();
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glChk();
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glChk();
-
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glChk();
-
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glChk();
-
-    if (tex.data) {
-        glTexImage2D(GL_TEXTURE_2D,
-                     0,
-                     GL_RGB,
-                     tex.width,
-                     tex.height,
-                     0, // "Because it says so"
-                     GL_RGB,
-                     GL_UNSIGNED_BYTE,
-                     tex.data);
-        glChk();
-    }
-
-    return true;
-}
-
 void initTextures() {
     pattern.handle = SOIL_load_OGL_texture(
         "assets/textures/minecraft.jpg",
@@ -157,18 +118,38 @@ void initTextures() {
             | SOIL_FLAG_COMPRESS_TO_DXT);
     warn("%s\n", SOIL_last_result());
     glChk();
-    registerOpenGLTexture(pattern);
+    {
+        glBindTexture(GL_TEXTURE_2D, pattern.handle);
+        glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    }
+    glChk();
 
     // Ancient aliens are REAL. REAL I TELL YOU!
-    skybox.handle = SOIL_load_OGL_texture(
-        "assets/textures/WhereThePyramidsCameFrom.png",
-        SOIL_LOAD_AUTO,
-        SOIL_CREATE_NEW_ID,
-        SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB
-            | SOIL_FLAG_COMPRESS_TO_DXT);
+    skybox.handle = SOIL_load_OGL_texture("assets/textures/clouds-skybox.jpg",
+                                          SOIL_LOAD_AUTO,
+                                          SOIL_CREATE_NEW_ID,
+                                          SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y
+                                              | SOIL_FLAG_NTSC_SAFE_RGB
+                                              | SOIL_FLAG_COMPRESS_TO_DXT);
     warn("%s\n", SOIL_last_result());
     glChk();
-    registerOpenGLTexture(skybox);
+    {
+        glBindTexture(GL_TEXTURE_2D, skybox.handle);
+        glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+    }
+    glChk();
 }
 
 void initShaders(const std::string &vertFilename,
