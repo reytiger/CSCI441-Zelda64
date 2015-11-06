@@ -18,12 +18,10 @@ struct Vec {
     Vec() = default;
 
     template <typename X, typename Y>
-    Vec(X x, Y y)
-        : x(as<float>(x)), y(as<float>(y)), z(0.0f) {}
+    Vec(X x, Y y) : x(as<float>(x)), y(as<float>(y)), z(0.0f) {}
 
     template <typename X, typename Y, typename Z>
-    Vec(X x, Y y, Z z)
-        : x(as<float>(x)), y(as<float>(y)), z(as<float>(z)) {}
+    Vec(X x, Y y, Z z) : x(as<float>(x)), y(as<float>(y)), z(as<float>(z)) {}
 
     VecPolar polar() const;
 
@@ -57,7 +55,7 @@ struct VecPolar {
         vec = vec.normalize();
 
         theta = atan2(vec.x, vec.z);
-        phi = asin(vec.y);
+        phi   = asin(vec.y);
         glChk(); // asin sets errno on bad input.
     }
 
