@@ -48,6 +48,18 @@ void Shader::loadFromString(const std::string &str, GLenum kind) {
     }
 }
 
+GLint ShaderProgram::getAttribLocation(const std::string &name) const {
+    auto search = m_attribs.find(name);
+    if (search != m_attribs.end()) {
+        return search->second;
+    }
+
+    auto loc = glGetAttribLocation(handle(), name.c_str());
+
+    m_attribs[name] = loc;
+    return loc;
+}
+
 // TODO: It'd be nice to template these.
 void ShaderProgram::attachUniform(const std::string &name, float value) {
     usingProgram([&name, &value](const ShaderProgram &self) {
@@ -85,7 +97,6 @@ void ShaderProgram::usingProgram(
 
 GLint ShaderProgram::getUniformLocation(const std::string &name) const {
     auto search = m_uniforms.find(name);
-
     if (search != m_uniforms.end()) {
         return search->second;
     }

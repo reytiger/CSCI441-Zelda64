@@ -13,6 +13,8 @@ Incallidus inc;
 Texture pattern;
 Texture skybox;
 
+FountainSystem fountain;
+
 // Defines the menu options.
 // See handleRightClickMenu() and initRightClickMenu() for details.
 enum MenuOpt {
@@ -42,6 +44,8 @@ void updateScene(double t, double dt) {
     // activeCam->doWASDControls(25.0, keyPressed, true);
 
     shaderDemo.attachUniform("time", t);
+
+    inc.moveTo(clamp(inc.pos(), Vec(-100, 0, -100), Vec(100, 0, 100)));
 }
 
 void initScene() {
@@ -92,7 +96,11 @@ void initScene() {
         glEndList();
     });
     glChk();
-    roomFloor.moveToY(-4.7); // About half the height of the Venus statue.
+
+    drawn.push_back(&fountain);
+    fountain.material(Material::Brass);
+    fountain.moveTo(0, 10, 0);
+    fountain.radius(5.0f);
 
     drawn.push_back(&inc);
     inc.setUpdateFunc([&](double /*t*/, double /*dt*/) {
@@ -103,11 +111,15 @@ void initScene() {
     activeCam->follow(&inc);
     activeCam->radius(50.0);
 
+    auto pt = model.getLocation();
+    assert(pt);
+    pt->setY(4.7);
     model.loadObjectFile("assets/venus.obj");
 
-    auto pt = model2.getLocation();
+    pt = model2.getLocation();
     assert(pt);
     pt->setX(3);
+    pt->setY(4.7);
     model2.loadObjectFile("assets/venus.obj");
 }
 

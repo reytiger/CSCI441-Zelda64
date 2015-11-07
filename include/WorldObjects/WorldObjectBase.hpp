@@ -45,6 +45,7 @@ public:
 
     // Absolute motion
     void moveTo(Vec pos) { m_pos = pos; }
+    void moveTo(float x, float y, float z) { m_pos = Vec(x, y, z); }
     void moveToX(float x) { m_pos.x = x; }
     void moveToY(float y) { m_pos.y = y; }
     void moveToZ(float z) { m_pos.z = z; }

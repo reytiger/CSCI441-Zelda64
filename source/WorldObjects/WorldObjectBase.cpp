@@ -23,6 +23,7 @@ void WorldObject::follow(WorldObject *wo) {
 
 void WorldObject::draw() const {
     if (this->visible()) {
+        m_material.set();
         this->internalDraw();
     }
 }

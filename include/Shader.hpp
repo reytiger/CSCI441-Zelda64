@@ -39,13 +39,19 @@ public:
     void use() const { glUseProgram(handle()); }
     void usingProgram(std::function<void(const ShaderProgram &)> code);
 
+    // Attributes
+    GLint getAttribLocation(const std::string &name) const;
+
+    // Uniforms
     GLint getUniformLocation(const std::string &name) const;
 
     void attachUniform(const std::string &name, float value);
     void attachUniform(const std::string &name, Vec value);
 
 private:
-    GLint m_handle = -1;
+    // Default to using the FFS.
+    GLint m_handle = 0;
 
     mutable LocationsMap m_uniforms;
+    mutable LocationsMap m_attribs;
 };
