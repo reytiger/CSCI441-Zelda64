@@ -304,6 +304,12 @@ void render() {
 }
 
 void printOpenGLInformation() {
+    GLint attribs = 0;
+    glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &attribs);
+
+    GLint lights = 0;
+    glGetIntegerv(GL_MAX_LIGHTS, &lights);
+
     info(
         // We don't want to break this string across lines.
         // clang-format off
@@ -314,11 +320,16 @@ void printOpenGLInformation() {
          "|   OpenGL Version:  %50s |\n"
          "|   OpenGL Renderer: %50s |\n"
          "|   OpenGL Vendor:   %50s |\n"
+         "|-----------------------------------------------------------------------|\n"
+         "|   Max Vert Attrib: %50s |\n"
+         "|   Max GL Lights:   %50s |\n"
         "\\-----------------------------------------------------------------------/\n",
         // clang-format on
         glGetString(GL_VERSION),
         glGetString(GL_RENDERER),
-        glGetString(GL_VENDOR));
+        glGetString(GL_VENDOR),
+        attribs,
+        lights);
 }
 
 void loadLoadingScreen() {
