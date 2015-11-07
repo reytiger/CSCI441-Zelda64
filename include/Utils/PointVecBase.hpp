@@ -9,13 +9,19 @@ struct Vec;
 struct VecPolar;
 
 struct Vec {
-    float x = 0.0;
-    float y = 0.0;
-    float z = 0.0;
+    union {
+        struct {
+            float x;
+            float y;
+            float z;
+            float w;
+        };
+        float v[4];
+    };
 
     ~Vec() = default;
 
-    Vec() = default;
+    Vec() : x(0.0f), y(0.0f), z(0.0f), w(1.0f) {}
 
     template <typename X, typename Y>
     Vec(X x, Y y)
