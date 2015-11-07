@@ -35,9 +35,6 @@ void trace_helper(const char *file, int line, const char *func) {
     }
 
     tfm::printf("%s\n", tracelist);
-#else
-    // Visual Studio can break on this.
-    abort();
 #endif
 }
 
@@ -91,6 +88,7 @@ void check_SOIL(const char *file, int line) {
         return;
     }
     error("%s:%d\t%s", file, line, err);
+    trace();
 }
 
 void check_helper(const char *file, int line) {

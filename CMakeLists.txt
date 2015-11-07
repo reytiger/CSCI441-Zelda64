@@ -2,13 +2,26 @@ cmake_minimum_required(VERSION 2.8)
 
 project(csci441-Graphics-Project)
 
-# Only Chris uses CMake, so we might as well have this on by default.
-option(USE_CLANG_FORMAT
-    "Use clang-format to automatically format code before building"
-    ON)
-
 set(S "${CMAKE_SOURCE_DIR}")
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${S}/cmake")
+
+# Move some stuff around so that Visual Studio debugging can be happy,
+add_custom_target("Copy_Asset_Files" ALL
+    COMMAND cmake -E copy_directory "${S}/assets/" "${CMAKE_BINARY_DIR}/assets/")
+add_custom_target("Copy_Shaders" ALL
+    COMMAND cmake -E copy_directory "${S}/glsl/" "${CMAKE_BINARY_DIR}/glsl/")
+
+# Only Chris uses CMake, so we might as well have this on by default.
+option(USE_CLANG_FORMAT
+    "Use clang-format to automatically format code before building."
+    ON)
+if("${USE_CLANG_FORMAT}")
+    # TODO: Maybe use git-clang-format?
+    # I'm not entirely sure what the difference is.
+    add_custom_target(Format COMMAND clang-format ${sources} ${includes} -i)
+    add_dependencies(${binary} Format)
+endif()
+
 
 # OpenGL
 find_package(OpenGL REQUIRED)
@@ -117,11 +130,3 @@ target_link_libraries(${binary}
 
                       # Dr Paone's wavfront object loader.
                       objectLoader)
-
-
-if("${USE_CLANG_FORMAT}")
-    # TODO: Maybe use git-clang-format?
-    # I'm not entirely sure what the difference is.
-    add_custom_target(Format COMMAND clang-format ${sources} ${includes} -i)
-    add_dependencies(${binary} Format)
-endif()
