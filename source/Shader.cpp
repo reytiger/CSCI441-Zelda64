@@ -48,34 +48,52 @@ void Shader::loadFromString(const std::string &str, GLenum kind) {
     }
 }
 
+// TODO: It'd be nice to template these.
 void ShaderProgram::attachUniform(const std::string &name, float value) {
-    auto search = m_uniforms.find(name);
-    if (search == m_uniforms.end()) {
-        loadUniformLocation(name);
-        search = m_uniforms.find(name);
-        assert(search != m_uniforms.end());
-    }
-    auto loc = search->second;
+    usingProgram([&name, &value](const ShaderProgram &self) {
+        auto loc = self.getUniformLocation(name);
+        glUniform1f(loc, value);
+        glChk();
+    });
+}
+
+void ShaderProgram::attachUniform(const std::string &name, Vec value) {
+    usingProgram([&name, &value](const ShaderProgram &self) {
+        auto loc = self.getUniformLocation(name);
+        glUniform3fv(loc, 1, value.v);
+        glChk();
+    });
+}
+
+
+void ShaderProgram::usingProgram(
+    std::function<void(const ShaderProgram &)> code) {
 
     GLint current = 0;
     glGetIntegerv(GL_CURRENT_PROGRAM, &current);
-
-    // Our program might not be active right now.
-    // Swap ours in...
-    this->use();
-    glUniform1f(loc, value);
     glChk();
 
-    // ...and restore.
+    glUseProgram(handle());
+    glChk();
+
+    code(*this);
+    glChk();
+
     glUseProgram(current);
     glChk();
 }
 
-void ShaderProgram::loadUniformLocation(const std::string &name) {
+GLint ShaderProgram::getUniformLocation(const std::string &name) const {
+    auto search = m_uniforms.find(name);
+
+    if (search != m_uniforms.end()) {
+        return search->second;
+    }
+
     auto loc = glGetUniformLocation(handle(), name.c_str());
-    glChk();
 
     m_uniforms[name] = loc;
+    return loc;
 }
 
 void ShaderProgram::link(const Shader &vert, const Shader &frag) {

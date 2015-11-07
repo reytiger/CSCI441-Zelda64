@@ -91,8 +91,16 @@ void check_SOIL(const char *file, int line) {
     trace();
 }
 
+static size_t check_helper_count = 0;
+
 void check_helper(const char *file, int line) {
+    check_helper_count += 1;
     check_errno(file, line);
     check_opengl(file, line);
     check_SOIL(file, line);
+
+    static const size_t million = 1000000;
+    if (check_helper_count % million == 0) {
+        info("glChk() called %s million times.", check_helper_count / million);
+    }
 }

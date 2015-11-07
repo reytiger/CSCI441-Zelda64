@@ -532,8 +532,7 @@ void initGLUT(int *argcp, char **argv) {
 
     // Lighting
     glEnable(GL_LIGHTING);
-    glEnable(GL_CULL_FACE);
-    glCullFace(GL_BACK);
+    glDisable(GL_CULL_FACE);
 
     glShadeModel(GL_FLAT);
 

@@ -18,7 +18,7 @@ private:
 };
 
 
-struct ShaderProgram {
+class ShaderProgram {
 public:
     using LocationsMap = std::map<std::string, GLint>;
 
@@ -37,15 +37,15 @@ public:
     void link(const Shader &vert, const Shader &frag);
 
     void use() const { glUseProgram(handle()); }
+    void usingProgram(std::function<void(const ShaderProgram &)> code);
 
-    // TODO: template / overload this.
+    GLint getUniformLocation(const std::string &name) const;
+
     void attachUniform(const std::string &name, float value);
-
+    void attachUniform(const std::string &name, Vec value);
 
 private:
     GLint m_handle = -1;
 
-    LocationsMap m_uniforms;
-
-    void loadUniformLocation(const std::string &name);
+    mutable LocationsMap m_uniforms;
 };
