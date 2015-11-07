@@ -48,6 +48,36 @@ void Shader::loadFromString(const std::string &str, GLenum kind) {
     }
 }
 
+void ShaderProgram::attachUniform(const std::string &name, float value) {
+    auto search = m_uniforms.find(name);
+    if (search == m_uniforms.end()) {
+        loadUniformLocation(name);
+        search = m_uniforms.find(name);
+        assert(search != m_uniforms.end());
+    }
+    auto loc = search->second;
+
+    GLint current = 0;
+    glGetIntegerv(GL_CURRENT_PROGRAM, &current);
+
+    // Our program might not be active right now.
+    // Swap ours in...
+    this->use();
+    glUniform1f(loc, value);
+    glChk();
+
+    // ...and restore.
+    glUseProgram(current);
+    glChk();
+}
+
+void ShaderProgram::loadUniformLocation(const std::string &name) {
+    auto loc = glGetUniformLocation(handle(), name.c_str());
+    glChk();
+
+    m_uniforms[name] = loc;
+}
+
 void ShaderProgram::link(const Shader &vert, const Shader &frag) {
     glAttachShader(handle(), vert.handle());
     glChk();

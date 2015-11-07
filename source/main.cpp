@@ -40,6 +40,8 @@ void updateScene(double t, double dt) {
     // we have to update them manually, if we want them updated at all.
     activeCam->update(t, dt);
     // activeCam->doWASDControls(25.0, keyPressed, true);
+
+    shaderDemo.attachUniform("time", t);
 }
 
 void initScene() {

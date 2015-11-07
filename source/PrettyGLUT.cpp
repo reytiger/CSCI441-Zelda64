@@ -424,8 +424,11 @@ void doFrame(int) {
         frames       = 0;
     }
 
-    updateScene(duration<double>(now.time_since_epoch()).count(),
-                duration<double>(dt).count());
+    // TODO: Pass a t which changes. We're pushing out all of our precision
+    // with really big numbers.
+    static double running = 0.0;
+    running += duration<double>(dt).count();
+    updateScene(running, duration<double>(dt).count());
 
     glutPostRedisplay();
 }
