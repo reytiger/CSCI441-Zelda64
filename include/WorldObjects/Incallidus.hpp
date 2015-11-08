@@ -50,8 +50,8 @@ protected:
             glColor3d(0.5, 0.5, color.z);
             drawBackNose();
 
-            auto pos = m_arc.cart() * 2;
-            glTranslated(0, 1, 0);
+            Vec pos = m_arc.cart() * 2;
+            glTranslated(pos.x, pos.y, pos.z);
             glColor3d(1, 1, 1);
             glutSolidSphere(0.2, 20, 20);
         });

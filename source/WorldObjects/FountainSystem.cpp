@@ -5,7 +5,7 @@
 const double FountainSystem::s_gravity = -9.81;
 const double FountainSystem::s_dampen  = 0.85;
 
-void FountainSystem::update(double t, double dt) {
+void FountainSystem::update(double /*t*/, double dt) {
     // TODO: Multithread!
 
     // Step 1: Clean out the existing points that have died.

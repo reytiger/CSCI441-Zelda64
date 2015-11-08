@@ -25,7 +25,6 @@ void ParticleSystem<Particle>::internalDraw() const {
     m_program.use();
 
     pushMatrixAnd([this]() {
-        auto pos = this->pos();
         glScalef(m_radius, m_radius, m_radius);
         for (const auto &particle : this->m_particles) {
             drawParticle(particle);
