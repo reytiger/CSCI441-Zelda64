@@ -1,4 +1,4 @@
-FLAGS := -std=c++11 -g -O2
+FLAGS := -std=c++11 -g -Os
 Wwarnings := -Wall -Wextra
 Wno_warnings := -Wno-char-subscripts -Wno-deprecated-declarations
 
@@ -25,7 +25,7 @@ endif
 # Make does not offer a recursive wildcard function, so here's one:
 rwildcard=$(wildcard $1$2) $(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2))
 
-BINARY  := a5
+BINARY  := a6
 SOURCES := $(strip $(call rwildcard, source/,*.cpp))
 HEADERS := $(strip $(call rwildcard, include/,*.hpp))
 OBJECTS := $(strip $(addprefix object/, $(SOURCES:source/%.cpp=%.o)))
