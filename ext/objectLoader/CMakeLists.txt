@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8)
 
 project("Object Loader")
 
-if (CMAKE_COMPILER_IS_GNUCXX)
+if (CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_CLANGXX)
     # Disable all warnings. They are of little interest to us.
     set(NO_WARNINGS "${CMAKE_CXX_FLAGS_INIT} -w")
 # This *might* catch Clang, but pretend it only catches MSVC for now.

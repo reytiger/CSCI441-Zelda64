@@ -5,6 +5,7 @@ project(csci441-Graphics-Project)
 set(binary "Assignment")
 set(S "${CMAKE_SOURCE_DIR}")
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${S}/cmake")
+set(CMAKE_COMPILER_IS_CLANGXX "${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
 
 # OpenGL
 find_package(OpenGL REQUIRED)
@@ -72,10 +73,13 @@ source_group("Source Files\\WorldObjects" FILES ${sources_worldobjects})
 
 include_directories("${S}/include")
 
-if (CMAKE_COMPILER_IS_GNUCXX)
+if (CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_CLANGXX)
     # Misc flags
     add_compile_options("-std=c++11")
-    add_compile_options("-fmax-errors=5")
+    if (NOT CMAKE_COMPILER_IS_CLANGXX)
+      # Clang doesn't support this.
+      add_compile_options("-fmax-errors=5")
+    endif()
     # This doesn't work on older versions of GCC. Instead, they error.
     add_compile_options("-fdiagnostics-color")
 
