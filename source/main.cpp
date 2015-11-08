@@ -69,6 +69,7 @@ void initScene() {
     roomFloor = CallListObject([&](GLuint dl) {
         glNewList(dl, GL_COMPILE);
 
+        Material().set();
         glEnable(GL_TEXTURE_2D);
         glBindTexture(GL_TEXTURE_2D, pattern.handle);
 
