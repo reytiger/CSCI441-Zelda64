@@ -14,9 +14,10 @@ public:
     virtual void drawParticle(const Particle &particle) const = 0;
 
 protected:
-    std::vector<Particle> m_particles;
+    // TODO: Settings file stuff goes here.
 
     ShaderProgram m_program;
+    std::vector<Particle> m_particles;
 };
 
 template <typename Particle>

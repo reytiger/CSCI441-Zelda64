@@ -3,7 +3,7 @@
 #include <algorithm>
 
 const double FountainSystem::s_gravity = -9.81;
-const double FountainSystem::s_dampen  = 0.98;
+const double FountainSystem::s_dampen  = 0.85;
 
 void FountainSystem::update(double t, double dt) {
     // TODO: Multithread!
@@ -15,17 +15,23 @@ void FountainSystem::update(double t, double dt) {
                                  return p.lifetime <= as<float>(dt);
                              });
 
+    if (dead != std::end(m_particles)) {
+        dead++;
+        m_particles.erase(std::begin(m_particles), dead);
+    }
+
     // Step 2: Add new points from the fountain's 'source'.
-    if (m_particles.size() < 1e5) {
-        const size_t new_particles = dt * 100;
+    if (m_particles.empty()) {
+        const size_t new_particles = 10000;
         for (size_t i = 0; i < new_particles; i += 1) {
             FountainSystem::Particle p;
 
+            // Place it in a unit cube centered at (0, 0.5, 0), randomly.
             p.pos = Vec(getRand(), getRand(), getRand());
             p.pos -= Vec(0.5, 0.0, 0.5);
-            p.pos *= Vec(20, 10, 20);
+            p.pos *= Vec(2, 1, 2);
 
-            p.lifetime = 5.0f * getRand() + 5.0f;
+            p.lifetime = 1.0f * getRand();
 
             m_particles.push_back(p);
         }
@@ -36,10 +42,7 @@ void FountainSystem::update(double t, double dt) {
         p.lifetime -= dt;
 
         // If they get close to stopping, kill them.
-        static const double thresh = 0.1;
-        if (fabs(p.vel.y) < thresh && p.pos.y < thresh) {
-            continue;
-        }
+        static const double thresh = 0.005;
 
         // The update order here matters.
 
@@ -49,7 +52,15 @@ void FountainSystem::update(double t, double dt) {
             double floortime = fabs(p.pos.y / p.vel.y);
             p.pos += floortime * p.vel;
 
-            // Then bounce and go back.
+            // If they get close to stopping, freeze them.
+            // We do this here to make sure it only happens when they bounce.
+            if (fabs(p.vel.y) < thresh) {
+                p.pos.y = 0.0f;
+                p.vel.y = 0.0f;
+                continue;
+            }
+
+            // Otherwise, bounce and go back.
             p.vel.y *= -s_dampen;
             p.pos += (dt - floortime) * p.vel;
         } else {
@@ -58,14 +69,6 @@ void FountainSystem::update(double t, double dt) {
         }
 
         p.vel.y += dt * s_gravity;
-
-        // If they get close to stopping, kill them.
-        if (fabs(p.vel.y) < thresh && p.pos.y < thresh) {
-            p.pos.y = 0.0f;
-            p.vel.y = 0.0f;
-        } else {
-            // info("%s", fabs(p.vel.y));
-        }
     }
 }
 
