@@ -7,6 +7,10 @@ set(S "${CMAKE_SOURCE_DIR}")
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${S}/cmake")
 set(CMAKE_COMPILER_IS_CLANGXX "${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
 
+# Some of our stuff is GCC version dependent.
+execute_process(COMMAND ${CMAKE_C_COMPILER} -dumpversion
+                OUTPUT_VARIABLE GCC_VERSION)
+
 # OpenGL
 find_package(OpenGL REQUIRED)
 
@@ -80,8 +84,12 @@ if (CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_CLANGXX)
       # Clang doesn't support this.
       add_compile_options("-fmax-errors=5")
     endif()
-    # This doesn't work on older versions of GCC. Instead, they error.
-    add_compile_options("-fdiagnostics-color")
+
+    if (GCC_VERSION VERSION_GREATER 4.8)
+        message("Using gcc version ${GCC_VERSION}")
+        # This doesn't work on older versions of GCC. Instead, they error.
+        add_compile_options("-fdiagnostics-color")
+    endif()
 
     # Warnings to turn ON
     add_compile_options("-Wall")

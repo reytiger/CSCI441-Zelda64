@@ -19,7 +19,7 @@ all: $(BINARY)
 
 $(BINARY): $(BUILD_DIR)
 	@$(MAKE) --quiet -C $(BUILD_DIR) Assignment
-	@cp -v $@/Assignment $(BINARY)
+	@cp -v $</Assignment $(BINARY)
 
 $(BUILD_DIR):
 	@mkdir -vp $@
