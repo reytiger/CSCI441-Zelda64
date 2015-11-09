@@ -34,18 +34,16 @@ a5
 depend.mk
 
 # in-tree CMake build
-build
-msvc64
-_msvc64
-perf-stats
+_*
+build*
+msvc*
+perf*
 
 # graphviz!
 *.dot
-*.png
 
 # nsf files, they are on network drives
 .nfs*
 
 # External libs
-ext/boost
 ext/fmod
