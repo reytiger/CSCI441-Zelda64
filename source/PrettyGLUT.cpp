@@ -8,7 +8,7 @@
 void updateScene(double t, double dt);
 
 Texture loading;
-ShaderProgram shaderDemo;
+ShaderProgram wigglyShader;
 
 // Cameras
 FreeCamera freecam;
@@ -284,14 +284,13 @@ void render() {
     }
 
     glChk();
-    shaderDemo.use();
+    wigglyShader.use();
     glChk();
     venus.draw();
     glChk();
 
-    ShaderProgram::useFFS();
-
     glChk();
+    wigglyShader.use();
     Material::Pearl.set();
     pushMatrixAnd([]() {
         glTranslatef(-50, 0.0, 50);

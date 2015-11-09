@@ -58,4 +58,4 @@ extern Texture skybox;
 extern Texture loading;
 extern Texture ember;
 
-extern ShaderProgram shaderDemo;
+extern ShaderProgram wigglyShader;

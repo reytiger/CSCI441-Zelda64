@@ -17,14 +17,15 @@ public:
 
     void clear() { m_particles.clear(); }
 
+    ShaderProgram program;
+
 protected:
-    ShaderProgram m_program;
     std::vector<Particle> m_particles;
 };
 
 template <typename Particle>
 void ParticleSystem<Particle>::internalDraw() const {
-    m_program.use();
+    program.use();
 
     for (const auto &particle : this->m_particles) {
         drawParticle(particle);

@@ -83,7 +83,7 @@ void updateScene(double t, double dt) {
     activeCam->update(t, dt);
     // activeCam->doWASDControls(25.0, keyPressed, true);
 
-    shaderDemo.attachUniform("time", 1000.0 + t);
+    wigglyShader.attachUniform("time", 1000.0 + t);
 
     inc.moveTo(clamp(inc.pos(), Vec(-100, 0.5, -100), Vec(100, 0.5, 100)));
 
@@ -159,6 +159,8 @@ void initScene() {
     vulcano = CallListObject([&](GLuint dl) {
         glNewList(dl, GL_COMPILE);
         glDisable(GL_CULL_FACE);
+
+        wigglyShader.use();
 
         pushMatrixAnd([&]() {
             glRotatef(-90.0f, 1, 0, 0);
@@ -283,16 +285,32 @@ void initTextures() {
     glChk();
 }
 
-void initShaders(const std::string &vertFilename,
-                 const std::string &fragFilename) {
-    Shader vert;
-    vert.loadFromFile(vertFilename, GL_VERTEX_SHADER);
+void initShaders() {
 
-    Shader frag;
-    frag.loadFromFile(fragFilename, GL_FRAGMENT_SHADER);
+    // Venus
+    {
+        Shader vert;
+        vert.loadFromFile("glsl/wiggly.v.glsl", GL_VERTEX_SHADER);
 
-    shaderDemo.create();
-    shaderDemo.link(vert, frag);
+        Shader frag;
+        frag.loadFromFile("glsl/pass_through.f.glsl", GL_FRAGMENT_SHADER);
+
+        wigglyShader.create();
+        wigglyShader.link(vert, frag);
+    }
+
+    // Vulcano
+    {
+        Shader vert;
+        vert.loadFromFile("glsl/FFP-Texture/vert.glsl", GL_VERTEX_SHADER);
+
+        Shader frag;
+        frag.loadFromFile("glsl/FFP-Texture/frag.glsl", GL_FRAGMENT_SHADER);
+
+        vulSpout.program.create();
+        vulSpout.program.link(vert, frag);
+    }
+
 
     glChk();
 }
@@ -305,14 +323,7 @@ int main(int argc, char **argv) {
     glewInit();
     printOpenGLInformation();
 
-    // Handle shader filenames.
-    std::string file1 = argc >= 2 ? argv[1] : "glsl/wiggly.v.glsl";
-    std::string file2 = argc >= 3 ? argv[2] : "glsl/pass_through.f.glsl";
-
-    if (argc < 2) {
-        warn("Expected filenames, defaulting to '%s' and '%s'.", file1, file2);
-    }
-    initShaders(file1, file2);
+    initShaders();
 
     initTextures();
     initScene();
