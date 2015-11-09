@@ -543,7 +543,7 @@ void initGLUT(int *argcp, char **argv) {
 
     // Lighting
     glEnable(GL_LIGHTING);
-    glDisable(GL_CULL_FACE);
+    glEnable(GL_CULL_FACE);
 
     glShadeModel(GL_FLAT);
 

@@ -4,6 +4,8 @@
 #include <array>
 
 CallListObject roomFloor;
+CallListObject vulcano;
+
 paone::Object model;
 paone::Object model2;
 PointLight light;
@@ -71,6 +73,7 @@ void initScene() {
 
         Material().set();
         glEnable(GL_TEXTURE_2D);
+        glEnable(GL_CULL_FACE);
         glBindTexture(GL_TEXTURE_2D, pattern.handle);
 
         static const auto halfsize = Vec(100, 100);
@@ -98,10 +101,45 @@ void initScene() {
     });
     glChk();
 
+    drawn.push_back(&vulcano);
+    vulcano.moveTo(-10, 0, -10);
+    vulcano.material(Material::Obsidian);
+    float vulHeight  = 15.0;
+    float vulBaseRad = 9.0;
+
+    static auto vulcano_body = gluNewQuadric();
+    static auto vulcano_top  = gluNewQuadric();
+
+    vulcano = CallListObject([&](GLuint dl) {
+        glNewList(dl, GL_COMPILE);
+        glDisable(GL_CULL_FACE);
+
+        pushMatrixAnd([&]() {
+            auto pos = vulcano.pos();
+            glTranslatef(pos.x, pos.y, pos.z);
+
+            glRotatef(90.0f, -1, 0, 0);
+            gluCylinder(vulcano_body, vulBaseRad, 3.0, 15.0, 20, 20);
+        });
+
+        pushMatrixAnd([&]() {
+            auto pos = vulcano.pos();
+            pos.y += vulHeight - 0.25;
+            glTranslatef(pos.x, pos.y, pos.z);
+
+            glRotatef(90.0f, -1, 0, 0);
+            gluDisk(vulcano_top, 0, 3, 20, 1);
+        });
+
+        glEndList();
+    });
+
     drawn.push_back(&fountain);
     fountain.material(Material::Brass);
-    fountain.moveTo(0, 10, 0);
-    fountain.radius(5.0f);
+    fountain.moveTo(vulcano.pos());
+    fountain.moveByX(-vulBaseRad - 1);
+    fountain.moveByZ(-vulBaseRad - 1);
+    fountain.moveToY(vulHeight - 1.0);
 
     drawn.push_back(&inc);
     inc.setUpdateFunc([&](double /*t*/, double /*dt*/) {

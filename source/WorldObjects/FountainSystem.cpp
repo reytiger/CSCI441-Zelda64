@@ -3,35 +3,47 @@
 #include <algorithm>
 
 const double FountainSystem::s_gravity = -9.81;
-const double FountainSystem::s_dampen  = 0.85;
+const double FountainSystem::s_dampen  = 0.68;
 
-void FountainSystem::update(double /*t*/, double dt) {
-    // TODO: Multithread!
-
+void FountainSystem::update(double t, double dt) {
     // Step 1: Clean out the existing points that have died.
-    auto dead = std::find_if(std::begin(m_particles),
-                             std::end(m_particles),
-                             [&dt](const FountainSystem::Particle &p) {
-                                 return p.lifetime <= as<float>(dt);
-                             });
 
-    if (dead != std::end(m_particles)) {
-        dead++;
+    // Order them by first-to-die.
+    std::sort(std::begin(m_particles),
+              std::end(m_particles),
+              [&dt](const FountainSystem::Particle &lhs,
+                    const FountainSystem::Particle &rhs) {
+                  return lhs.lifetime < rhs.lifetime;
+              });
+
+    // And kill them.
+    auto dead = std::find_if(m_particles.begin(),
+                             m_particles.end(),
+                             [&dt](const FountainSystem::Particle &p) {
+                                 return p.lifetime > as<float>(dt);
+                             });
+    if (dead != m_particles.end()) {
         m_particles.erase(std::begin(m_particles), dead);
     }
 
     // Step 2: Add new points from the fountain's 'source'.
-    if (m_particles.empty()) {
-        const size_t new_particles = 10000;
+    // if (m_particles.empty()) {
+    {
+        const size_t new_particles = dt * m_spawn_rate;
         for (size_t i = 0; i < new_particles; i += 1) {
             FountainSystem::Particle p;
 
-            // Place it in a unit cube centered at (0, 0.5, 0), randomly.
-            p.pos = Vec(getRand(), getRand(), getRand());
-            p.pos -= Vec(0.5, 0.0, 0.5);
-            p.pos *= Vec(2, 1, 2);
+            // The center of output is the center of the FountainSystem.
+            p.pos = this->pos();
 
-            p.lifetime = 1.0f * getRand();
+            auto theta = getRand(2.0f * PI);
+            auto phi   = 90.0f; // getRand(m_min_cone, m_max_cone);
+            p.vel      = VecPolar(theta, phi, getRand(m_min_speed, m_max_speed));
+
+            // Don't forget negative velocities too!
+            p.vel -= 0.5;
+
+            p.lifetime = getRand(m_min_life, m_max_life);
 
             m_particles.push_back(p);
         }
@@ -74,9 +86,9 @@ void FountainSystem::update(double /*t*/, double dt) {
 
 void FountainSystem::drawParticle(const FountainSystem::Particle &self) const {
     pushMatrixAnd([&self]() {
-        static const float radius = 5e-3; // Draw them so that their edge just
+        static const float radius = 5e-1; // Draw them so that their edge just
                                           // barely touches the surface.
         glTranslatef(self.pos.x, radius + self.pos.y, self.pos.z);
-        glutSolidSphere(radius, 10, 10);
+        glutSolidCube(radius);
     });
 }

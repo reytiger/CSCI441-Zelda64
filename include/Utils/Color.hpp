@@ -1,6 +1,8 @@
 #pragma once
 #include "Utils/GL_Defs.hpp"
 
+#include <cassert>
+
 struct Color {
     union {
         float v[4];
@@ -19,6 +21,11 @@ struct Color {
 };
 
 inline float getRand() { return rand() / (float)RAND_MAX; }
+inline float getRand(float max) { return max * getRand(); }
+inline float getRand(float min, float max) {
+    assert(max > min);
+    return getRand(max - min) + min;
+}
 
 inline Color randColor() { return Color(getRand(), getRand(), getRand()); }
 

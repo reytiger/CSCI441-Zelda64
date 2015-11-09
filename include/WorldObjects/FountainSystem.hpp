@@ -23,4 +23,14 @@ public:
     virtual void drawParticle(const Particle &particle) const override;
 
 private:
+    float m_min_cone = 45.0f; // degrees
+    float m_max_cone = 60.0f; // degrees
+
+    float m_min_speed = 5.0f;   // meters
+    float m_max_speed = 100.0f; // meters
+
+    float m_min_life = 3.0f; // seconds
+    float m_max_life = 5.0f; // seconds
+
+    float m_spawn_rate = 500.0f; // particles per second
 };

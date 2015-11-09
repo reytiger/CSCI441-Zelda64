@@ -13,9 +13,9 @@ public:
 
     virtual void drawParticle(const Particle &particle) const = 0;
 
-protected:
-    // TODO: Settings file stuff goes here.
+    size_t living() const { return m_particles.size(); }
 
+protected:
     ShaderProgram m_program;
     std::vector<Particle> m_particles;
 };
@@ -25,7 +25,13 @@ void ParticleSystem<Particle>::internalDraw() const {
     m_program.use();
 
     pushMatrixAnd([this]() {
-        glScalef(m_radius, m_radius, m_radius);
+        glTranslatef(pos().x, pos().y, pos().z);
+
+        Material::Ruby.set();
+        glutSolidCube(0.5);
+    });
+
+    pushMatrixAnd([this]() {
         for (const auto &particle : this->m_particles) {
             drawParticle(particle);
         }
