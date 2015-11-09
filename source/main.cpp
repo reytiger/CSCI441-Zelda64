@@ -190,17 +190,17 @@ void initScene() {
     vulSpout.min_speed = 20.0f;                    // meters
     vulSpout.max_speed = 2.0 * vulSpout.min_speed; // meters
 
-    vulSpout.max_life = 8.0f;
+    vulSpout.max_life = 8.0f; // seconds
+
+    vulSpout.spawn_rate = 750.0f; // particles per second.
 
     vulSpout.tex(ember);
 
     // Our Hero!
     drawn.push_back(&inc);
     inc.setUpdateFunc([&](double /*t*/, double /*dt*/) {
-        inc.doWASDControls(15.0, keyPressed, false);
+        inc.doWASDControls(25.0, keyPressed, false);
     });
-
-    info("%s - %s", inc.pos(), vulSpout.pos());
 
     // His spell
     incSpell.follow(&inc);

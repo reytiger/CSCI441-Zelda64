@@ -431,7 +431,7 @@ void doFrame(int) {
 
     // Keep a live, running average FPS counter.
     if (now - last_updated > FPS_update_delay) {
-        live_fps       = frames / duration<double>(FPS_update_delay).count();
+        live_fps       = frames / duration<double>(now - last_updated).count();
         live_frametime = duration<double>(dt).count() / frames;
         live_frames    = frames;
 
