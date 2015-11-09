@@ -292,8 +292,13 @@ void render() {
     ShaderProgram::useFFS();
 
     glChk();
-    Material::Emerald.set();
-    model2.draw();
+    Material::Pearl.set();
+    pushMatrixAnd([]() {
+        glTranslatef(-50, 0, 50);
+        glScalef(3.0f, 3.0f, 3.0f);
+        glRotatef(90, 0.0, 1.0, 0.0);
+        model2.draw();
+    });
     glChk();
 
     ShaderProgram::useFFS();

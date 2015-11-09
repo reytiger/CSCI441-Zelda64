@@ -21,8 +21,8 @@ FountainSystem incSpell;
 
 bool castingSpell = false;
 
-float vulHeight     = 15.0;
-float vulBaseRadius = 9.0;
+float vulHeight     = 45.0;
+float vulBaseRadius = 20.0;
 
 // Defines the menu options.
 // See handleRightClickMenu() and initRightClickMenu() for details.
@@ -55,13 +55,15 @@ void stopCasting(int) {
 void initVulcano(FountainSystem &volcano) {
     vulSpout.material(Material::Brass);
     // I have no idea why this is doubled. But it works.
-    vulSpout.moveTo(2.0 * vulcano.pos());
+    vulSpout.moveTo(vulcano.pos());
     vulSpout.moveToY(vulHeight - 1.0);
 
     vulSpout.radius(0.5);
 
     volcano.min_speed = 20.0f;                   // meters
     volcano.max_speed = 2.0 * volcano.min_speed; // meters
+
+    volcano.tex(ember);
 }
 
 void initSpell(FountainSystem &spell) {
@@ -177,7 +179,7 @@ void initScene() {
             glTranslatef(pos.x, pos.y, pos.z);
 
             glRotatef(90.0f, -1, 0, 0);
-            gluCylinder(vulcano_body, vulBaseRadius, 3.0, 15.0, 20, 20);
+            gluCylinder(vulcano_body, vulBaseRadius, 3.0, vulHeight, 20, 20);
         });
 
         pushMatrixAnd([&]() {
@@ -213,15 +215,15 @@ void initScene() {
     // Venus 1
     auto pt = model.getLocation();
     assert(pt);
-    pt->setY(4.7);
+    pt->setY(6.7);
+    pt->setX(-50);
+    pt->setZ(50);
     model.loadObjectFile("assets/venus.obj");
 
     // Venus 2
     pt = model2.getLocation();
     assert(pt);
-    pt->setX(3);
-    pt->setY(4.7);
-    model2.loadObjectFile("assets/venus.obj");
+    model2.loadObjectFile("assets/temple.obj");
 }
 
 void initTextures() {
@@ -306,7 +308,7 @@ int main(int argc, char **argv) {
     printOpenGLInformation();
 
     // Handle shader filenames.
-    std::string file1 = argc >= 2 ? argv[1] : "glsl/pass_through.v.glsl";
+    std::string file1 = argc >= 2 ? argv[1] : "glsl/wiggly.v.glsl";
     std::string file2 = argc >= 3 ? argv[2] : "glsl/pass_through.f.glsl";
 
     if (argc < 2) {

@@ -17,7 +17,40 @@ void FountainSystem::internalDraw() const {
 void FountainSystem::drawParticle(const FountainSystem::Particle &self) const {
     pushMatrixAnd([&self, this]() {
         glTranslatef(self.pos.x, self.pos.y, self.pos.z);
-        glutSolidCube(this->radius());
+
+        assert((max_life - min_life) != 0);
+        // The 'radius' of the billboarded quad.
+        float halfsize = (self.lifetime - min_life) / (max_life - min_life);
+
+        // The 'radius' of the area sampled from the texture.
+        float texsize = 0.1;
+
+        // TODO: Make these Vec(+1, +1) into billboarding vectors!
+        auto bl = self.pos + halfsize * Vec(-1, -1);
+        auto br = self.pos + halfsize * Vec(+1, -1);
+        auto tl = self.pos + halfsize * Vec(-1, +1);
+        auto tr = self.pos + halfsize * Vec(+1, +1);
+
+        auto t_bl = self.uv + texsize * Vec(-1, -1);
+        auto t_br = self.uv + texsize * Vec(+1, -1);
+        auto t_tl = self.uv + texsize * Vec(-1, +1);
+        auto t_tr = self.uv + texsize * Vec(+1, +1);
+
+        glBegin(GL_QUADS);
+
+        glTexCoord2f(t_bl.x, t_bl.y);
+        glVertex4f(bl.x, bl.y, bl.z, 0.5);
+
+        glTexCoord2f(t_br.x, t_br.y);
+        glVertex4f(br.x, br.y, br.z, 0.5);
+
+        glTexCoord2f(t_tr.x, t_tr.y);
+        glVertex4f(tr.x, tr.y, tr.z, 0.5);
+
+        glTexCoord2f(t_tl.x, t_tl.y);
+        glVertex4f(tl.x, tl.y, tl.z, 0.5);
+
+        glEnd();
     });
 }
 
@@ -53,6 +86,8 @@ void FountainSystem::update(double t, double dt) {
             // The center of output is the center of the FountainSystem.
             p.pos = this->pos();
             p.vel = this->vel();
+
+            p.uv = Vec(getRand(), getRand());
 
             // VecPolar uses Radians. I lost an hour because I forgot this. ._.
             auto theta = PI / 180.0f * getRand(min_cone_theta, max_cone_theta);

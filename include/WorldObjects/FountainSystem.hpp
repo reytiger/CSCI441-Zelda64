@@ -5,9 +5,9 @@
 
 namespace Internal {
 struct FountainParticle {
-    Vec pos;               // meters
-    Vec vel;               // meters / second
-    float mass     = 1.0;  // g
+    Vec pos; // meters
+    Vec vel; // meters / second
+    Vec uv;
     float lifetime = 10.0; // seconds
 };
 };
@@ -44,5 +44,5 @@ public:
     bool gravity = true;
 
 private:
-    GLint m_tex;
+    GLint m_tex = 0;
 };
