@@ -190,6 +190,8 @@ void initScene() {
     vulSpout.min_speed = 20.0f;                    // meters
     vulSpout.max_speed = 2.0 * vulSpout.min_speed; // meters
 
+    vulSpout.max_life = 8.0f;
+
     vulSpout.tex(ember);
 
     // Our Hero!

@@ -3,7 +3,7 @@
 #include <algorithm>
 
 const double FountainSystem::s_gravity = -9.81;
-const double FountainSystem::s_dampen  = 0.68;
+const double FountainSystem::s_dampen  = 0.45;
 
 void FountainSystem::internalDraw() const {
     glEnable(GL_TEXTURE_2D);
@@ -23,7 +23,8 @@ void FountainSystem::drawParticle(const FountainSystem::Particle &self) const {
 
         assert((max_life - min_life) != 0);
         // The 'radius' of the billboarded quad.
-        float halfsize = radius() * (self.lifetime - min_life) / (max_life - min_life);
+        float halfsize
+            = radius() * (self.lifetime - min_life) / (max_life - min_life);
 
         // TODO: Make these Vec(+1, +1) into billboarding vectors!
         auto bl = self.pos + halfsize * Vec(-1, -1);
