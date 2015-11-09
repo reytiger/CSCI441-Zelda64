@@ -74,6 +74,7 @@ public:
     VecPolar lookDir() const { return m_arc; }
 
     Vec pos() const { return m_pos; }
+    Vec vel() const { return m_vel; }
     Vec up() const { return m_up; }
 
     void follow(WorldObject *wo);
