@@ -97,6 +97,8 @@ static inline bool operator==(const Vec &a, const Vec &b) {
     return a.x == b.x && a.y == b.y && a.z == b.z;
 }
 
+static inline bool operator!=(const Vec &a, const Vec &b) { return !(a == b); }
+
 // Vec + Vec -> Vec
 def_op_by_components(Vec, +, Vec, Vec);
 def_op_by_components(Vec, -, Vec, Vec);

@@ -15,7 +15,13 @@ Incallidus inc;
 Texture pattern;
 Texture skybox;
 
-FountainSystem fountain;
+FountainSystem vulSpout;
+FountainSystem incSpell;
+
+bool castingSpell = false;
+
+float vulHeight     = 15.0;
+float vulBaseRadius = 9.0;
 
 // Defines the menu options.
 // See handleRightClickMenu() and initRightClickMenu() for details.
@@ -30,16 +36,59 @@ enum MenuOpt {
     Quit,
 };
 
+void startCasting() {
+    castingSpell = true;
+    drawn.push_back(&incSpell);
+}
+
+// The int is requried, but unused.
+void stopCasting(int) {
+    castingSpell = false;
+    auto pos = std::find(drawn.begin(), drawn.end(), &incSpell);
+    if (pos != drawn.end()) {
+        drawn.erase(pos);
+    }
+    incSpell.clear();
+}
+
+void initVulcano(FountainSystem &volcano) {
+    vulSpout.material(Material::Brass);
+    // I have no idea why this is doubled. But it works.
+    vulSpout.moveTo(2.0 * vulcano.pos());
+    vulSpout.moveToY(vulHeight - 1.0);
+
+    vulSpout.radius(0.5);
+
+    volcano.min_speed = 20.0f;                   // meters
+    volcano.max_speed = 2.0 * volcano.min_speed; // meters
+}
+
+void initSpell(FountainSystem &spell) {
+    spell.radius(0.05);
+
+    spell.min_cone_theta = -10.0f; // degrees
+    spell.max_cone_theta = 10.0f;  // degrees
+
+    spell.min_cone_phi = -10; // degrees
+    spell.max_cone_phi = 10;  // degrees
+
+    spell.min_speed = 10.0f; // meters
+    spell.max_speed = 20.0f; // meters
+
+    spell.min_life = 0.5f; // seconds
+    spell.max_life = 1.0f; // seconds
+
+    spell.spawn_rate = 5000.0f; // particles per second
+
+    spell.gravity = false;
+}
+
 // This function is expected by PrettyGLUT, because I designed it to get
 // done fast, not smart. We can change this later, but this makes sure it
 // builds.
 // It takes in t and dt, the time and time since the last updateScene was
 // called.
 void updateScene(double t, double dt) {
-    for (WorldObject *wo : drawn) {
-        wo->update(t, dt);
-    }
-
     // Even though they're rendered, the cameras are NOT in the drawn list, so
     // we have to update them manually, if we want them updated at all.
     activeCam->update(t, dt);
@@ -47,7 +96,16 @@ void updateScene(double t, double dt) {
 
     shaderDemo.attachUniform("time", t);
 
-    inc.moveTo(clamp(inc.pos(), Vec(-100, 0, -100), Vec(100, 0, 100)));
+    inc.moveTo(clamp(inc.pos(), Vec(-100, 0.5, -100), Vec(100, 0.5, 100)));
+
+    if (keyPressed[' '] && !castingSpell) {
+        startCasting();
+        glutTimerFunc(5000, stopCasting, 0);
+    }
+
+    for (WorldObject *wo : drawn) {
+        wo->update(t, dt);
+    }
 }
 
 void initScene() {
@@ -101,11 +159,10 @@ void initScene() {
     });
     glChk();
 
+    // Vulcano
     drawn.push_back(&vulcano);
-    vulcano.moveTo(-10, 0, -10);
+    vulcano.moveTo(-25, 0, -25);
     vulcano.material(Material::Obsidian);
-    float vulHeight  = 15.0;
-    float vulBaseRad = 9.0;
 
     static auto vulcano_body = gluNewQuadric();
     static auto vulcano_top  = gluNewQuadric();
@@ -119,7 +176,7 @@ void initScene() {
             glTranslatef(pos.x, pos.y, pos.z);
 
             glRotatef(90.0f, -1, 0, 0);
-            gluCylinder(vulcano_body, vulBaseRad, 3.0, 15.0, 20, 20);
+            gluCylinder(vulcano_body, vulBaseRadius, 3.0, 15.0, 20, 20);
         });
 
         pushMatrixAnd([&]() {
@@ -134,27 +191,31 @@ void initScene() {
         glEndList();
     });
 
-    drawn.push_back(&fountain);
-    fountain.material(Material::Brass);
-    fountain.moveTo(vulcano.pos());
-    fountain.moveByX(-vulBaseRad - 1);
-    fountain.moveByZ(-vulBaseRad - 1);
-    fountain.moveToY(vulHeight - 1.0);
+    // Vulcano Spout
+    drawn.push_back(&vulSpout);
+    initVulcano(vulSpout);
 
+    // Our Hero!
     drawn.push_back(&inc);
     inc.setUpdateFunc([&](double /*t*/, double /*dt*/) {
         inc.doWASDControls(15.0, keyPressed, false);
     });
-    inc.moveToY(roomFloor.pos().y + 0.1);
 
+    // His spell
+    incSpell.follow(&inc);
+    initSpell(incSpell);
+
+    // Camera
     activeCam->follow(&inc);
     activeCam->radius(50.0);
 
+    // Venus 1
     auto pt = model.getLocation();
     assert(pt);
     pt->setY(4.7);
     model.loadObjectFile("assets/venus.obj");
 
+    // Venus 2
     pt = model2.getLocation();
     assert(pt);
     pt->setX(3);

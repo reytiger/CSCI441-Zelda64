@@ -22,15 +22,19 @@ public:
     virtual void update(double t, double dt) override;
     virtual void drawParticle(const Particle &particle) const override;
 
-private:
-    float m_min_cone = 45.0f; // degrees
-    float m_max_cone = 60.0f; // degrees
+    float min_cone_theta = 0.0f;   // degrees
+    float max_cone_theta = 360.0f; // degrees
 
-    float m_min_speed = 5.0f;   // meters
-    float m_max_speed = 100.0f; // meters
+    float min_cone_phi = 40.0f; // degrees
+    float max_cone_phi = 50.0f; // degrees
 
-    float m_min_life = 3.0f; // seconds
-    float m_max_life = 5.0f; // seconds
+    float min_speed = 20.0f; // meters
+    float max_speed = 50.0f; // meters
 
-    float m_spawn_rate = 500.0f; // particles per second
+    float min_life = 3.0f; // seconds
+    float max_life = 5.0f; // seconds
+
+    float spawn_rate = 1000.0f; // particles per second
+
+    bool gravity = true;
 };

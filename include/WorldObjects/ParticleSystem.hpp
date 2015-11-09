@@ -15,6 +15,8 @@ public:
 
     size_t living() const { return m_particles.size(); }
 
+    void clear() { m_particles.clear(); }
+
 protected:
     ShaderProgram m_program;
     std::vector<Particle> m_particles;
@@ -31,9 +33,7 @@ void ParticleSystem<Particle>::internalDraw() const {
         glutSolidCube(0.5);
     });
 
-    pushMatrixAnd([this]() {
-        for (const auto &particle : this->m_particles) {
-            drawParticle(particle);
-        }
-    });
+    for (const auto &particle : this->m_particles) {
+        drawParticle(particle);
+    }
 }
