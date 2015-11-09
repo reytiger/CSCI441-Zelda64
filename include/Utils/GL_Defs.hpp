@@ -13,7 +13,18 @@
 #include <GL/glu.h>
 #endif
 
+#ifdef __has_include
+#define has_include __has_include
+#elif
+#define has_include 0
+#pragma message("Warning: Your compiler doesn't support __has_include.")
+#endif
+
+#if has_include("SOIL.h")
+#include "SOIL.h"
+#elif has_include("SOIL/SOIL.h")
 #include "SOIL/SOIL.h"
+#endif
 
 #include "Utils/DebugTools.hpp"
 
