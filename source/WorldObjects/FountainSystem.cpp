@@ -5,6 +5,22 @@
 const double FountainSystem::s_gravity = -9.81;
 const double FountainSystem::s_dampen  = 0.68;
 
+void FountainSystem::internalDraw() const {
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, tex());
+
+    ParticleSystem<Particle>::internalDraw();
+
+    glDisable(GL_TEXTURE_2D);
+}
+
+void FountainSystem::drawParticle(const FountainSystem::Particle &self) const {
+    pushMatrixAnd([&self, this]() {
+        glTranslatef(self.pos.x, self.pos.y, self.pos.z);
+        glutSolidCube(this->radius());
+    });
+}
+
 void FountainSystem::update(double t, double dt) {
     WorldObject::update(t, dt);
     // Step 1: Clean out the existing points that have died.
@@ -72,11 +88,4 @@ void FountainSystem::update(double t, double dt) {
             p.vel.y += dt * s_gravity;
         }
     }
-}
-
-void FountainSystem::drawParticle(const FountainSystem::Particle &self) const {
-    pushMatrixAnd([&self, this]() {
-        glTranslatef(self.pos.x, self.pos.y, self.pos.z);
-        glutSolidCube(this->radius());
-    });
 }

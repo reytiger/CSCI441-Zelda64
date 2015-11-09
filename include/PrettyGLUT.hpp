@@ -51,14 +51,11 @@ void printOpenGLInformation();
 void initGLUT(int *argcp, char **argv);
 void start();
 
-struct Texture {
-    unsigned char *data = nullptr;
-    int width           = 0;
-    int height          = 0;
-    GLuint handle       = 0;
-};
-extern Texture pattern;
+using Texture = GLint;
+
+extern Texture grass;
 extern Texture skybox;
 extern Texture loading;
+extern Texture ember;
 
 extern ShaderProgram shaderDemo;

@@ -21,6 +21,11 @@ public:
 
     virtual void update(double t, double dt) override;
     virtual void drawParticle(const Particle &particle) const override;
+    virtual void internalDraw() const override;
+
+    // TODO: Is there some kind of texture release we should do?
+    void tex(GLint tex) { m_tex = tex; }
+    GLint tex() const { return m_tex; }
 
     float min_cone_theta = 0.0f;   // degrees
     float max_cone_theta = 360.0f; // degrees
@@ -37,4 +42,7 @@ public:
     float spawn_rate = 1000.0f; // particles per second
 
     bool gravity = true;
+
+private:
+    GLint m_tex;
 };

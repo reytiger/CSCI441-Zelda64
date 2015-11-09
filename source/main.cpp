@@ -12,8 +12,9 @@ PointLight light;
 
 Incallidus inc;
 
-Texture pattern;
+Texture grass;
 Texture skybox;
+Texture ember;
 
 FountainSystem vulSpout;
 FountainSystem incSpell;
@@ -132,7 +133,7 @@ void initScene() {
         Material().set();
         glEnable(GL_TEXTURE_2D);
         glEnable(GL_CULL_FACE);
-        glBindTexture(GL_TEXTURE_2D, pattern.handle);
+        glBindTexture(GL_TEXTURE_2D, grass);
 
         static const auto halfsize = Vec(100, 100);
 
@@ -224,15 +225,15 @@ void initScene() {
 }
 
 void initTextures() {
-    pattern.handle = SOIL_load_OGL_texture(
-        "assets/textures/minecraft.jpg",
-        SOIL_LOAD_AUTO,
-        SOIL_CREATE_NEW_ID,
-        SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB
-            | SOIL_FLAG_COMPRESS_TO_DXT);
+    grass = SOIL_load_OGL_texture("assets/textures/minecraft.jpg",
+                                  SOIL_LOAD_AUTO,
+                                  SOIL_CREATE_NEW_ID,
+                                  SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y
+                                      | SOIL_FLAG_NTSC_SAFE_RGB
+                                      | SOIL_FLAG_COMPRESS_TO_DXT);
     glChk();
     {
-        glBindTexture(GL_TEXTURE_2D, pattern.handle);
+        glBindTexture(GL_TEXTURE_2D, grass);
         glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -243,15 +244,15 @@ void initTextures() {
     }
     glChk();
 
-    skybox.handle = SOIL_load_OGL_texture("assets/textures/clouds-skybox.jpg",
-                                          SOIL_LOAD_AUTO,
-                                          SOIL_CREATE_NEW_ID,
-                                          SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y
-                                              | SOIL_FLAG_NTSC_SAFE_RGB
-                                              | SOIL_FLAG_COMPRESS_TO_DXT);
+    skybox = SOIL_load_OGL_texture("assets/textures/clouds-skybox.jpg",
+                                   SOIL_LOAD_AUTO,
+                                   SOIL_CREATE_NEW_ID,
+                                   SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y
+                                       | SOIL_FLAG_NTSC_SAFE_RGB
+                                       | SOIL_FLAG_COMPRESS_TO_DXT);
     glChk();
     {
-        glBindTexture(GL_TEXTURE_2D, skybox.handle);
+        glBindTexture(GL_TEXTURE_2D, skybox);
         glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -259,6 +260,25 @@ void initTextures() {
 
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+    }
+    glChk();
+
+    ember = SOIL_load_OGL_texture("assets/textures/ember.jpg",
+                                  SOIL_LOAD_AUTO,
+                                  SOIL_CREATE_NEW_ID,
+                                  SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y
+                                      | SOIL_FLAG_NTSC_SAFE_RGB
+                                      | SOIL_FLAG_COMPRESS_TO_DXT);
+    glChk();
+    {
+        glBindTexture(GL_TEXTURE_2D, ember);
+        glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     }
     glChk();
 }

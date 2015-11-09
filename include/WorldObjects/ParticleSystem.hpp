@@ -26,13 +26,6 @@ template <typename Particle>
 void ParticleSystem<Particle>::internalDraw() const {
     m_program.use();
 
-    pushMatrixAnd([this]() {
-        glTranslatef(pos().x, pos().y, pos().z);
-
-        Material::Ruby.set();
-        glutSolidCube(0.5);
-    });
-
     for (const auto &particle : this->m_particles) {
         drawParticle(particle);
     }

@@ -132,7 +132,7 @@ void renderSkybox() {
 
     glEnable(GL_TEXTURE_2D);
     glDisable(GL_LIGHTING);
-    glBindTexture(GL_TEXTURE_2D, skybox.handle);
+    glBindTexture(GL_TEXTURE_2D, skybox);
 
     pushMatrixAnd([&]() {
         glBegin(GL_QUADS);
@@ -334,15 +334,15 @@ void printOpenGLInformation() {
 
 void loadLoadingScreen() {
     glChk();
-    loading.handle = SOIL_load_OGL_texture(
-        "assets/textures/dont_panic.jpg",
-        SOIL_LOAD_AUTO,
-        SOIL_CREATE_NEW_ID,
-        SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB
-            | SOIL_FLAG_COMPRESS_TO_DXT);
+    loading = SOIL_load_OGL_texture("assets/textures/dont_panic.jpg",
+                                    SOIL_LOAD_AUTO,
+                                    SOIL_CREATE_NEW_ID,
+                                    SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y
+                                        | SOIL_FLAG_NTSC_SAFE_RGB
+                                        | SOIL_FLAG_COMPRESS_TO_DXT);
     glChk();
     {
-        glBindTexture(GL_TEXTURE_2D, loading.handle);
+        glBindTexture(GL_TEXTURE_2D, loading);
         glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -355,7 +355,7 @@ void loadLoadingScreen() {
 }
 
 void renderLoadingScreen() {
-    if (loading.handle == 0) {
+    if (loading == 0) {
         info("Loading 'loading screen'.");
         loadLoadingScreen();
     }
@@ -372,7 +372,7 @@ void renderLoadingScreen() {
         gluOrtho2D(0.0, 1.0, 0.0, 1.0);
 
         glEnable(GL_TEXTURE_2D);
-        glBindTexture(GL_TEXTURE_2D, loading.handle);
+        glBindTexture(GL_TEXTURE_2D, loading);
         glChk();
 
         glMatrixMode(GL_MODELVIEW);
@@ -483,7 +483,7 @@ void mouseMotion(int x, int y) {
             } else {
                 radius = radius + fudge * dist.norm();
             }
-            radius = clamp(radius, 3.0f, 100.0f);
+            radius = clamp(radius, 3.0f, 1000.0f);
             activeCam->radius(radius);
             return;
         }

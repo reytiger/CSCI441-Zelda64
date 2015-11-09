@@ -89,6 +89,7 @@ void check_SOIL(const char *file, int line) {
     }
     error("%s:%d\t%s", file, line, err);
     trace();
+    abort();
 }
 
 static size_t check_helper_count = 0;
