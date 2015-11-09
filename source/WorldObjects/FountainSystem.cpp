@@ -9,6 +9,9 @@ void FountainSystem::internalDraw() const {
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, tex());
 
+    auto mat = this->material();
+    mat.emission(Color(1.0, 0.84, 0.0));
+    mat.set();
     ParticleSystem<Particle>::internalDraw();
 
     glDisable(GL_TEXTURE_2D);
@@ -31,10 +34,10 @@ void FountainSystem::drawParticle(const FountainSystem::Particle &self) const {
         auto tl = self.pos + halfsize * Vec(-1, +1);
         auto tr = self.pos + halfsize * Vec(+1, +1);
 
-        auto t_bl = self.uv + texsize * Vec(-1, -1);
-        auto t_br = self.uv + texsize * Vec(+1, -1);
-        auto t_tl = self.uv + texsize * Vec(-1, +1);
-        auto t_tr = self.uv + texsize * Vec(+1, +1);
+        auto t_bl = Vec(0.0, 0.0);
+        auto t_br = Vec(1.0, 0.0);
+        auto t_tl = Vec(0.0, 1.0);
+        auto t_tr = Vec(1.0, 1.0);
 
         glBegin(GL_QUADS);
 

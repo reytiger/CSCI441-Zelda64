@@ -21,8 +21,8 @@ FountainSystem incSpell;
 
 bool castingSpell = false;
 
-float vulHeight     = 45.0;
-float vulBaseRadius = 20.0;
+float vulHeight     = 50.0;
+float vulBaseRadius = 30.0;
 
 // Defines the menu options.
 // See handleRightClickMenu() and initRightClickMenu() for details.
@@ -50,20 +50,6 @@ void stopCasting(int) {
         drawn.erase(pos);
     }
     incSpell.clear();
-}
-
-void initVulcano(FountainSystem &volcano) {
-    vulSpout.material(Material::Brass);
-    // I have no idea why this is doubled. But it works.
-    vulSpout.moveTo(vulcano.pos());
-    vulSpout.moveToY(vulHeight - 1.0);
-
-    vulSpout.radius(0.5);
-
-    volcano.min_speed = 20.0f;                   // meters
-    volcano.max_speed = 2.0 * volcano.min_speed; // meters
-
-    volcano.tex(ember);
 }
 
 void initSpell(FountainSystem &spell) {
@@ -97,7 +83,7 @@ void updateScene(double t, double dt) {
     activeCam->update(t, dt);
     // activeCam->doWASDControls(25.0, keyPressed, true);
 
-    shaderDemo.attachUniform("time", t);
+    shaderDemo.attachUniform("time", 1000.0 + t);
 
     inc.moveTo(clamp(inc.pos(), Vec(-100, 0.5, -100), Vec(100, 0.5, 100)));
 
@@ -178,8 +164,13 @@ void initScene() {
             auto pos = vulcano.pos();
             glTranslatef(pos.x, pos.y, pos.z);
 
-            glRotatef(90.0f, -1, 0, 0);
-            gluCylinder(vulcano_body, vulBaseRadius, 3.0, vulHeight, 20, 20);
+            glRotatef(-90.0f, 1, 0, 0);
+            gluCylinder(vulcano_body,
+                        vulBaseRadius,
+                        vulBaseRadius / 4.0,
+                        vulHeight,
+                        20,
+                        20);
         });
 
         pushMatrixAnd([&]() {
@@ -188,7 +179,7 @@ void initScene() {
             glTranslatef(pos.x, pos.y, pos.z);
 
             glRotatef(90.0f, -1, 0, 0);
-            gluDisk(vulcano_top, 0, 3, 20, 1);
+            gluDisk(vulcano_top, 0, vulBaseRadius / 4.0, 20, 1);
         });
 
         glEndList();
@@ -196,7 +187,14 @@ void initScene() {
 
     // Vulcano Spout
     drawn.push_back(&vulSpout);
-    initVulcano(vulSpout);
+    vulSpout.material(Material::Brass);
+    vulSpout.follow(&vulcano);
+    vulSpout.moveToY(0.33 * vulHeight - 1.0);
+
+    vulSpout.min_speed = 20.0f;                    // meters
+    vulSpout.max_speed = 2.0 * vulSpout.min_speed; // meters
+
+    vulSpout.tex(ember);
 
     // Our Hero!
     drawn.push_back(&inc);
@@ -204,13 +202,15 @@ void initScene() {
         inc.doWASDControls(15.0, keyPressed, false);
     });
 
+    info("%s - %s", inc.pos(), vulSpout.pos());
+
     // His spell
     incSpell.follow(&inc);
     initSpell(incSpell);
 
     // Camera
     activeCam->follow(&inc);
-    activeCam->radius(50.0);
+    activeCam->radius(150.0);
 
     // Venus 1
     auto pt = model.getLocation();
@@ -265,7 +265,7 @@ void initTextures() {
     }
     glChk();
 
-    ember = SOIL_load_OGL_texture("assets/textures/ember.jpg",
+    ember = SOIL_load_OGL_texture("assets/textures/ember.png",
                                   SOIL_LOAD_AUTO,
                                   SOIL_CREATE_NEW_ID,
                                   SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y
