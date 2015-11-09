@@ -22,7 +22,7 @@
 
 #if has_include("SOIL.h")
 #include "SOIL.h"
-#elif has_include("SOIL/SOIL.h")
+#else
 #include "SOIL/SOIL.h"
 #endif
 
