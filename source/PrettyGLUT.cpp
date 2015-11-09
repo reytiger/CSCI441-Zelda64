@@ -286,7 +286,7 @@ void render() {
     glChk();
     shaderDemo.use();
     glChk();
-    model.draw();
+    venus.draw();
     glChk();
 
     ShaderProgram::useFFS();
@@ -294,10 +294,10 @@ void render() {
     glChk();
     Material::Pearl.set();
     pushMatrixAnd([]() {
-        glTranslatef(-50, 0, 50);
+        glTranslatef(-50, 0.0, 50);
         glScalef(3.0f, 3.0f, 3.0f);
         glRotatef(90, 0.0, 1.0, 0.0);
-        model2.draw();
+        temple.draw();
     });
     glChk();
 

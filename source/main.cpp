@@ -6,8 +6,8 @@
 CallListObject roomFloor;
 CallListObject vulcano;
 
-paone::Object model;
-paone::Object model2;
+paone::Object venus;
+paone::Object temple;
 PointLight light;
 
 Incallidus inc;
@@ -150,7 +150,7 @@ void initScene() {
 
     // Vulcano
     drawn.push_back(&vulcano);
-    vulcano.moveTo(-25, 0, -25);
+    vulcano.moveTo(-50, 0, -50);
     vulcano.material(Material::Obsidian);
 
     static auto vulcano_body = gluNewQuadric();
@@ -161,9 +161,6 @@ void initScene() {
         glDisable(GL_CULL_FACE);
 
         pushMatrixAnd([&]() {
-            auto pos = vulcano.pos();
-            glTranslatef(pos.x, pos.y, pos.z);
-
             glRotatef(-90.0f, 1, 0, 0);
             gluCylinder(vulcano_body,
                         vulBaseRadius,
@@ -174,10 +171,7 @@ void initScene() {
         });
 
         pushMatrixAnd([&]() {
-            auto pos = vulcano.pos();
-            pos.y += vulHeight - 0.25;
-            glTranslatef(pos.x, pos.y, pos.z);
-
+            glTranslatef(0.0f, vulHeight - 0.25f, 0.0f);
             glRotatef(90.0f, -1, 0, 0);
             gluDisk(vulcano_top, 0, vulBaseRadius / 4.0, 20, 1);
         });
@@ -187,9 +181,11 @@ void initScene() {
 
     // Vulcano Spout
     drawn.push_back(&vulSpout);
+    vulSpout.moveTo(vulcano.pos());
+    vulSpout.moveToY(vulHeight - 1.0);
+
     vulSpout.material(Material::Brass);
-    vulSpout.follow(&vulcano);
-    vulSpout.moveToY(0.33 * vulHeight - 1.0);
+    vulSpout.radius(0.5);
 
     vulSpout.min_speed = 20.0f;                    // meters
     vulSpout.max_speed = 2.0 * vulSpout.min_speed; // meters
@@ -213,17 +209,17 @@ void initScene() {
     activeCam->radius(150.0);
 
     // Venus 1
-    auto pt = model.getLocation();
+    auto pt = venus.getLocation();
     assert(pt);
-    pt->setY(6.7);
+    pt->setY(8.7);
     pt->setX(-50);
     pt->setZ(50);
-    model.loadObjectFile("assets/venus.obj");
+    venus.loadObjectFile("assets/venus.obj");
 
     // Venus 2
-    pt = model2.getLocation();
+    pt = temple.getLocation();
     assert(pt);
-    model2.loadObjectFile("assets/temple.obj");
+    temple.loadObjectFile("assets/temple.obj");
 }
 
 void initTextures() {

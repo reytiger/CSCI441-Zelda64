@@ -19,14 +19,11 @@ void FountainSystem::internalDraw() const {
 
 void FountainSystem::drawParticle(const FountainSystem::Particle &self) const {
     pushMatrixAnd([&self, this]() {
-        glTranslatef(self.pos.x, self.pos.y, self.pos.z);
+        glTranslatef(-self.pos.x, -self.pos.y, -self.pos.z);
 
         assert((max_life - min_life) != 0);
         // The 'radius' of the billboarded quad.
-        float halfsize = (self.lifetime - min_life) / (max_life - min_life);
-
-        // The 'radius' of the area sampled from the texture.
-        float texsize = 0.1;
+        float halfsize = radius() * (self.lifetime - min_life) / (max_life - min_life);
 
         // TODO: Make these Vec(+1, +1) into billboarding vectors!
         auto bl = self.pos + halfsize * Vec(-1, -1);

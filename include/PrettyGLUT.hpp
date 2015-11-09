@@ -18,8 +18,8 @@ extern FreeCamera freecam;
 
 extern Camera *activeCam;
 
-extern paone::Object model;
-extern paone::Object model2;
+extern paone::Object venus;
+extern paone::Object temple;
 
 extern double live_fps;
 extern double live_frametime;
