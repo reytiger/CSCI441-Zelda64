@@ -38,10 +38,6 @@ void FountainSystem::update(double t, double dt) {
             p.pos = this->pos();
             p.vel = this->vel();
 
-            if (p.vel != Vec()) {
-                info("%s", p.vel);
-            }
-
             // VecPolar uses Radians. I lost an hour because I forgot this. ._.
             auto theta = PI / 180.0f * getRand(min_cone_theta, max_cone_theta);
             auto phi   = PI / 180.0f * getRand(min_cone_phi, max_cone_phi);
