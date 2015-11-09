@@ -8,5 +8,5 @@ void main() {
     pos.x += 0.5 * cos(0.17 * time * pos.z);
 
     gl_Position = pos;
-    color = vec4(gl_Normal, 1.0);
+    color       = vec4(gl_Normal, 1.0);
 }
