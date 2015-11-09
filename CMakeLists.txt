@@ -80,6 +80,8 @@ if (CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_CLANGXX)
       # Clang doesn't support this.
       add_compile_options("-fmax-errors=5")
     endif()
+    # This doesn't work on older versions of GCC. Instead, they error.
+    add_compile_options("-fdiagnostics-color")
 
     # Warnings to turn ON
     add_compile_options("-Wall")
