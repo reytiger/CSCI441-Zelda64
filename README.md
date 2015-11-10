@@ -12,9 +12,7 @@ Bugs:
     The ground is still rendered as a single quad, without fragment shader
         lighting, lighting doesn't show up on it.
 
-    TODO: control file
-
-    TODO: Test build on Lab machines
+    Something is causing a GL_INVALID_OPERATION and I'm not sure what. Stuff works.
 
 Features:
     The vulcano, the statue, and the temple all share a shader - an unmodified "Wiggly".

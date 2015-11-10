@@ -1,7 +1,7 @@
 #include "PrettyGLUT.hpp"
 #include "WorldObjects.hpp"
 
-#include <array>
+#include <fstream>
 
 CallListObject roomFloor;
 CallListObject vulcano;
@@ -37,6 +37,17 @@ enum MenuOpt {
     Quit,
 };
 
+// Returns a copy of 'str' with leading and trailing whitespace removed.
+std::string trim(std::string str) {
+    auto pred = std::ptr_fun<int, int>(std::isspace);
+    // From the left.
+    str.erase(str.begin(), std::find_if_not(str.begin(), str.end(), pred));
+    // From the right.
+    str.erase(std::find_if_not(str.rbegin(), str.rend(), pred).base(),
+              str.end());
+    return str;
+}
+
 void startCasting() {
     castingSpell = true;
     drawn.push_back(&incSpell);
@@ -52,24 +63,134 @@ void stopCasting(int) {
     incSpell.clear();
 }
 
-void initSpell(FountainSystem &spell) {
-    spell.radius(0.05);
+void initParticleSystems(const std::string filename) {
+    std::ifstream file;
+    file.open(filename);
+    if (!file) {
+        error("Unable to load '%s'", filename);
+        glChk();
+        abort();
+    }
 
-    spell.min_cone_theta = -10.0f; // degrees
-    spell.max_cone_theta = 10.0f;  // degrees
+    size_t fountainCount = 0;
 
-    spell.min_cone_phi = -10; // degrees
-    spell.max_cone_phi = 10;  // degrees
+    std::string line;
+    size_t lineno = 0;
+    while (std::getline(file, line)) {
+        lineno += 1;
 
-    spell.min_speed = 10.0f; // meters
-    spell.max_speed = 20.0f; // meters
+        line = trim(line);
+        // Skip empty or commented lines.
+        if (line.empty() || line.front() == '#') {
+            continue;
+        } else if (line.front() == 'F') {
+            line.erase(line.begin());
+            line = trim(line);
 
-    spell.min_life = 0.5f; // seconds
-    spell.max_life = 1.0f; // seconds
+            // Fountain
+            std::stringstream ss;
+            ss << line;
 
-    spell.spawn_rate = 5000.0f; // particles per second
+            size_t entry = 0;
 
-    spell.gravity = false;
+#define chk()                                                                  \
+    entry += 1;                                                                \
+    if (!ss) {                                                                 \
+        error("\nBad formatting in '%s':%s:%s: \"%s\"",                        \
+              filename,                                                        \
+              lineno,                                                          \
+              entry,                                                           \
+              line);                                                           \
+        abort();                                                               \
+    }
+
+            // The format is pretty straight forward.
+            // Read in the same order which they were declared in.
+
+            // degrees
+            float min_cone_theta = 0.0f;
+            ss >> min_cone_theta;
+            chk();
+
+            // degrees
+            float max_cone_theta = 0.0f;
+            ss >> max_cone_theta;
+            chk();
+
+            // degrees
+            float min_cone_phi = 0.0f;
+            ss >> min_cone_phi;
+            chk();
+
+            // degrees
+            float max_cone_phi = 0.0f;
+            ss >> max_cone_phi;
+            chk();
+
+            // meters
+            float min_speed = 0.0f;
+            ss >> min_speed;
+            chk();
+
+            // meters
+            float max_speed = 0.0f;
+            ss >> max_speed;
+            chk();
+
+            // seconds
+            float min_life = 0.0f;
+            ss >> min_life;
+            chk();
+
+            // seconds
+            float max_life = 0.0f;
+            ss >> max_life;
+            chk();
+
+            // particles per second
+            float spawn_rate = 0.0f;
+            ss >> spawn_rate;
+            chk();
+
+            // Do the particles in the system react to gravity?
+            bool gravity = true;
+            ss >> gravity;
+            chk();
+
+            FountainSystem *fountain = nullptr;
+
+            fountainCount += 1;
+            if (fountainCount == 1) {
+                info("Loading vulcano spout.");
+                fountain = &vulSpout;
+            } else if (fountainCount == 2) {
+                info("Loading Incallidus's spell.");
+                fountain = &incSpell;
+            } else {
+                warn("More than 2 fountains found. "
+                     "I don't know what to do with them.");
+                continue;
+            }
+
+            fountain->min_cone_theta = min_cone_theta;
+            fountain->max_cone_theta = max_cone_theta;
+            fountain->min_cone_phi   = min_cone_phi;
+            fountain->max_cone_phi   = max_cone_phi;
+            fountain->min_speed      = min_speed;
+            fountain->max_speed      = max_speed;
+            fountain->min_life       = min_life;
+            fountain->max_life       = max_life;
+            fountain->spawn_rate     = spawn_rate;
+            fountain->gravity        = gravity;
+
+        } else {
+            // Unsupported type.
+            warn("Unsupported type '%s' found in '%s':%s. Skipping.",
+                 line.front(),
+                 filename,
+                 lineno);
+        }
+    }
 }
 
 // This function is expected by PrettyGLUT, because I designed it to get
@@ -191,15 +312,6 @@ void initScene() {
 
     vulSpout.material(Material::Brass);
     vulSpout.radius(0.5);
-
-    vulSpout.min_speed = 20.0f;                    // meters
-    vulSpout.max_speed = 2.0 * vulSpout.min_speed; // meters
-
-    vulSpout.min_life = 7.0f; // seconds
-    vulSpout.max_life = 8.0f; // seconds
-
-    vulSpout.spawn_rate = 750.0f; // particles per second.
-
     vulSpout.tex(ember);
 
     // Our Hero!
@@ -210,7 +322,7 @@ void initScene() {
 
     // His spell
     incSpell.follow(&inc);
-    initSpell(incSpell);
+    incSpell.radius(0.05);
 
     // Camera
     activeCam->follow(&inc);
@@ -290,7 +402,6 @@ void initTextures() {
 }
 
 void initShaders() {
-
     // Venus
     {
         Shader vert;
@@ -324,7 +435,6 @@ void initShaders() {
         incSpell.program = prog;
     }
 
-
     glChk();
 }
 
@@ -337,6 +447,18 @@ int main(int argc, char **argv) {
     printOpenGLInformation();
 
     initShaders();
+
+    std::string controlfile;
+    if (argc != 2) {
+        controlfile = "assets/control/particle.txt";
+        info("Usage: %s filename\nUsing default filename='%s'",
+             argv[0],
+             controlfile);
+    } else {
+        controlfile = argv[1];
+    }
+
+    initParticleSystems(controlfile);
 
     initTextures();
     initScene();
