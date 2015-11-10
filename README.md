@@ -5,14 +5,25 @@ Bugs:
     Controls of the hero are wonky. Heading isn't taken into account, so they're
     a little counter-intuitive.
 
+    Incallidus doesn't have a shader, or texture, so he inherits from whatever.
+
+    The particles do not billboard and do not support transparent textures.
+
+    The ground is still rendered as a single quad, without fragment shader
+        lighting, lighting doesn't show up on it.
+
+    TODO: control file
+
+    TODO: Test build on Lab machines
+
 Features:
-    I have four shaders under glsl:
-        The 2 standard pass-through shaders
-        A vertex shader which passes normals as the color
-        A fragment shader which reverses the depth of things, which I have
-            affectionately named "Wallhax".
+    The vulcano, the statue, and the temple all share a shader - an unmodified "Wiggly".
+        This also means they ignore lighting.
 
-    Any pairing of the above (1 vertex, 1 fragment) should work.
+    A vulcano! The 'embers', which are really flowers, darken as they
+        'cool' and expire. They fall and bounce with gravity.
 
-    I tried to get the Z-buffer to render, but it needs to be linearized
-        apparently, and that's hard to do without uniforms.
+    Press the Space Bar to cast Incallidus's spell! The particles move with him,
+        so if you press it while he's running, they will continue to move
+        when you stop.
+        They are short lived and follow the same rules as the vulcano.

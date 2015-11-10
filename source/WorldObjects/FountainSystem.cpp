@@ -26,7 +26,8 @@ void FountainSystem::drawParticle(const FountainSystem::Particle &self) const {
     // This is set in updateScene to mimic the camera.
     auto norm = up().cross(lookDir());
 
-    // This is where I'd do the computations for billboarding, using the above norm.
+    // This is where I'd do the computations for billboarding, using the above
+    // norm.
     // But I mismanaged my time and am in a rush.
     // :(
 

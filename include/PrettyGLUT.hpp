@@ -27,7 +27,7 @@ extern int live_frames;
 
 // Display settings.
 // For more detailed settings, see initGLUT in PrettyGLUT.cpp.
-constexpr const char *windowTitle = "Do you actually read these?";
+constexpr const char *windowTitle = "Pompeii! Oh noooo!";
 
 constexpr float FOV = 60.0;
 
