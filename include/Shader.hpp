@@ -34,7 +34,8 @@ public:
         assert(m_handle != -1);
         return m_handle;
     }
-    void link(const Shader &vert, const Shader &frag);
+    void attach(const Shader &vert, const Shader &frag);
+    void link();
 
     void use() const { glUseProgram(handle()); }
     void usingProgram(std::function<void(const ShaderProgram &)> code);

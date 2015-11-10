@@ -55,6 +55,8 @@ GLint ShaderProgram::getAttribLocation(const std::string &name) const {
     }
 
     auto loc = glGetAttribLocation(handle(), name.c_str());
+    glChk();
+    assert(loc != 0);
 
     m_attribs[name] = loc;
     return loc;
@@ -107,13 +109,15 @@ GLint ShaderProgram::getUniformLocation(const std::string &name) const {
     return loc;
 }
 
-void ShaderProgram::link(const Shader &vert, const Shader &frag) {
+void ShaderProgram::attach(const Shader &vert, const Shader &frag) {
     glAttachShader(handle(), vert.handle());
     glChk();
 
     glAttachShader(handle(), frag.handle());
     glChk();
+}
 
+void ShaderProgram::link() {
     glLinkProgram(handle());
     glChk();
 
@@ -132,17 +136,6 @@ void ShaderProgram::link(const Shader &vert, const Shader &frag) {
 
         glDeleteShader(handle());
         m_handle = -1;
-
-        glDeleteProgram(handle());
-        glDeleteShader(vert.handle());
-        glDeleteShader(frag.handle());
     }
-    glChk();
-
-    // Always detach shaders after a successful link.
-    glDetachShader(handle(), vert.handle());
-    glChk();
-
-    glDetachShader(handle(), frag.handle());
     glChk();
 }

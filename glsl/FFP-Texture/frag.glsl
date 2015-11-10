@@ -83,5 +83,4 @@ void main(void) {
 
     // compute the modulated resulting color
     gl_FragColor = vec4(ct * cf, at * af);
-    gl_FragColor.rgb *= lifespan;
 }

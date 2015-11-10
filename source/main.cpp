@@ -296,7 +296,8 @@ void initShaders() {
         frag.loadFromFile("glsl/pass_through.f.glsl", GL_FRAGMENT_SHADER);
 
         wigglyShader.create();
-        wigglyShader.link(vert, frag);
+        wigglyShader.attach(vert, frag);
+        wigglyShader.link();
     }
 
     // Vulcano
@@ -307,8 +308,16 @@ void initShaders() {
         Shader frag;
         frag.loadFromFile("glsl/FFP-Texture/frag.glsl", GL_FRAGMENT_SHADER);
 
-        vulSpout.program.create();
-        vulSpout.program.link(vert, frag);
+        ShaderProgram prog;
+        prog.create();
+        prog.attach(vert, frag);
+
+        glBindAttribLocation(prog.handle(), 20, "a_lifespan");
+
+        prog.link();
+
+        vulSpout.program = prog;
+        incSpell.program = prog;
     }
 
 

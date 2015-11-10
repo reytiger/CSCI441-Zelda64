@@ -13,6 +13,7 @@ varying vec3 halfwayVec;
 varying float attenuation;
 varying float lifespan;
 
+// The ratio of its life remaining.
 attribute float a_lifespan;
 
 void main() {
@@ -20,10 +21,9 @@ void main() {
     /*****************************************/
     /********* Vertex Calculations  **********/
     /*****************************************/
-    lifespan = a_lifespan;
 
     vec4 pos = gl_Vertex;
-    pos.xyz *= lifespan;
+    pos.xyz *= a_lifespan;
 
     // first things, first: set gl_Position equal to the vertex in clip space
     gl_Position = gl_ModelViewProjectionMatrix * pos;

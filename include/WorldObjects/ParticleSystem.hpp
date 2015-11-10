@@ -9,7 +9,7 @@
 template <typename Particle>
 class ParticleSystem : public WorldObject {
 public:
-    virtual void internalDraw() const override;
+    virtual void internalDraw() const override = 0;
 
     virtual void drawParticle(const Particle &particle) const = 0;
 
@@ -22,12 +22,3 @@ public:
 protected:
     std::vector<Particle> m_particles;
 };
-
-template <typename Particle>
-void ParticleSystem<Particle>::internalDraw() const {
-    program.use();
-
-    for (const auto &particle : this->m_particles) {
-        drawParticle(particle);
-    }
-}

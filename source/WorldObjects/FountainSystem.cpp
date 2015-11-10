@@ -12,44 +12,50 @@ void FountainSystem::internalDraw() const {
     auto mat = this->material();
     mat.emission(Color(1.0, 0.84, 0.0));
     mat.set();
-    ParticleSystem<Particle>::internalDraw();
+    program.use();
+    ShaderProgram::useFFS();
+
+    for (const auto &particle : this->m_particles) {
+        drawParticle(particle);
+    }
 
     glDisable(GL_TEXTURE_2D);
 }
 
 void FountainSystem::drawParticle(const FountainSystem::Particle &self) const {
     pushMatrixAnd([&self, this]() {
-        glTranslatef(-self.pos.x, -self.pos.y, -self.pos.z);
-
-        assert((max_life - min_life) != 0);
-        // The 'radius' of the billboarded quad.
-        float halfsize
-            = radius() * (self.lifetime - min_life) / (max_life - min_life);
+        // glTranslatef(-self.pos.x, -self.pos.y, -self.pos.z);
 
         // TODO: Make these Vec(+1, +1) into billboarding vectors!
-        auto bl = self.pos + halfsize * Vec(-1, -1);
-        auto br = self.pos + halfsize * Vec(+1, -1);
-        auto tl = self.pos + halfsize * Vec(-1, +1);
-        auto tr = self.pos + halfsize * Vec(+1, +1);
+        auto bl = self.pos + radius() * Vec(-1, -1);
+        auto br = self.pos + radius() * Vec(+1, -1);
+        auto tl = self.pos + radius() * Vec(-1, +1);
+        auto tr = self.pos + radius() * Vec(+1, +1);
 
         auto t_bl = Vec(0.0, 0.0);
         auto t_br = Vec(1.0, 0.0);
         auto t_tl = Vec(0.0, 1.0);
         auto t_tr = Vec(1.0, 1.0);
 
+        assert((max_life - min_life) != 0);
+        float lifespan = (self.lifetime - min_life) / (max_life - min_life);
+
         glBegin(GL_QUADS);
 
+        glVertexAttrib1f(20, lifespan);
+        glChk();
+
         glTexCoord2f(t_bl.x, t_bl.y);
-        glVertex4f(bl.x, bl.y, bl.z, 0.5);
+        glVertex3f(bl.x, bl.y, bl.z);
 
         glTexCoord2f(t_br.x, t_br.y);
-        glVertex4f(br.x, br.y, br.z, 0.5);
+        glVertex3f(br.x, br.y, br.z);
 
         glTexCoord2f(t_tr.x, t_tr.y);
-        glVertex4f(tr.x, tr.y, tr.z, 0.5);
+        glVertex3f(tr.x, tr.y, tr.z);
 
         glTexCoord2f(t_tl.x, t_tl.y);
-        glVertex4f(tl.x, tl.y, tl.z, 0.5);
+        glVertex3f(tl.x, tl.y, tl.z);
 
         glEnd();
     });
@@ -60,6 +66,8 @@ void FountainSystem::update(double t, double dt) {
     // Step 1: Clean out the existing points that have died.
 
     // Order them by first-to-die.
+    std::vector<FountainSystem::Particle> next_particles;
+
     std::sort(std::begin(m_particles),
               std::end(m_particles),
               [&dt](const FountainSystem::Particle &lhs,
