@@ -278,7 +278,9 @@ void render() {
     });
 
     ShaderProgram::useFFS();
+    glChk();
     for (WorldObject *wo : drawn) {
+        glChk();
         wo->draw();
         glChk();
     }

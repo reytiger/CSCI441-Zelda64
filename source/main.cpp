@@ -310,7 +310,6 @@ void initScene() {
     vulSpout.moveTo(vulcano.pos());
     vulSpout.moveToY(vulHeight - 1.0);
 
-    vulSpout.material(Material::Brass);
     vulSpout.radius(0.5);
     vulSpout.tex(ember);
 
@@ -323,6 +322,9 @@ void initScene() {
     // His spell
     incSpell.follow(&inc);
     incSpell.radius(0.05);
+    // Incallidus spits out flowers too. Of love. Magic love fowers.
+    // Why yes, Incallidus did enjoy the 60s, why do you ask?
+    incSpell.tex(ember);
 
     // Camera
     activeCam->follow(&inc);
@@ -450,7 +452,7 @@ int main(int argc, char **argv) {
 
     std::string controlfile;
     if (argc != 2) {
-        controlfile = "assets/control/particle.txt";
+        controlfile = "assets/control/particle2.txt";
         info("Usage: %s filename\nUsing default filename='%s'",
              argv[0],
              controlfile);
