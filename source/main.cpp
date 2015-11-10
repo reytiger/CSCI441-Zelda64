@@ -307,10 +307,10 @@ void initShaders() {
     // Vulcano
     {
         Shader vert;
-        vert.loadFromFile("glsl/FFP-Texture/vert.glsl", GL_VERTEX_SHADER);
+        vert.loadFromFile("glsl/Fountain/vert.glsl", GL_VERTEX_SHADER);
 
         Shader frag;
-        frag.loadFromFile("glsl/FFP-Texture/frag.glsl", GL_FRAGMENT_SHADER);
+        frag.loadFromFile("glsl/Fountain/frag.glsl", GL_FRAGMENT_SHADER);
 
         ShaderProgram prog;
         prog.create();
