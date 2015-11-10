@@ -22,7 +22,14 @@ void FountainSystem::internalDraw() const {
 }
 
 void FountainSystem::drawParticle(const FountainSystem::Particle &self) const {
-    // TODO: Make these Vec(+1, +1) into billboarding vectors!
+
+    // This is set in updateScene to mimic the camera.
+    auto norm = up().cross(lookDir());
+
+    // This is where I'd do the computations for billboarding, using the above norm.
+    // But I mismanaged my time and am in a rush.
+    // :(
+
     auto bl = self.pos + radius() * Vec(-1, -1);
     auto br = self.pos + radius() * Vec(+1, -1);
     auto tl = self.pos + radius() * Vec(-1, +1);

@@ -83,6 +83,9 @@ void updateScene(double t, double dt) {
     activeCam->update(t, dt);
     // activeCam->doWASDControls(25.0, keyPressed, true);
 
+    // Tell the fountains where to 'look' - same as the camera.
+    vulSpout.lookInDir(activeCam->lookDir());
+
     wigglyShader.attachUniform("time", 1000.0 + t);
 
     inc.moveTo(clamp(inc.pos(), Vec(-100, 0.5, -100), Vec(100, 0.5, 100)));
