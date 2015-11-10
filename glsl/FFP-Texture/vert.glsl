@@ -15,14 +15,7 @@ attribute float a_lifespan;
 void main() {
     v_lifespan = a_lifespan;
 
-    // compute the camera vector in eye space
-    vec3 cameraVec
-        = normalize(vec3(gl_ModelViewMatrixInverse * vec4(0.0, 0.0, 0.0, 1.0))
-                    - gl_Vertex.xyz);
-    vec4 pos = gl_Vertex;
-    // rotate them!
-
-    gl_Position = gl_ModelViewProjectionMatrix * pos;
+    gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;
 
     // pass the texture coordinate through to the fragment processor
     gl_TexCoord[0] = gl_MultiTexCoord0;

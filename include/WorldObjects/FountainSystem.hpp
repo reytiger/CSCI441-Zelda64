@@ -5,9 +5,9 @@
 
 namespace Internal {
 struct FountainParticle {
-    Vec pos;               // meters
-    Vec vel;               // meters / second
-    float lifetime = 10.0; // seconds
+    Vec pos;              // meters
+    Vec vel;              // meters / second
+    float lifetime = 0.0; // seconds
 };
 };
 
