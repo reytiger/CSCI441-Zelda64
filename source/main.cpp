@@ -192,6 +192,7 @@ void initScene() {
     vulSpout.min_speed = 20.0f;                    // meters
     vulSpout.max_speed = 2.0 * vulSpout.min_speed; // meters
 
+    vulSpout.min_life = 7.0f; // seconds
     vulSpout.max_life = 8.0f; // seconds
 
     vulSpout.spawn_rate = 750.0f; // particles per second.

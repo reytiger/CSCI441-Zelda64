@@ -8,57 +8,51 @@ const double FountainSystem::s_dampen  = 0.45;
 void FountainSystem::internalDraw() const {
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, tex());
-
-    auto mat = this->material();
-    mat.emission(Color(1.0, 0.84, 0.0));
-    mat.set();
+    glDisable(GL_LIGHTING);
     program.use();
-    ShaderProgram::useFFS();
 
     for (const auto &particle : this->m_particles) {
         drawParticle(particle);
     }
 
+    glEnable(GL_LIGHTING);
     glDisable(GL_TEXTURE_2D);
 }
 
 void FountainSystem::drawParticle(const FountainSystem::Particle &self) const {
-    pushMatrixAnd([&self, this]() {
-        // glTranslatef(-self.pos.x, -self.pos.y, -self.pos.z);
+    // TODO: Make these Vec(+1, +1) into billboarding vectors!
+    auto bl = self.pos + radius() * Vec(-1, -1);
+    auto br = self.pos + radius() * Vec(+1, -1);
+    auto tl = self.pos + radius() * Vec(-1, +1);
+    auto tr = self.pos + radius() * Vec(+1, +1);
 
-        // TODO: Make these Vec(+1, +1) into billboarding vectors!
-        auto bl = self.pos + radius() * Vec(-1, -1);
-        auto br = self.pos + radius() * Vec(+1, -1);
-        auto tl = self.pos + radius() * Vec(-1, +1);
-        auto tr = self.pos + radius() * Vec(+1, +1);
+    auto t_bl = Vec(0.0, 0.0);
+    auto t_br = Vec(1.0, 0.0);
+    auto t_tl = Vec(0.0, 1.0);
+    auto t_tr = Vec(1.0, 1.0);
 
-        auto t_bl = Vec(0.0, 0.0);
-        auto t_br = Vec(1.0, 0.0);
-        auto t_tl = Vec(0.0, 1.0);
-        auto t_tr = Vec(1.0, 1.0);
+    assert((max_life - min_life) != 0);
+    float lifespan = (self.lifetime - min_life) / (max_life - min_life);
+    lifespan       = clamp(lifespan, 0.0f, 1.0f);
 
-        assert((max_life - min_life) != 0);
-        float lifespan = (self.lifetime - min_life) / (max_life - min_life);
+    glBegin(GL_QUADS);
 
-        glBegin(GL_QUADS);
+    glVertexAttrib1f(20, lifespan);
+    glChk();
 
-        glVertexAttrib1f(20, lifespan);
-        glChk();
+    glTexCoord2f(t_bl.x, t_bl.y);
+    glVertex3f(bl.x, bl.y, bl.z);
 
-        glTexCoord2f(t_bl.x, t_bl.y);
-        glVertex3f(bl.x, bl.y, bl.z);
+    glTexCoord2f(t_br.x, t_br.y);
+    glVertex3f(br.x, br.y, br.z);
 
-        glTexCoord2f(t_br.x, t_br.y);
-        glVertex3f(br.x, br.y, br.z);
+    glTexCoord2f(t_tr.x, t_tr.y);
+    glVertex3f(tr.x, tr.y, tr.z);
 
-        glTexCoord2f(t_tr.x, t_tr.y);
-        glVertex3f(tr.x, tr.y, tr.z);
+    glTexCoord2f(t_tl.x, t_tl.y);
+    glVertex3f(tl.x, tl.y, tl.z);
 
-        glTexCoord2f(t_tl.x, t_tl.y);
-        glVertex3f(tl.x, tl.y, tl.z);
-
-        glEnd();
-    });
+    glEnd();
 }
 
 void FountainSystem::update(double t, double dt) {
@@ -95,8 +89,6 @@ void FountainSystem::update(double t, double dt) {
             // The center of output is the center of the FountainSystem.
             p.pos = this->pos();
             p.vel = this->vel();
-
-            p.uv = Vec(getRand(), getRand());
 
             // VecPolar uses Radians. I lost an hour because I forgot this. ._.
             auto theta = PI / 180.0f * getRand(min_cone_theta, max_cone_theta);

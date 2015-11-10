@@ -7,61 +7,23 @@
 
 #version 120
 
-varying vec3 normalVec;
-varying vec3 lightVec;
-varying vec3 halfwayVec;
-varying float attenuation;
-varying float lifespan;
+varying float v_lifespan;
 
 // The ratio of its life remaining.
 attribute float a_lifespan;
 
 void main() {
-
-    /*****************************************/
-    /********* Vertex Calculations  **********/
-    /*****************************************/
-
-    vec4 pos = gl_Vertex;
-    pos.xyz *= a_lifespan;
-
-    // first things, first: set gl_Position equal to the vertex in clip space
-    gl_Position = gl_ModelViewProjectionMatrix * pos;
-
-    /*****************************************/
-    /********* Texture Calculations  *********/
-    /*****************************************/
-
-    // pass the texture coordinate through to the fragment processor
-    gl_TexCoord[0] = gl_MultiTexCoord0;
-
-    /*****************************************/
-    /*********  Vector Calculations  *********/
-    /*****************************************/
-
-    // compute our normal vector in eye space
-    normalVec = normalize(gl_NormalMatrix * gl_Normal);
-
-    // compute the light vector in eye space
-    lightVec
-        = gl_LightSource[0].position.xyz - (gl_ModelViewMatrix * gl_Vertex).xyz;
-
-    // compute the distance from the point to the light and compute attenuation
-    float dist = length(lightVec);
-    attenuation
-        = 1.0 / (gl_LightSource[0].constantAttenuation
-                 + gl_LightSource[0].linearAttenuation * dist
-                 + gl_LightSource[0].quadraticAttenuation * dist * dist);
-
-    // now normalize our vector after we've used the magnitude for the distance
-    lightVec = normalize(lightVec);
+    v_lifespan = a_lifespan;
 
     // compute the camera vector in eye space
     vec3 cameraVec
         = normalize(vec3(gl_ModelViewMatrixInverse * vec4(0.0, 0.0, 0.0, 1.0))
                     - gl_Vertex.xyz);
+    vec4 pos = gl_Vertex;
+    // rotate them!
 
-    // compute the halfway vector between the light and camera vectors, used for
-    // specular highlighting
-    halfwayVec = normalize(lightVec + cameraVec);
+    gl_Position = gl_ModelViewProjectionMatrix * pos;
+
+    // pass the texture coordinate through to the fragment processor
+    gl_TexCoord[0] = gl_MultiTexCoord0;
 }
