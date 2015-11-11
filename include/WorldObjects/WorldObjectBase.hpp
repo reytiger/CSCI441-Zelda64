@@ -1,6 +1,7 @@
 #pragma once
 #include "Utils.hpp"
 
+#include "Shader.hpp"
 #include "Material.hpp"
 
 #include <functional>
@@ -85,6 +86,9 @@ public:
     float radius() const { return m_radius; }
     void radius(float rad) { m_radius = rad; }
 
+    ShaderProgram shader() { return m_shader; }
+    void shader(const ShaderProgram &shader) { m_shader = shader; }
+
     Material material() const { return m_material; }
     void material(const Material &mat) { m_material = mat; }
 
@@ -110,7 +114,8 @@ protected:
     // m_arc.r isn't used and should be assumed 1.0.
     VecPolar m_arc;
 
-    Material m_material = Material::WhiteRubber;
+    Material m_material;
+    ShaderProgram m_shader;
 
     float m_radius = 1.0;
     float m_height = 0.0;

@@ -9,8 +9,6 @@ void FountainSystem::internalDraw() const {
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, tex());
     glDisable(GL_LIGHTING);
-
-    program.use();
     glChk();
 
     for (const auto &particle : this->m_particles) {
@@ -22,7 +20,6 @@ void FountainSystem::internalDraw() const {
 }
 
 void FountainSystem::drawParticle(const FountainSystem::Particle &self) const {
-
     // This is set in updateScene to mimic the camera.
     // auto norm = up().cross(lookDir());
 

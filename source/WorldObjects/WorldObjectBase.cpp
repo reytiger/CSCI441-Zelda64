@@ -28,6 +28,7 @@ void WorldObject::follow(WorldObject *wo) {
 void WorldObject::draw() const {
     if (this->visible()) {
         m_material.set();
+        m_shader.use();
         this->internalDraw();
     }
 }

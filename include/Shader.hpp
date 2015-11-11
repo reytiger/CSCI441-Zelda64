@@ -34,6 +34,7 @@ public:
         assert(m_handle != -1);
         return m_handle;
     }
+
     void attach(const Shader &vert, const Shader &frag);
     void link();
 

@@ -115,6 +115,7 @@ void resize(int w, int h) {
 }
 
 void renderSkybox() {
+    ShaderProgram::useFFS();
 // Coordinates for each face of the skybox within the skybox texture.
 // "Forward" is the leftmost square in the texture and "bottom" is the one
 // immediately to the right.
@@ -270,14 +271,12 @@ void render() {
 
     activeCam->adjustGLU();
 
-    ShaderProgram::useFFS();
     pushMatrixAnd([&]() {
         auto scale = 1000.0f;
         glScalef(scale, scale, scale);
         renderSkybox();
     });
 
-    ShaderProgram::useFFS();
     glChk();
     for (WorldObject *wo : drawn) {
         glChk();

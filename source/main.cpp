@@ -226,10 +226,13 @@ void updateScene(double t, double dt) {
 void initScene() {
     glLightModelfv(GL_LIGHT_MODEL_AMBIENT, Color(1.0, 1.0, 1.0).v);
 
+    // Global constructors do weird things.
+    inc = Incallidus();
+
     drawn.push_back(&light);
     light.enable();
 
-    light.moveToY(50.0);
+    light.moveToY(5.0);
 
     light.setUpdateFunc([&](double t, double /*dt*/) {
         t /= 5.0;
@@ -244,7 +247,6 @@ void initScene() {
     roomFloor = CallListObject([&](GLuint dl) {
         glNewList(dl, GL_COMPILE);
 
-        Material().set();
         glEnable(GL_TEXTURE_2D);
         glEnable(GL_CULL_FACE);
         glBindTexture(GL_TEXTURE_2D, grass);
@@ -277,7 +279,7 @@ void initScene() {
     // Vulcano
     drawn.push_back(&vulcano);
     vulcano.moveTo(-50, 0, -50);
-    vulcano.material(Material::Obsidian);
+    vulcano.shader(wigglyShader);
 
     static auto vulcano_body = gluNewQuadric();
     static auto vulcano_top  = gluNewQuadric();
@@ -285,8 +287,6 @@ void initScene() {
     vulcano = CallListObject([&](GLuint dl) {
         glNewList(dl, GL_COMPILE);
         glDisable(GL_CULL_FACE);
-
-        wigglyShader.use();
 
         pushMatrixAnd([&]() {
             glRotatef(-90.0f, 1, 0, 0);
@@ -449,6 +449,22 @@ void initShaders() {
 
         vulSpout.program = prog;
         incSpell.program = prog;
+    }
+
+    // Lit planes - like the ground!
+    {
+        Shader vert;
+        vert.loadFromFile("glsl/Ground/vert.glsl", GL_VERTEX_SHADER);
+
+        Shader frag;
+        frag.loadFromFile("glsl/Ground/frag.glsl", GL_FRAGMENT_SHADER);
+
+        ShaderProgram prog;
+        prog.create();
+        prog.attach(vert, frag);
+        prog.link();
+
+        roomFloor.shader(prog);
     }
 
     glChk();
