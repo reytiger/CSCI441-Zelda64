@@ -19,6 +19,8 @@ Texture ember;
 FountainSystem vulSpout;
 FountainSystem incSpell;
 
+Incallidus enemies[2];
+
 bool castingSpell = false;
 
 float vulHeight     = 50.0;
@@ -318,6 +320,18 @@ void initScene() {
     inc.setUpdateFunc([&](double /*t*/, double /*dt*/) {
         inc.doWASDControls(25.0, keyPressed, false);
     });
+
+    // His enemies!
+    for (auto &enemy : enemies) {
+        drawn.push_back(&enemy);
+
+        auto pos = 50 * Vec(getRand(), getRand(), getRand());
+        enemy.moveTo(pos);
+        enemy.setUpdateFunc([&](double /*t*/, double /*dt*/) {
+            auto displacement = (inc.pos() - enemy.pos()).normalize();
+            enemy.vel(18.0f * displacement);
+        });
+    }
 
     // His spell
     incSpell.follow(&inc);

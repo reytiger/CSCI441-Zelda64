@@ -77,6 +77,8 @@ public:
     Vec vel() const { return m_vel; }
     Vec up() const { return m_up; }
 
+    void vel(const Vec &vel) { m_vel = vel; }
+
     void follow(WorldObject *wo);
     void setUpdateFunc(UpdateFunc func) { m_update = func; }
 
