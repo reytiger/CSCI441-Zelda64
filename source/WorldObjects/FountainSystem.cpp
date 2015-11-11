@@ -11,12 +11,16 @@ void FountainSystem::internalDraw() const {
     glDisable(GL_LIGHTING);
     glChk();
 
+    glChk();
     for (const auto &particle : this->m_particles) {
+        glChk();
         drawParticle(particle);
+        glChk();
     }
 
     glEnable(GL_LIGHTING);
     glDisable(GL_TEXTURE_2D);
+    glChk();
 }
 
 void FountainSystem::drawParticle(const FountainSystem::Particle &self) const {
@@ -41,10 +45,10 @@ void FountainSystem::drawParticle(const FountainSystem::Particle &self) const {
     assert((max_life - min_life) != 0);
     float lifespan = self.lifetime / max_life;
 
+    glChk();
     glBegin(GL_QUADS);
 
     glVertexAttrib1f(20, lifespan);
-    glChk();
 
     glTexCoord2f(t_bl.x, t_bl.y);
     glVertex3f(bl.x, bl.y, bl.z);
@@ -59,6 +63,7 @@ void FountainSystem::drawParticle(const FountainSystem::Particle &self) const {
     glVertex3f(tl.x, tl.y, tl.z);
 
     glEnd();
+    glChk();
 }
 
 void FountainSystem::update(double t, double dt) {
