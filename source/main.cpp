@@ -63,8 +63,9 @@ void initScene() {
     light.moveToY(5.0);
     light.setUpdateFunc([&](double t, double /*dt*/) {
         t /= 5.0;
-        auto color
-            = 0.3 * Color(cos(3.0 * t), cos(5.0 * t), cos(1.0 * t)) + 0.6;
+        auto color = Color(cos(3.0 * t), cos(5.0 * t), cos(4.0 * t));
+        color = 0.5f * color + 0.5f;
+        light.ambient(color.v);
         light.diffuse(color.v);
         light.specular(color.v);
     });
