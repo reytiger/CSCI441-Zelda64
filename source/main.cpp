@@ -84,21 +84,22 @@ void initScene() {
         glBindTexture(GL_TEXTURE_2D, grass);
 
         static const auto halfsize = Vec(100, 100);
+        static const auto texsize  = 0.1f * halfsize;
 
         glBegin(GL_QUADS);
 
         glNormal3f(0.0f, 1.0f, 0.0f);
 
-        glTexCoord2f(-halfsize.x, halfsize.y);
+        glTexCoord2f(-texsize.x, texsize.y);
         glVertex3d(-halfsize.x, 0, halfsize.y);
 
-        glTexCoord2f(halfsize.x, halfsize.y);
+        glTexCoord2f(texsize.x, texsize.y);
         glVertex3d(halfsize.x, 0, halfsize.y);
 
-        glTexCoord2f(halfsize.x, -halfsize.y);
+        glTexCoord2f(texsize.x, -texsize.y);
         glVertex3d(halfsize.x, 0, -halfsize.y);
 
-        glTexCoord2f(-halfsize.x, -halfsize.y);
+        glTexCoord2f(-texsize.x, -texsize.y);
         glVertex3d(-halfsize.x, 0, -halfsize.y);
 
         glEnd();
@@ -144,6 +145,7 @@ void initScene() {
     inc.setUpdateFunc([&](double /*t*/, double /*dt*/) {
         inc.doWASDControls(25.0, keyPressed, false);
     });
+    inc.radius(1.0f);
 
     game.initScene(&inc);
 
