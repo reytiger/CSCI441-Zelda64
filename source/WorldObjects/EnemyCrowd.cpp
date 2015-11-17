@@ -20,6 +20,11 @@ void EnemyCrowd::drawParticle(const Enemy &self) const {
     pushMatrixAnd([&]() {
         glTranslatef(self.pos.x, self.pos.y, self.pos.z);
         glutSolidCube(2.0f * self.size);
+
+        auto dir = self.size * self.head;
+        glTranslatef(dir.x, dir.y, dir.z);
+        glutSolidCube(self.size);
+
     });
 }
 
@@ -64,6 +69,7 @@ void EnemyCrowd::update(double t, double dt) {
 
         auto vel = p.speed * (nextTarget - p.pos).normalize();
         p.pos += dt * vel;
+        p.head = vel.normalize();
     }
 
     std::copy_if(m_particles.begin(),

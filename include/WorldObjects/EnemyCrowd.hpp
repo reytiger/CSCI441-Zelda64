@@ -6,6 +6,7 @@
 namespace Internal {
 struct Enemy {
     Vec pos;           // meters
+    Vec head;          // Direction. Used for drawing.
     float speed;       // meters / second
     float size = 1.0f; // A size of 0.0f represents a 'dead' enemy.
                        // This is also the radius of their bounding sphere.
