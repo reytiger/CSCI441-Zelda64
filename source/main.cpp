@@ -170,10 +170,10 @@ void initScene() {
 
     // Our Hero!
     drawn.push_back(&inc);
-    inc.setUpdateFunc([&](double /*t*/, double /*dt*/) {
+    inc.setUpdateFunc([&](double t, double /*dt*/) {
         inc.doWASDControls(25.0, keyPressed, false);
+        inc.radius(3.5f + 1.0f * cosf(t));
     });
-    inc.radius(3.0f);
 
     game.initScene(&inc);
 

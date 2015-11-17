@@ -26,12 +26,11 @@ void EnemyCrowd::internalDraw() const {
 void EnemyCrowd::drawParticle(const Enemy &self) const {
     pushMatrixAnd([&]() {
         glTranslatef(self.pos.x, self.pos.y, self.pos.z);
-        glutSolidCube(2.0f * self.size);
+        glutSolidSphere(self.size, 20, 20);
 
         auto dir = self.size * self.head;
         glTranslatef(dir.x, dir.y, dir.z);
         glutSolidCube(self.size);
-
     });
 }
 
