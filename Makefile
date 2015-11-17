@@ -12,7 +12,7 @@ else
 	LIBRARY_PATH += "$(HOME)/lib"
 endif
 
-BINARY=a6
+BINARY=a7
 BUILD_DIR="build-lab"
 
 all: $(BINARY)
