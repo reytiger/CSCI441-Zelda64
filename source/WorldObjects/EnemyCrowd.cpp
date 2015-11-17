@@ -1,6 +1,7 @@
 #include "WorldObjects.hpp"
 
 #include <algorithm>
+#include <limits>
 
 const double EnemyCrowd::s_gravity = -9.81;
 
@@ -42,7 +43,14 @@ void EnemyCrowd::update(double t, double dt) {
                 // collide! Note: A size of 0.0f represents a 'dead' enemy.
                 p.size = 0.0f;
                 o.size = 0.0f;
+                continue;
             }
+        }
+
+        float dist = (p.pos - target->pos()).norm();
+        if (dist < p.size + target->radius()) {
+            p.size = 0.0f;
+            target->radius(0.0f);
         }
     }
 
@@ -50,7 +58,7 @@ void EnemyCrowd::update(double t, double dt) {
     for (auto &p : m_particles) {
         // Chase the hero.
         auto vel = p.speed * (target->pos() - p.pos).normalize();
-        p.pos += vel;
+        p.pos += dt * vel;
     }
 
     std::copy_if(m_particles.begin(),
@@ -59,20 +67,32 @@ void EnemyCrowd::update(double t, double dt) {
                  [](const Enemy &e) { return e.size != 0.0f; });
 
     // Create new particles!
-    // const size_t new_particle_count = dt * spawn_rate;
-    const size_t new_particle_count = 1;
-    for (size_t i = 0; i < new_particle_count; i += 1) {
-        Enemy p;
+    static double lastSpawn = -std::numeric_limits<double>::infinity();
+    if ((t - lastSpawn) > spawn_rate) {
+        lastSpawn    = t;
+        size_t count = this->living() < 5 ? 20 : 5;
 
-        p.size = getRand(0.5f, 1.5f);
+        for (size_t i = 0; i < count; i += 1) {
 
-        float area = 50.0f;
-        p.pos      = Vec(getRand(-area, area), 1.5, getRand(-area, area));
+            Enemy p;
+            p.size = getRand(1.5f, 2.5f);
 
-        // VecPolar uses Radians. I lost an hour because I forgot this. ._.
-        p.speed = getRand(0.1f);
+            do {
+                float theta  = getRand(2.0f * PI);
+                float radius = getRand(50.0f, 80.0f);
+                p.pos = target->pos() + VecPolar(theta, 0.0, radius).cart();
+            } while (m_particles.end()
+                     != std::find_if(m_particles.begin(),
+                                     m_particles.end(),
+                                     [&](const Enemy &e) {
+                                         return (p.pos - e.pos).norm() < 2.0f;
+                                     }));
 
-        next_particles.push_back(p);
+            // VecPolar uses Radians. I lost an hour because I forgot this. ._.
+            p.speed = getRand(10.0f, 15.0f);
+
+            next_particles.push_back(p);
+        }
     }
 
     m_particles = next_particles;

@@ -16,5 +16,14 @@ void PacmanGame::draw() const {
 void PacmanGame::update(double t, double dt) {
     m_crowd.update(t, dt);
 
-    // TODO: collision detection between hero and crowd
+    // We're dead.
+    if (m_hero->radius() == 0.0f) {
+        m_score = t;
+        endGame();
+    }
+}
+
+void PacmanGame::endGame() {
+    info("You lose! You lasted %s seconds", m_score);
+    exit(0);
 }
