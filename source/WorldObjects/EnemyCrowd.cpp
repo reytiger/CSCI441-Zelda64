@@ -57,7 +57,12 @@ void EnemyCrowd::update(double t, double dt) {
     // Now go through and update everything.
     for (auto &p : m_particles) {
         // Chase the hero.
-        auto vel = p.speed * (target->pos() - p.pos).normalize();
+
+        // Chase after where the hero will be in 10 frames.
+        auto nextTarget = target->pos() + 10 * dt * target->vel();
+
+
+        auto vel = p.speed * (nextTarget - p.pos).normalize();
         p.pos += dt * vel;
     }
 
@@ -70,7 +75,8 @@ void EnemyCrowd::update(double t, double dt) {
     static double lastSpawn = -std::numeric_limits<double>::infinity();
     if ((t - lastSpawn) > spawn_rate) {
         lastSpawn    = t;
-        size_t count = this->living() < 5 ? 20 : 5;
+        // This use to spawn 20 when it got low, but that was too hard.
+        size_t count = this->living() < 5 ? 17 : 5;
 
         for (size_t i = 0; i < count; i += 1) {
 
@@ -79,7 +85,7 @@ void EnemyCrowd::update(double t, double dt) {
 
             do {
                 float theta  = getRand(2.0f * PI);
-                float radius = getRand(50.0f, 80.0f);
+                float radius = getRand(70.0f, 100.0f);
                 p.pos = target->pos() + VecPolar(theta, 0.0, radius).cart();
             } while (m_particles.end()
                      != std::find_if(m_particles.begin(),
@@ -89,7 +95,7 @@ void EnemyCrowd::update(double t, double dt) {
                                      }));
 
             // VecPolar uses Radians. I lost an hour because I forgot this. ._.
-            p.speed = getRand(10.0f, 15.0f);
+            p.speed = getRand(15.0f, 20.0f);
 
             next_particles.push_back(p);
         }
