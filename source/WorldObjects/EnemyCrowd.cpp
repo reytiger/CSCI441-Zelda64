@@ -7,6 +7,13 @@ const double EnemyCrowd::s_gravity = -9.81;
 
 using Enemy = EnemyCrowd::Enemy;
 
+// 'lo' and 'hi' use x and y, but pos is in x and z.
+// 'y' is passed in to define the plain.
+static bool inRect(Vec pos, float y, Vec lo, Vec hi) {
+    return pos.y >= y && (lo.x <= pos.x && pos.x <= hi.x)
+           && (lo.y <= pos.z && pos.z <= hi.y);
+}
+
 void EnemyCrowd::internalDraw() const {
     glChk();
     for (const auto &particle : this->m_particles) {
@@ -56,6 +63,13 @@ void EnemyCrowd::update(double t, double dt) {
         if (dist < p.size + target->radius()) {
             p.size = 0.0f;
             target->radius(0.0f);
+        }
+
+        if (p.size != 0.0f) {
+            static const auto floorHalfSize = Vec(100, 100);
+            if (!inRect(p.pos, 0.0f, -floorHalfSize, floorHalfSize)) {
+                p.pos -= dt * 9.8f * 10;
+            }
         }
     }
 
