@@ -22,6 +22,8 @@ PacmanGame game;
 float vulHeight     = 50.0f;
 float vulBaseRadius = 30.0f;
 
+static const auto floorHalfSize = Vec(100, 100);
+
 // Returns a copy of 'str' with leading and trailing whitespace removed.
 std::string trim(std::string str) {
     auto pred = std::ptr_fun<int, int>(std::isspace);
@@ -31,6 +33,13 @@ std::string trim(std::string str) {
     str.erase(std::find_if_not(str.rbegin(), str.rend(), pred).base(),
               str.end());
     return str;
+}
+
+// 'lo' and 'hi' use x and y, but pos is in x and z.
+// 'y' is passed in to define the plain.
+bool inRect(Vec pos, float y, Vec lo, Vec hi) {
+    return pos.y == y && (lo.x <= pos.x && pos.x <= hi.x)
+           && (lo.y <= pos.z && pos.z <= hi.y);
 }
 
 // This function is expected by PrettyGLUT, because I designed it to get
@@ -46,7 +55,20 @@ void updateScene(double t, double dt) {
 
     wigglyShader.attachUniform("time", 1000.0 + t);
 
-    inc.moveTo(clamp(inc.pos(), Vec(-100, 0.5, -100), Vec(100, 0.5, 100)));
+    if (!inRect(inc.pos(), 0.0f, -floorHalfSize, floorHalfSize)) {
+        // doWASDControls overrides the velocity... so this is hard to deal
+        // with.
+        static float yvel = 0.0f;
+        yvel += dt * -9.8f * 10; // fudge factor
+
+        auto vel = inc.vel();
+        vel.y += yvel;
+        inc.vel(vel);
+    }
+
+    if (inc.pos().y < -500.0f) {
+        game.endGame();
+    }
 
     for (WorldObject *wo : drawn) {
         wo->update(t, dt);
@@ -83,24 +105,23 @@ void initScene() {
         glEnable(GL_CULL_FACE);
         glBindTexture(GL_TEXTURE_2D, grass);
 
-        static const auto halfsize = Vec(100, 100);
-        static const auto texsize  = 0.1f * halfsize;
+        static const auto texsize = 0.1f * floorHalfSize;
 
         glBegin(GL_QUADS);
 
         glNormal3f(0.0f, 1.0f, 0.0f);
 
         glTexCoord2f(-texsize.x, texsize.y);
-        glVertex3d(-halfsize.x, 0, halfsize.y);
+        glVertex3d(-floorHalfSize.x, 0, floorHalfSize.y);
 
         glTexCoord2f(texsize.x, texsize.y);
-        glVertex3d(halfsize.x, 0, halfsize.y);
+        glVertex3d(floorHalfSize.x, 0, floorHalfSize.y);
 
         glTexCoord2f(texsize.x, -texsize.y);
-        glVertex3d(halfsize.x, 0, -halfsize.y);
+        glVertex3d(floorHalfSize.x, 0, -floorHalfSize.y);
 
         glTexCoord2f(-texsize.x, -texsize.y);
-        glVertex3d(-halfsize.x, 0, -halfsize.y);
+        glVertex3d(-floorHalfSize.x, 0, -floorHalfSize.y);
 
         glEnd();
 

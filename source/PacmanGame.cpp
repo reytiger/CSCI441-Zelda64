@@ -15,10 +15,10 @@ void PacmanGame::draw() const {
 
 void PacmanGame::update(double t, double dt) {
     m_crowd.update(t, dt);
+    m_score = t;
 
     // We're dead.
     if (m_hero->radius() == 0.0f) {
-        m_score = t;
         endGame();
     }
 }

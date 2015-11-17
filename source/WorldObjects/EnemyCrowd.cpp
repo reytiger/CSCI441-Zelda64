@@ -61,7 +61,6 @@ void EnemyCrowd::update(double t, double dt) {
         // Chase after where the hero will be in 10 frames.
         auto nextTarget = target->pos() + 10 * dt * target->vel();
 
-
         auto vel = p.speed * (nextTarget - p.pos).normalize();
         p.pos += dt * vel;
     }
@@ -74,7 +73,7 @@ void EnemyCrowd::update(double t, double dt) {
     // Create new particles!
     static double lastSpawn = -std::numeric_limits<double>::infinity();
     if ((t - lastSpawn) > spawn_rate) {
-        lastSpawn    = t;
+        lastSpawn = t;
         // This use to spawn 20 when it got low, but that was too hard.
         size_t count = this->living() < 5 ? 17 : 5;
 
