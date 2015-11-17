@@ -3,6 +3,7 @@
 
 #include "Cameras.hpp"
 #include "Shader.hpp"
+#include "PacmanGame.hpp"
 #include "WorldObjects.hpp"
 
 #include "ObjectLoader.hpp"
@@ -59,3 +60,5 @@ extern Texture loading;
 extern Texture ember;
 
 extern ShaderProgram wigglyShader;
+
+extern PacmanGame game;

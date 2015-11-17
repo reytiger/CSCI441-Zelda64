@@ -3,6 +3,7 @@
 // General world objects
 #include "WorldObjects/BezierCurve.hpp"
 #include "WorldObjects/CallListObject.hpp"
+#include "WorldObjects/EnemyCrowd.hpp"
 #include "WorldObjects/FountainSystem.hpp"
 #include "WorldObjects/Incallidus.hpp"
 #include "WorldObjects/IncallidusPet.hpp"

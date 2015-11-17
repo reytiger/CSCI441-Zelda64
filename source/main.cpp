@@ -17,6 +17,8 @@ Texture skybox;
 
 Incallidus enemies[2];
 
+PacmanGame game;
+
 float vulHeight     = 50.0f;
 float vulBaseRadius = 30.0f;
 
@@ -49,6 +51,8 @@ void updateScene(double t, double dt) {
     for (WorldObject *wo : drawn) {
         wo->update(t, dt);
     }
+
+    game.update(t, dt);
 }
 
 void initScene() {
@@ -141,17 +145,7 @@ void initScene() {
         inc.doWASDControls(25.0, keyPressed, false);
     });
 
-    // His enemies!
-    for (auto &enemy : enemies) {
-        drawn.push_back(&enemy);
-
-        auto pos = 50 * Vec(getRand(), getRand(), getRand());
-        enemy.moveTo(pos);
-        enemy.setUpdateFunc([&](double /*t*/, double /*dt*/) {
-            auto displacement = (inc.pos() - enemy.pos()).normalize();
-            enemy.vel(18.0f * displacement);
-        });
-    }
+    game.initScene(&inc);
 
     // Camera
     activeCam->follow(&inc);

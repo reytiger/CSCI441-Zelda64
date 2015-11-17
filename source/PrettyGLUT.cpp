@@ -301,6 +301,8 @@ void render() {
     });
     glChk();
 
+    game.draw();
+
     ShaderProgram::useFFS();
     renderHUD();
 
