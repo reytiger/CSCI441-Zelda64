@@ -38,7 +38,7 @@ std::string trim(std::string str) {
 // 'lo' and 'hi' use x and y, but pos is in x and z.
 // 'y' is passed in to define the plain.
 bool inRect(Vec pos, float y, Vec lo, Vec hi) {
-    return pos.y == y && (lo.x <= pos.x && pos.x <= hi.x)
+    return pos.y >= y && (lo.x <= pos.x && pos.x <= hi.x)
            && (lo.y <= pos.z && pos.z <= hi.y);
 }
 
@@ -54,16 +54,17 @@ void updateScene(double t, double dt) {
     // activeCam->doWASDControls(25.0, keyPressed, true);
 
     wigglyShader.attachUniform("time", 1000.0 + t);
+    static bool jumping = false;
 
-    if (!inRect(inc.pos(), 0.0f, -floorHalfSize, floorHalfSize)) {
-        // doWASDControls overrides the velocity... so this is hard to deal
-        // with.
-        static float yvel = 0.0f;
-        yvel += dt * -9.8f * 10; // fudge factor
-
-        auto vel = inc.vel();
-        vel.y += yvel;
-        inc.vel(vel);
+    if (jumping) {
+        if (inc.pos().y > 0) {
+            inc.moveByY(dt * -9.8f * 10);
+        } else {
+            jumping = false;
+            inc.moveToY(0.5f);
+        }
+    } else if (!inRect(inc.pos(), 0.0f, -floorHalfSize, floorHalfSize)) {
+        inc.moveByY(dt * -9.8f * 10); // fudge factor
     }
 
     if (inc.pos().y < -500.0f) {
@@ -72,6 +73,12 @@ void updateScene(double t, double dt) {
 
     for (WorldObject *wo : drawn) {
         wo->update(t, dt);
+    }
+
+    if (!jumping && keyPressed[' ']) {
+        jumping = true;
+        // Truely a lazy jump.
+        inc.moveByY(100);
     }
 
     game.update(t, dt);

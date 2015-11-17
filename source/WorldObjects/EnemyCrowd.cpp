@@ -60,6 +60,7 @@ void EnemyCrowd::update(double t, double dt) {
 
         // Chase after where the hero will be in 10 frames.
         auto nextTarget = target->pos() + 10 * dt * target->vel();
+        nextTarget.y    = 0.0;
 
         auto vel = p.speed * (nextTarget - p.pos).normalize();
         p.pos += dt * vel;
@@ -85,7 +86,9 @@ void EnemyCrowd::update(double t, double dt) {
             do {
                 float theta  = getRand(2.0f * PI);
                 float radius = getRand(70.0f, 100.0f);
-                p.pos = target->pos() + VecPolar(theta, 0.0, radius).cart();
+                auto base    = target->pos();
+                base.y       = 0.0;
+                p.pos = base + VecPolar(theta, 0.0, radius).cart();
             } while (m_particles.end()
                      != std::find_if(m_particles.begin(),
                                      m_particles.end(),
