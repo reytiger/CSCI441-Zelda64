@@ -145,13 +145,14 @@ void initScene() {
     inc.setUpdateFunc([&](double /*t*/, double /*dt*/) {
         inc.doWASDControls(25.0, keyPressed, false);
     });
-    inc.radius(1.0f);
+    inc.radius(3.0f);
 
     game.initScene(&inc);
 
     // Camera
     activeCam->follow(&inc);
     activeCam->radius(150.0);
+    activeCam->rotate(0.0f, PI);
 
     // Venus 1
     auto pt = venus.getLocation();
