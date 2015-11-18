@@ -8,8 +8,8 @@ ifeq ($(OS), Windows_NT)
 # Mac and Linux builds
 else
 	GENERATOR ?= "Unix Makefiles"
-	INCLUDE_PATH += "$(HOME)/"
-	LIBRARY_PATH += "$(HOME)/lib"
+	INCLUDE_PATH += "/Users/jpaone/Desktop/include;$(HOME)/"
+	LIBRARY_PATH += "/Users/jpaone/Desktop/lib;$(HOME)/lib"
 endif
 
 BINARY=a7
