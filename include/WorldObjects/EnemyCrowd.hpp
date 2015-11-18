@@ -27,7 +27,7 @@ public:
     void tex(GLint tex) { m_tex = tex; }
     GLint tex() const { return m_tex; }
 
-    float spawn_rate = 10.0f; // seconds per enemy
+    float spawn_rate = 3.0f; // seconds per enemy
 
     bool gravity = true;
 

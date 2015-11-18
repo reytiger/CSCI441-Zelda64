@@ -284,22 +284,22 @@ void render() {
         glChk();
     }
 
-    glChk();
-    wigglyShader.use();
-    glChk();
-    venus.draw();
-    glChk();
+    // glChk();
+    // wigglyShader.use();
+    // glChk();
+    // venus.draw();
+    // glChk();
 
-    glChk();
-    wigglyShader.use();
-    Material::Pearl.set();
-    pushMatrixAnd([]() {
-        glTranslatef(-50, 0.0, 50);
-        glScalef(3.0f, 3.0f, 3.0f);
-        glRotatef(90, 0.0, 1.0, 0.0);
-        temple.draw();
-    });
-    glChk();
+    // glChk();
+    // wigglyShader.use();
+    // Material::Pearl.set();
+    // pushMatrixAnd([]() {
+    //     glTranslatef(-50, 0.0, 50);
+    //     glScalef(3.0f, 3.0f, 3.0f);
+    //     glRotatef(90, 0.0, 1.0, 0.0);
+    //     temple.draw();
+    // });
+    // glChk();
 
     game.draw();
 

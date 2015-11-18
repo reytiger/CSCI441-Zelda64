@@ -138,40 +138,40 @@ void initScene() {
     glChk();
 
     // Vulcano
-    drawn.push_back(&vulcano);
-    vulcano.moveTo(-50, 0, -50);
-    vulcano.shader(wigglyShader);
+    // drawn.push_back(&vulcano);
+    // vulcano.moveTo(-50, 0, -50);
+    // vulcano.shader(wigglyShader);
 
-    static auto vulcano_body = gluNewQuadric();
-    static auto vulcano_top  = gluNewQuadric();
+    // static auto vulcano_body = gluNewQuadric();
+    // static auto vulcano_top  = gluNewQuadric();
 
-    vulcano = CallListObject([&](GLuint dl) {
-        glNewList(dl, GL_COMPILE);
-        glDisable(GL_CULL_FACE);
+    // vulcano = CallListObject([&](GLuint dl) {Nico found a neat technique where you fall off
+    //     glNewList(dl, GL_COMPILE);
+    //     glDisable(GL_CULL_FACE);
 
-        pushMatrixAnd([&]() {
-            glRotatef(-90.0f, 1, 0, 0);
-            gluCylinder(vulcano_body,
-                        vulBaseRadius,
-                        vulBaseRadius / 4.0,
-                        vulHeight,
-                        20,
-                        20);
-        });
+    //     pushMatrixAnd([&]() {
+    //         glRotatef(-90.0f, 1, 0, 0);
+    //         gluCylinder(vulcano_body,
+    //                     vulBaseRadius,
+    //                     vulBaseRadius / 4.0,
+    //                     vulHeight,
+    //                     20,
+    //                     20);
+    //     });
 
-        pushMatrixAnd([&]() {
-            glTranslatef(0.0f, vulHeight - 0.25f, 0.0f);
-            glRotatef(90.0f, -1, 0, 0);
-            gluDisk(vulcano_top, 0, vulBaseRadius / 4.0, 20, 1);
-        });
+    //     pushMatrixAnd([&]() {
+    //         glTranslatef(0.0f, vulHeight - 0.25f, 0.0f);
+    //         glRotatef(90.0f, -1, 0, 0);
+    //         gluDisk(vulcano_top, 0, vulBaseRadius / 4.0, 20, 1);
+    //     });
 
-        glEndList();
-    });
+    //     glEndList();
+    // });
 
     // Our Hero!
     drawn.push_back(&inc);
     inc.setUpdateFunc([&](double t, double /*dt*/) {
-        inc.doWASDControls(25.0, keyPressed, false);
+        inc.doWASDControls(30.0, keyPressed, false);
         inc.radius(3.5f + 1.0f * cosf(t));
     });
 
