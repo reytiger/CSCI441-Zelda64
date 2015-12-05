@@ -26,3 +26,26 @@
 *.exe
 *.out
 *.app
+<<<<<<< HEAD
+=======
+
+# Binary names
+z64
+
+# Our Makefile's dependency list
+depend.mk
+
+# in-tree CMake build
+_*
+build*
+msvc*
+perf*
+
+# graphviz!
+*.dot
+
+# nsf files, they are on network drives
+.nfs*
+
+# External libs
+ext/fmod
