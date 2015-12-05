@@ -1,0 +1,49 @@
+# Compiled Object files
+*.slo
+*.lo
+*.o
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+# Binary names
+guildWars
+a5
+
+# Our Makefile's dependency list
+depend.mk
+
+# in-tree CMake build
+_*
+build*
+msvc*
+perf*
+
+# graphviz!
+*.dot
+
+# nsf files, they are on network drives
+.nfs*
+
+# External libs
+ext/fmod
