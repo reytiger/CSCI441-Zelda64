@@ -21,5 +21,4 @@ public:
 private:
     float m_score       = 0.0f;
     WorldObject *m_hero = nullptr;
-    EnemyCrowd m_crowd;
 };

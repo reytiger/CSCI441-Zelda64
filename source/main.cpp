@@ -6,18 +6,14 @@
 CallListObject roomFloor;
 CallListObject vulcano;
 
-paone::Object venus;
-paone::Object temple;
+// paone::Object venus;
 PointLight light;
-
-Incallidus inc;
 
 Texture grass;
 Texture skybox;
 
-Incallidus enemies[2];
-
 PacmanGame game;
+BezierCurve tmpHero;
 
 float vulHeight     = 50.0f;
 float vulBaseRadius = 30.0f;
@@ -53,32 +49,8 @@ void updateScene(double t, double dt) {
     activeCam->update(t, dt);
     // activeCam->doWASDControls(25.0, keyPressed, true);
 
-    wigglyShader.attachUniform("time", 1000.0 + t);
-    static bool jumping = false;
-
-    if (jumping) {
-        if (inc.pos().y > 0) {
-            inc.moveByY(dt * -9.8f * 10);
-        } else {
-            jumping = false;
-            inc.moveToY(0.5f);
-        }
-    } else if (!inRect(inc.pos(), 0.0f, -floorHalfSize, floorHalfSize)) {
-        inc.moveByY(dt * -9.8f * 10); // fudge factor
-    }
-
-    if (inc.pos().y < -500.0f) {
-        game.endGame();
-    }
-
     for (WorldObject *wo : drawn) {
         wo->update(t, dt);
-    }
-
-    if (!jumping && keyPressed[' ']) {
-        jumping = true;
-        // Truely a lazy jump.
-        inc.moveByY(100);
     }
 
     game.update(t, dt);
@@ -88,7 +60,6 @@ void initScene() {
     glLightModelfv(GL_LIGHT_MODEL_AMBIENT, Color(1.0, 1.0, 1.0).v);
 
     // Global constructors do weird things.
-    inc = Incallidus();
 
     // Light
     drawn.push_back(&light);
@@ -144,8 +115,8 @@ void initScene() {
 
     // static auto vulcano_body = gluNewQuadric();
     // static auto vulcano_top  = gluNewQuadric();
-
-    // vulcano = CallListObject([&](GLuint dl) {Nico found a neat technique where you fall off
+    // vulcano = CallListObject([&](GLuint dl) {Nico found a neat technique
+    // where you fall off
     //     glNewList(dl, GL_COMPILE);
     //     glDisable(GL_CULL_FACE);
 
@@ -169,31 +140,13 @@ void initScene() {
     // });
 
     // Our Hero!
-    drawn.push_back(&inc);
-    inc.setUpdateFunc([&](double t, double /*dt*/) {
-        inc.doWASDControls(30.0, keyPressed, false);
-        inc.radius(3.5f + 1.0f * cosf(t));
-    });
 
-    game.initScene(&inc);
+    game.initScene(&tmpHero);
 
     // Camera
-    activeCam->follow(&inc);
+    activeCam->follow(&tmpHero);
     activeCam->radius(150.0);
     activeCam->rotate(0.0f, PI);
-
-    // Venus 1
-    auto pt = venus.getLocation();
-    assert(pt);
-    pt->setY(8.7);
-    pt->setX(-50);
-    pt->setZ(50);
-    venus.loadObjectFile("assets/venus.obj");
-
-    // Temple
-    pt = temple.getLocation();
-    assert(pt);
-    temple.loadObjectFile("assets/temple.obj");
 }
 
 void initTextures() {
@@ -237,18 +190,6 @@ void initTextures() {
 }
 
 void initShaders() {
-    // Venus
-    {
-        Shader vert;
-        vert.loadFromFile("glsl/wiggly.v.glsl", GL_VERTEX_SHADER);
-
-        Shader frag;
-        frag.loadFromFile("glsl/pass_through.f.glsl", GL_FRAGMENT_SHADER);
-
-        wigglyShader.create();
-        wigglyShader.attach(vert, frag);
-        wigglyShader.link();
-    }
 
     // Lit planes - like the ground!
     {

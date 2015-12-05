@@ -341,12 +341,12 @@ void printOpenGLInformation() {
 
 void loadLoadingScreen() {
     glChk();
-    loading = SOIL_load_OGL_texture("assets/textures/dont_panic.jpg",
-                                    SOIL_LOAD_AUTO,
-                                    SOIL_CREATE_NEW_ID,
-                                    SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y
-                                        | SOIL_FLAG_NTSC_SAFE_RGB
-                                        | SOIL_FLAG_COMPRESS_TO_DXT);
+    loading = SOIL_load_OGL_texture(
+        "assets/textures/Legend-of-Zelda-Ocarina-of-Time-Title-Screen.png",
+        SOIL_LOAD_AUTO,
+        SOIL_CREATE_NEW_ID,
+        SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB
+            | SOIL_FLAG_COMPRESS_TO_DXT);
     glChk();
     {
         glBindTexture(GL_TEXTURE_2D, loading);
