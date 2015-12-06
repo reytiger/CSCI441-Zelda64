@@ -35,6 +35,7 @@ $(BUILD_DIR):
 
 clean:
 	@$(MAKE) -C $(BUILD_DIR) clean --quiet
+	@rm -fv $(BINARY)
 
 # For when you really mean it.
 clean2:
