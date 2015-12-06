@@ -3,14 +3,13 @@
 #include "Cameras.hpp"
 #include "Shader.hpp"
 
-paone::Object bongo;
-
 // We need to know about this. but it's entirely game logic so it's defined
 // in main.cpp.
 void updateScene(double t, double dt);
 
+Texture grass;
+Texture skybox;
 Texture loading;
-ShaderProgram wigglyShader;
 
 // Cameras
 FreeCamera freecam;
@@ -37,6 +36,8 @@ bool keyPressed[256]  = {};
 
 // Things to draw
 std::vector<WorldObject *> drawn = std::vector<WorldObject *>();
+// extern paone::Object levelBongo;
+extern paone::Object levelHyruleField;
 
 // TODO: Make this stroke.
 void drawText(const std::string &text, Vec pos, Color color) {
@@ -145,14 +146,13 @@ void render() {
     glDisable(GL_LIGHTING);
     glDisable(GL_CULL_FACE);
 
-    bongo.draw();
+    // levelBongo.draw();
+    levelHyruleField.draw();
 
     glEnable(GL_CULL_FACE);
     glEnable(GL_LIGHTING);
 
     glChk();
-
-    game.draw();
 
     ShaderProgram::useFFS();
     renderHUD();

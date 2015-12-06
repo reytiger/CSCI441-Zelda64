@@ -2,7 +2,6 @@
 *.slo
 *.lo
 *.o
-*.obj
 
 # Precompiled Headers
 *.gch
@@ -44,6 +43,8 @@ perf*
 
 # nsf files, they are on network drives
 .nfs*
+
+keyToTheKingdom
 
 # External libs
 ext/fmod

@@ -57,10 +57,6 @@ using Texture = GLint;
 extern Texture grass;
 extern Texture skybox;
 extern Texture loading;
-extern Texture ember;
 
-extern ShaderProgram wigglyShader;
-
-extern PacmanGame game;
-
-extern paone::Object bongo;
+extern paone::Object levelBongo;
+extern paone::Object levelHyruleField;
