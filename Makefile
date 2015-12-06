@@ -8,8 +8,8 @@ ifeq ($(OS), Windows_NT)
 # Mac and Linux builds
 else
 	GENERATOR ?= "Unix Makefiles"
-	INCLUDE_PATH += "/Users/jpaone/Desktop/include;$(HOME)/"
-	LIBRARY_PATH += "/Users/jpaone/Desktop/lib;$(HOME)/lib"
+	INCLUDE_PATH += "/Users/jpaone/Desktop/include;$(HOME)/;$(HOME)/LIBS/include"
+	LIBRARY_PATH += "/Users/jpaone/Desktop/lib;$(HOME)/lib;$(HOME)/LIBS/lib"
 endif
 
 BINARY=keyToTheKingdom
@@ -18,8 +18,8 @@ BUILD_DIR="build-lab"
 all: $(BINARY)
 
 $(BINARY): $(BUILD_DIR)
-	@$(MAKE) --quiet -C $(BUILD_DIR) Assignment
-	@cp -v $</Assignment $(BINARY)
+	@$(MAKE) --quiet -C $(BUILD_DIR)
+	@cp -v $</keyToTheKingdom $(BINARY)
 
 $(BUILD_DIR):
 	@mkdir -vp $@
@@ -29,6 +29,8 @@ $(BUILD_DIR):
 		-DCMAKE_BUILD_TYPE=Release \
 		-DCMAKE_INCLUDE_PATH=$(INCLUDE_PATH) \
 		-DCMAKE_LIBRARY_PATH=$(LIBRARY_PATH) \
+		-DSOIL_INCLUDE_DIR=$(HOME)/LIBS/include/SOIL \
+		-DSOIL_LIBRARY=$(HOME)/LIBS/lib/libSOIL.a \
 		..
 
 clean:
