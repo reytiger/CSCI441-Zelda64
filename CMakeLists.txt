@@ -32,7 +32,6 @@ include_directories("${GLEW_INCLUDE_DIR}")
 
 # C style printf made with with C++ templates. Just a single header.
 include_directories("${S}/ext/tinyformat-include")
-include_directories("${S}/ext/glm")
 
 # Dr. Paone's object loader class and company. We embed a custom CMake project.
 include_directories("${S}/ext/objectLoader")
