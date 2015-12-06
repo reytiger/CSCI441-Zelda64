@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8)
 
 project(csci441-Graphics-Project)
 
-set(binary "z64")
+set(binary "keyToTheKingdom")
 set(S "${CMAKE_SOURCE_DIR}")
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${S}/cmake")
 set(CMAKE_COMPILER_IS_CLANGXX "${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")

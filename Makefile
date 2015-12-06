@@ -12,7 +12,7 @@ else
 	LIBRARY_PATH += "/Users/jpaone/Desktop/lib;$(HOME)/lib"
 endif
 
-BINARY=a7
+BINARY=keyToTheKingdom
 BUILD_DIR="build-lab"
 
 all: $(BINARY)
