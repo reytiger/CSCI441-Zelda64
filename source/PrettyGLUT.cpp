@@ -3,6 +3,8 @@
 #include "Cameras.hpp"
 #include "Shader.hpp"
 
+paone::Object bongo;
+
 // We need to know about this. but it's entirely game logic so it's defined
 // in main.cpp.
 void updateScene(double t, double dt);
@@ -15,7 +17,7 @@ FreeCamera freecam;
 ArcBallCamera arcballcam;
 
 // World objects
-Camera *activeCam = &arcballcam;
+Camera *activeCam = &freecam;
 
 double live_fps       = 0.0;
 double live_frametime = 0.0;
@@ -113,6 +115,52 @@ void resize(int w, int h) {
     glLoadIdentity();
     gluPerspective(FOV, aspectRatio(), 0.1, 1e6);
 }
+
+void render() {
+    // clear the render buffer
+    glDrawBuffer(GL_BACK);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    resize(windowWidth, windowHeight);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+
+    activeCam->adjustGLU();
+
+    pushMatrixAnd([&]() {
+        auto scale = 1000.0f;
+        glScalef(scale, scale, scale);
+        void renderSkybox();
+        renderSkybox();
+    });
+
+    glChk();
+    for (WorldObject *wo : drawn) {
+        glChk();
+        wo->draw();
+        glChk();
+    }
+
+    ShaderProgram::useFFS();
+    glDisable(GL_LIGHTING);
+    glDisable(GL_CULL_FACE);
+
+    bongo.draw();
+
+    glEnable(GL_CULL_FACE);
+    glEnable(GL_LIGHTING);
+
+    glChk();
+
+    game.draw();
+
+    ShaderProgram::useFFS();
+    renderHUD();
+
+    // push the back buffer to the screen
+    glutSwapBuffers();
+}
+
 
 void renderSkybox() {
     ShaderProgram::useFFS();
@@ -258,56 +306,6 @@ void renderSkybox() {
 
     glEnable(GL_LIGHTING);
     glDisable(GL_TEXTURE_2D);
-}
-
-void render() {
-    // clear the render buffer
-    glDrawBuffer(GL_BACK);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    resize(windowWidth, windowHeight);
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-
-    activeCam->adjustGLU();
-
-    pushMatrixAnd([&]() {
-        auto scale = 1000.0f;
-        glScalef(scale, scale, scale);
-        renderSkybox();
-    });
-
-    glChk();
-    for (WorldObject *wo : drawn) {
-        glChk();
-        wo->draw();
-        glChk();
-    }
-
-    // glChk();
-    // wigglyShader.use();
-    // glChk();
-    // venus.draw();
-    // glChk();
-
-    // glChk();
-    // wigglyShader.use();
-    // Material::Pearl.set();
-    // pushMatrixAnd([]() {
-    //     glTranslatef(-50, 0.0, 50);
-    //     glScalef(3.0f, 3.0f, 3.0f);
-    //     glRotatef(90, 0.0, 1.0, 0.0);
-    //     temple.draw();
-    // });
-    // glChk();
-
-    game.draw();
-
-    ShaderProgram::useFFS();
-    renderHUD();
-
-    // push the back buffer to the screen
-    glutSwapBuffers();
 }
 
 void printOpenGLInformation() {

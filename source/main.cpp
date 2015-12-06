@@ -6,7 +6,6 @@
 CallListObject roomFloor;
 CallListObject vulcano;
 
-// paone::Object venus;
 PointLight light;
 
 Texture grass;
@@ -47,7 +46,7 @@ void updateScene(double t, double dt) {
     // Even though they're rendered, the cameras are NOT in the drawn list, so
     // we have to update them manually, if we want them updated at all.
     activeCam->update(t, dt);
-    // activeCam->doWASDControls(25.0, keyPressed, true);
+    activeCam->doWASDControls(2.0, keyPressed, true);
 
     for (WorldObject *wo : drawn) {
         wo->update(t, dt);
@@ -57,6 +56,11 @@ void updateScene(double t, double dt) {
 }
 
 void initScene() {
+    if (!bongo.loadObjectFile("assets/Env/HyruleField/hyrulefeild.obj")) {
+        abort();
+    }
+    glChk();
+
     glLightModelfv(GL_LIGHT_MODEL_AMBIENT, Color(1.0, 1.0, 1.0).v);
 
     // Global constructors do weird things.
@@ -64,89 +68,16 @@ void initScene() {
     // Light
     drawn.push_back(&light);
     light.enable();
-    light.moveToY(5.0);
-    light.setUpdateFunc([&](double t, double /*dt*/) {
-        t /= 5.0;
-        auto color = Color(cos(3.0 * t), cos(5.0 * t), cos(4.0 * t));
-        color = 0.5f * color + 0.5f;
-        light.ambient(color.v);
-        light.diffuse(color.v);
-        light.specular(color.v);
-    });
+    light.moveToY(10.0);
 
-    // Floor
-    drawn.push_back(&roomFloor);
-    roomFloor = CallListObject([&](GLuint dl) {
-        glNewList(dl, GL_COMPILE);
-
-        glEnable(GL_TEXTURE_2D);
-        glEnable(GL_CULL_FACE);
-        glBindTexture(GL_TEXTURE_2D, grass);
-
-        static const auto texsize = 0.1f * floorHalfSize;
-
-        glBegin(GL_QUADS);
-
-        glNormal3f(0.0f, 1.0f, 0.0f);
-
-        glTexCoord2f(-texsize.x, texsize.y);
-        glVertex3d(-floorHalfSize.x, 0, floorHalfSize.y);
-
-        glTexCoord2f(texsize.x, texsize.y);
-        glVertex3d(floorHalfSize.x, 0, floorHalfSize.y);
-
-        glTexCoord2f(texsize.x, -texsize.y);
-        glVertex3d(floorHalfSize.x, 0, -floorHalfSize.y);
-
-        glTexCoord2f(-texsize.x, -texsize.y);
-        glVertex3d(-floorHalfSize.x, 0, -floorHalfSize.y);
-
-        glEnd();
-
-        glDisable(GL_TEXTURE_2D);
-        glEndList();
-    });
-    glChk();
-
-    // Vulcano
-    // drawn.push_back(&vulcano);
-    // vulcano.moveTo(-50, 0, -50);
-    // vulcano.shader(wigglyShader);
-
-    // static auto vulcano_body = gluNewQuadric();
-    // static auto vulcano_top  = gluNewQuadric();
-    // vulcano = CallListObject([&](GLuint dl) {Nico found a neat technique
-    // where you fall off
-    //     glNewList(dl, GL_COMPILE);
-    //     glDisable(GL_CULL_FACE);
-
-    //     pushMatrixAnd([&]() {
-    //         glRotatef(-90.0f, 1, 0, 0);
-    //         gluCylinder(vulcano_body,
-    //                     vulBaseRadius,
-    //                     vulBaseRadius / 4.0,
-    //                     vulHeight,
-    //                     20,
-    //                     20);
-    //     });
-
-    //     pushMatrixAnd([&]() {
-    //         glTranslatef(0.0f, vulHeight - 0.25f, 0.0f);
-    //         glRotatef(90.0f, -1, 0, 0);
-    //         gluDisk(vulcano_top, 0, vulBaseRadius / 4.0, 20, 1);
-    //     });
-
-    //     glEndList();
-    // });
-
-    // Our Hero!
+    auto color = Color(0.8, 0.8, 0.8);
+    light.ambient(color.v);
+    light.diffuse(color.v);
 
     game.initScene(&tmpHero);
 
     // Camera
-    activeCam->follow(&tmpHero);
     activeCam->radius(150.0);
-    activeCam->rotate(0.0f, PI);
 }
 
 void initTextures() {

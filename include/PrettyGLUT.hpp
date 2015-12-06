@@ -6,7 +6,7 @@
 #include "PacmanGame.hpp"
 #include "WorldObjects.hpp"
 
-#include "ObjectLoader.hpp"
+#include "ModelLoader.hpp"
 
 #include <vector>
 
@@ -28,7 +28,7 @@ extern int live_frames;
 
 // Display settings.
 // For more detailed settings, see initGLUT in PrettyGLUT.cpp.
-constexpr const char *windowTitle = "Pompeii! Oh noooo!";
+constexpr const char *windowTitle = "A little green tunic.";
 
 constexpr float FOV = 60.0;
 
@@ -62,3 +62,5 @@ extern Texture ember;
 extern ShaderProgram wigglyShader;
 
 extern PacmanGame game;
+
+extern paone::Object bongo;

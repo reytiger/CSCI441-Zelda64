@@ -34,8 +34,8 @@ include_directories("${GLEW_INCLUDE_DIR}")
 include_directories("${S}/ext/tinyformat-include")
 
 # Dr. Paone's object loader class and company. We embed a custom CMake project.
-include_directories("${S}/ext/objectLoader")
-add_subdirectory("${S}/ext/objectLoader")
+include_directories("${S}/ext/modelLoader")
+add_subdirectory("${S}/ext/modelLoader")
 
 # CMake must be manually updated anytime a new file is added, when using globs.
 # You can
@@ -122,8 +122,8 @@ target_link_libraries(${binary}
                       "${GLEW_LIBRARIES}"
                       "${SOIL_LIBRARIES}"
 
-                      # Dr Paone's wavfront object loader.
-                      objectLoader)
+                      # Dr Paone's wavfront model loader.
+                      modelLoader)
 
 # Move some stuff around so that Visual Studio debugging can be happy,
 add_custom_target("Copy_Asset_Files" ALL
