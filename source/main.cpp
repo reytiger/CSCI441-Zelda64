@@ -6,7 +6,8 @@
 CallListObject roomFloor;
 CallListObject vulcano;
 
-// paone::Object venus;
+//paone::Object levelBongo;
+paone::Object levelHyruleField;
 PointLight light;
 
 Texture grass;
@@ -107,6 +108,8 @@ void initScene() {
         glEndList();
     });
     glChk();
+    //levelBongo.loadObjectFile("assets/Env/Bongo Bongo/bbroom.obj");
+    levelHyruleField.loadObjectFile("assets/Env/Hyrule Field/hyrulefeild.obj");
 
     // Vulcano
     // drawn.push_back(&vulcano);
@@ -141,6 +144,7 @@ void initScene() {
 
     // Our Hero!
 
+    
     game.initScene(&tmpHero);
 
     // Camera

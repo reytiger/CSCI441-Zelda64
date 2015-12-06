@@ -35,6 +35,8 @@ bool keyPressed[256]  = {};
 
 // Things to draw
 std::vector<WorldObject *> drawn = std::vector<WorldObject *>();
+//extern paone::Object levelBongo;
+extern paone::Object levelHyruleField;
 
 // TODO: Make this stroke.
 void drawText(const std::string &text, Vec pos, Color color) {
@@ -300,6 +302,12 @@ void render() {
     //     temple.draw();
     // });
     // glChk();
+
+    ShaderProgram::useFFS();
+    glTranslatef(0, 4, 0);
+    glEnable(GL_TEXTURE_2D);
+    //levelBongo.draw();
+    levelHyruleField.draw();
 
     game.draw();
 
