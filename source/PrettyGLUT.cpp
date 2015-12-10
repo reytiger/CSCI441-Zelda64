@@ -92,7 +92,7 @@ void renderHUD() {
     drawText(tfm::format("%*.1f FPS", numLength, live_fps), pos, white);
 
     // Frame time
-    pos               = pos - Vec(0, lineSpacing);
+    pos.y -= lineSpacing;
     std::string units = "??";
     auto frametime = live_frametime;
     if (frametime < 1e-6) {
@@ -111,8 +111,13 @@ void renderHUD() {
     drawText(frametime_text, pos, white);
 
     // Frame count
-    pos = pos - Vec(0, lineSpacing);
+    pos.y -= lineSpacing;
     drawText(tfm::format("%*d frames", numLength, live_frames), pos, white);
+
+    pos.y -= lineSpacing;
+    auto dims = tfm::format("%d x %d", fbo_width, fbo_width);
+    pos.x += (numLength - dims.size()) * charWidth;
+    drawText(tfm::format("%s resolution", dims), pos, white);
 
     glEnable(GL_LIGHTING);
 }
