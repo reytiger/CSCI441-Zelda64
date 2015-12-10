@@ -2,12 +2,12 @@
 
 void RenderPass::render() {
     glChk();
+    m_program.use();
+
     if (m_setup) {
         m_setup();
         glChk();
     }
-
-    m_program.use();
     renderQuad();
 }
 
