@@ -58,7 +58,11 @@ void initScene() {
     // Camera
     activeCam->radius(150.0);
 
-    renderPasses.push_back(loadRenderPass("grayscale"));
+    // All three of these approaches came from his blog:
+    // http://www.johndcook.com/blog/2009/08/24/algorithms-convert-color-grayscale/
+    // renderPasses.push_back(loadRenderPass("average"));
+    // renderPasses.push_back(loadRenderPass("lightness"));
+    renderPasses.push_back(loadRenderPass("luminosity"));
 }
 
 void initTextures() {
