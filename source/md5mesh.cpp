@@ -30,13 +30,7 @@
  * gcc -Wall -ansi -lGL -lGLU -lglut md5anim.c md5anim.c -o md5model
  */
 
-#include <GL/glew.h>
-
-#ifdef __APPLE__
-#include <GLUT/glut.h>
-#else
-#include <GL/glut.h>
-#endif
+#include "Utils.hpp"
 
 #include <SOIL/SOIL.h>
 

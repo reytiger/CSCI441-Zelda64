@@ -27,10 +27,7 @@
 *.app
 
 # Binary names
-z64
-
-# Our Makefile's dependency list
-depend.mk
+keyToTheKingdom
 
 # in-tree CMake build
 _*
@@ -43,8 +40,3 @@ perf*
 
 # nsf files, they are on network drives
 .nfs*
-
-keyToTheKingdom
-
-# External libs
-ext/fmod
