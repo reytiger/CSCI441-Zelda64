@@ -62,7 +62,9 @@ void initScene() {
     // http://www.johndcook.com/blog/2009/08/24/algorithms-convert-color-grayscale/
     // renderPasses.push_back(loadRenderPass("average"));
     // renderPasses.push_back(loadRenderPass("lightness"));
-    renderPasses.push_back(loadRenderPass("luminosity"));
+    // renderPasses.push_back(loadRenderPass("luminosity"));
+
+    renderPasses.push_back(loadRenderPass("inverted"));
 }
 
 void initTextures() {
