@@ -34,6 +34,14 @@ int leftMouse         = 0;
 GLint modifiersButton = 0;
 bool keyPressed[256]  = {};
 
+// Multipass shenanigans.
+GLuint fbo;
+GLuint fboTex;
+
+// Give it that... retro feel.
+size_t fbo_width  = 512;
+size_t fbo_height = fbo_width;
+
 // Things to draw
 std::vector<WorldObject *> drawn = std::vector<WorldObject *>();
 // extern paone::Object levelBongo;
@@ -118,42 +126,103 @@ void resize(int w, int h) {
 }
 
 void render() {
-    // clear the render buffer
     glDrawBuffer(GL_BACK);
+
+    glClearColor(0.0, 0.0, 0.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     resize(windowWidth, windowHeight);
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
 
-    activeCam->adjustGLU();
+    // Render to our texture.
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 
-    pushMatrixAnd([&]() {
-        auto scale = 1000.0f;
-        glScalef(scale, scale, scale);
-        void renderSkybox();
-        renderSkybox();
-    });
+    glPushAttrib(GL_VIEWPORT_BIT);
+    glViewport(0, 0, fbo_width, fbo_height);
+    {
+        glClearColor(colorClear.r, colorClear.g, colorClear.b, colorClear.a);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    glChk();
-    for (WorldObject *wo : drawn) {
+        glMatrixMode(GL_MODELVIEW);
+        glLoadIdentity();
+        activeCam->adjustGLU();
+
+        pushMatrixAnd([&]() {
+            auto scale = 1000.0f;
+            glScalef(scale, scale, scale);
+            void renderSkybox();
+            renderSkybox();
+        });
+
         glChk();
-        wo->draw();
+        for (WorldObject *wo : drawn) {
+            glChk();
+            wo->draw();
+            glChk();
+        }
+
+        ShaderProgram::useFFS();
+        glDisable(GL_LIGHTING);
+        glDisable(GL_CULL_FACE);
+
+        // levelBongo.draw();
+        levelHyruleField.draw();
+
+        glEnable(GL_CULL_FACE);
+        glEnable(GL_LIGHTING);
+
         glChk();
     }
 
-    ShaderProgram::useFFS();
-    glDisable(GL_LIGHTING);
-    glDisable(GL_CULL_FACE);
+    glPopAttrib();
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-    // levelBongo.draw();
-    levelHyruleField.draw();
+    // TODO: Subsequent passes.
 
-    glEnable(GL_CULL_FACE);
-    glEnable(GL_LIGHTING);
+    // Render the quad with our texture.
+    glClearColor(1.0, 1.0, 1.0, 1.0);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    glChk();
+    glMatrixMode(GL_PROJECTION);
+    pushMatrixAnd([]() {
+        glLoadIdentity();
 
+        double ratio = 2.0f * fbo_height / double(fbo_width);
+
+        gluOrtho2D(0.0, 1.0, 0.0, ratio);
+
+        glMatrixMode(GL_MODELVIEW);
+        glLoadIdentity();
+        glDisable(GL_LIGHTING);
+
+        glEnable(GL_TEXTURE_2D);
+        glBindTexture(GL_TEXTURE_2D, fboTex);
+
+        glBegin(GL_QUADS);
+        {
+            float x[] = {0.0, 1.0, 1.0, 0.0};
+            float y[] = {0.0, 0.0, 1.0, 1.0};
+
+            glTexCoord2f(0.0, 0.0);
+            glVertex3f(0.0, 0.0, 0.0);
+
+            glTexCoord2f(1.0, 0.0);
+            glVertex3f(1.0, 0.0, 0.0);
+
+            glTexCoord2f(1.0, 1.0);
+            glVertex3f(1.0, ratio, 0.0);
+
+            glTexCoord2f(0.0, 1.0);
+            glVertex3f(0.0, ratio, 0.0);
+        }
+        glEnd();
+
+        glDisable(GL_TEXTURE_2D);
+
+        // Make sure we pop the right matrix.
+        glMatrixMode(GL_PROJECTION);
+    });
+
+    // The HUD is separate.
     ShaderProgram::useFFS();
     renderHUD();
 
@@ -519,6 +588,60 @@ void normalKeysUp(unsigned char key, int, int) {
     }
 }
 
+void initFBO() {
+    glChk();
+
+    glGenFramebuffers(1, &fbo);
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glChk();
+
+    GLuint renderbuff;
+    glGenRenderbuffers(1, &renderbuff);
+    glBindRenderbuffer(GL_RENDERBUFFER, renderbuff);
+    glChk();
+
+    glRenderbufferStorage(
+        GL_RENDERBUFFER, GL_DEPTH_COMPONENT, fbo_width, fbo_height);
+    glFramebufferRenderbuffer(
+        GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, renderbuff);
+    glChk();
+
+    glGenTextures(1, &fboTex);
+    glBindTexture(GL_TEXTURE_2D, fboTex);
+    glChk();
+
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glChk();
+
+    glTexImage2D(GL_TEXTURE_2D,
+                 0,
+                 GL_RGBA,
+                 fbo_width,
+                 fbo_height,
+                 0,
+                 GL_RGBA,
+                 GL_UNSIGNED_BYTE,
+                 NULL);
+    glChk();
+    glFramebufferTexture2D(
+        GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, fboTex, 0);
+    glChk();
+    GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+
+    // Unbind everything.
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glDisable(GL_TEXTURE_2D);
+
+    if (status == GL_FRAMEBUFFER_COMPLETE) {
+        info("Framebuffer initialized completely!");
+    } else {
+        info("Framebuffer FAILED TO INITIALIZE COMPLETELY.");
+    }
+}
+
 // This sets up anything GLUT. This more or less never needs to change.
 void initGLUT(int *argcp, char **argv) {
     glutInit(argcp, argv);
@@ -552,11 +675,13 @@ void initGLUT(int *argcp, char **argv) {
     glShadeModel(GL_FLAT);
 
     glDisable(GL_COLOR_MATERIAL);
+}
 
-    glClearColor(colorClear.r, colorClear.g, colorClear.b, colorClear.a);
+void initOpenGL(int *argcp, char **argv) {
+    initGLUT(argcp, argv);
 
-    // This turns off ambient lighting. :D
-    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, Color(0.8, 0.8, 0.8, 1.0).v);
+    glewInit();
+    initFBO();
 }
 
 void start() {

@@ -87,8 +87,7 @@ int main(int argc, char **argv) {
     errno = 0;
     srand(static_cast<unsigned int>(time(nullptr)));
 
-    initGLUT(&argc, argv);
-    glewInit();
+    initOpenGL(&argc, argv);
     printOpenGLInformation();
 
     initShaders();

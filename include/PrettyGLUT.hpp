@@ -49,7 +49,7 @@ extern bool keyPressed[256];
 
 // "public" functions
 void printOpenGLInformation();
-void initGLUT(int *argcp, char **argv);
+void initOpenGL(int *argcp, char **argv);
 void start();
 
 using Texture = GLint;
