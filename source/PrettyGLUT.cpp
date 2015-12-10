@@ -44,6 +44,9 @@ size_t fbo_height = fbo_width;
 
 // Things to draw
 std::vector<WorldObject *> drawn = std::vector<WorldObject *>();
+
+std::vector<RenderPass> renderPasses;
+
 // extern paone::Object levelBongo;
 extern paone::Object levelHyruleField;
 
@@ -175,58 +178,30 @@ void render() {
         glChk();
     }
 
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, fboTex);
+    glChk();
+
+    for (auto &pass : renderPasses) {
+        pass.render();
+    }
+
     glPopAttrib();
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-    // TODO: Subsequent passes.
 
     // Render the quad with our texture.
     glClearColor(0.0, 0.0, 0.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    glMatrixMode(GL_PROJECTION);
-    pushMatrixAnd([]() {
-        glLoadIdentity();
-
-        double ratio = 2.0f * fbo_height / double(fbo_width);
-
-        gluOrtho2D(0.0, 1.0, 0.0, ratio);
-
-        glMatrixMode(GL_MODELVIEW);
-        glLoadIdentity();
-        glDisable(GL_LIGHTING);
-
-        glEnable(GL_TEXTURE_2D);
-        glBindTexture(GL_TEXTURE_2D, fboTex);
-
-        glBegin(GL_QUADS);
-        {
-            float x[] = {0.0, 1.0, 1.0, 0.0};
-            float y[] = {0.0, 0.0, 1.0, 1.0};
-
-            glTexCoord2f(0.0, 0.0);
-            glVertex3f(0.0, 0.0, 0.0);
-
-            glTexCoord2f(1.0, 0.0);
-            glVertex3f(1.0, 0.0, 0.0);
-
-            glTexCoord2f(1.0, 1.0);
-            glVertex3f(1.0, ratio, 0.0);
-
-            glTexCoord2f(0.0, 1.0);
-            glVertex3f(0.0, ratio, 0.0);
-        }
-        glEnd();
-
-        glDisable(GL_TEXTURE_2D);
-
-        // Make sure we pop the right matrix.
-        glMatrixMode(GL_PROJECTION);
-    });
+    ShaderProgram::useFFS();
+    RenderPass::renderQuad();
 
     // The HUD is separate.
     ShaderProgram::useFFS();
     renderHUD();
+
+    glDisable(GL_TEXTURE_2D);
+    glChk();
 
     // push the back buffer to the screen
     glutSwapBuffers();

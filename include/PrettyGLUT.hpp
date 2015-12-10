@@ -2,8 +2,9 @@
 #include "Utils.hpp"
 
 #include "Cameras.hpp"
-#include "Shader.hpp"
 #include "PacmanGame.hpp"
+#include "RenderPass.hpp"
+#include "Shader.hpp"
 #include "WorldObjects.hpp"
 
 #include "ModelLoader.hpp"
@@ -60,3 +61,5 @@ extern Texture loading;
 
 extern paone::Object levelBongo;
 extern paone::Object levelHyruleField;
+
+extern std::vector<RenderPass> renderPasses;
