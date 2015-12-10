@@ -22,6 +22,27 @@ void updateScene(double t, double dt) {
     }
 }
 
+RenderPass loadRenderPass(const std::string &name) {
+    Shader vert;
+    vert.loadFromFile(tfm::format("glsl/%s/vert.glsl", name), GL_VERTEX_SHADER);
+
+    Shader frag;
+    frag.loadFromFile(tfm::format("glsl/%s/frag.glsl", name),
+                      GL_FRAGMENT_SHADER);
+
+    ShaderProgram program;
+    program.create();
+    program.attach(vert, frag);
+    program.link();
+
+    RenderPass pass;
+    pass.program(program);
+
+    glChk();
+
+    return pass;
+}
+
 void initScene() {
     // if (!levelBongo.loadObjectFile("assets/Env/HyruleField/hyrulefeild.obj"))
     // {
@@ -36,6 +57,12 @@ void initScene() {
 
     // Camera
     activeCam->radius(150.0);
+
+    // All three of these approaches came from his blog:
+    // http://www.johndcook.com/blog/2009/08/24/algorithms-convert-color-grayscale/
+    // renderPasses.push_back(loadRenderPass("average"));
+    // renderPasses.push_back(loadRenderPass("lightness"));
+    renderPasses.push_back(loadRenderPass("luminosity"));
 }
 
 void initTextures() {
@@ -78,20 +105,13 @@ void initTextures() {
     glChk();
 }
 
-void initShaders() {
-    // TODO: Shaders!
-    glChk();
-}
-
 int main(int argc, char **argv) {
     errno = 0;
     srand(static_cast<unsigned int>(time(nullptr)));
 
-    initGLUT(&argc, argv);
-    glewInit();
+    initOpenGL(&argc, argv);
     printOpenGLInformation();
 
-    initShaders();
     initTextures();
     initScene();
 

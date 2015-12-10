@@ -2,8 +2,9 @@
 #include "Utils.hpp"
 
 #include "Cameras.hpp"
-#include "Shader.hpp"
 #include "PacmanGame.hpp"
+#include "RenderPass.hpp"
+#include "Shader.hpp"
 #include "WorldObjects.hpp"
 
 #include "ModelLoader.hpp"
@@ -49,7 +50,7 @@ extern bool keyPressed[256];
 
 // "public" functions
 void printOpenGLInformation();
-void initGLUT(int *argcp, char **argv);
+void initOpenGL(int *argcp, char **argv);
 void start();
 
 using Texture = GLint;
@@ -60,3 +61,5 @@ extern Texture loading;
 
 extern paone::Object levelBongo;
 extern paone::Object levelHyruleField;
+
+extern std::vector<RenderPass> renderPasses;
