@@ -68,6 +68,8 @@ void renderHUD() {
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
+    // Make sure everything is drawn infront of everything.
+    glTranslatef(0.0, 0.0, 1.0);
 
     // These two come from us using GLUT_BITMAP_9_BY_15 in drawText().
     static const size_t charWidth  = 9;
@@ -179,7 +181,7 @@ void render() {
     // TODO: Subsequent passes.
 
     // Render the quad with our texture.
-    glClearColor(1.0, 1.0, 1.0, 1.0);
+    glClearColor(0.0, 0.0, 0.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glMatrixMode(GL_PROJECTION);
