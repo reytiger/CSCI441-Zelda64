@@ -50,6 +50,32 @@ std::vector<RenderPass> renderPasses;
 // extern paone::Object levelBongo;
 extern paone::Object levelHyruleField;
 
+// Call this after the swapbuffer call to update the FPS, etc. counter.
+// See: https://www.opengl.org/wiki/Performance#Measuring_Performance
+void updateFrameCounter() {
+    using namespace std::chrono;
+
+    static auto last_updated = timer_clock::now();
+    static auto then         = timer_clock::now();
+    static int frames        = 0;
+
+    frames += 1;
+
+    auto now = timer_clock::now();
+    auto dt  = now - then;
+    then     = now;
+
+    // Keep a live, running average FPS counter.
+    if (now - last_updated > FPS_update_delay) {
+        live_fps       = frames / duration<double>(now - last_updated).count();
+        live_frametime = duration<double>(dt).count() / frames;
+        live_frames    = frames;
+
+        last_updated = now;
+        frames       = 0;
+    }
+}
+
 // TODO: Make this stroke.
 void drawText(const std::string &text, Vec pos, Color color) {
     glColor3fv(color.v);
@@ -115,7 +141,7 @@ void renderHUD() {
     drawText(tfm::format("%*d frames", numLength, live_frames), pos, white);
 
     pos.y -= lineSpacing;
-    auto dims = tfm::format("%d x %d", fbo_width, fbo_width);
+    auto dims = tfm::format("%d x %d", fbo_width, fbo_height);
     pos.x += (numLength - dims.size()) * charWidth;
     drawText(tfm::format("%s resolution", dims), pos, white);
 
@@ -210,6 +236,7 @@ void render() {
 
     // push the back buffer to the screen
     glutSwapBuffers();
+    updateFrameCounter();
 }
 
 
@@ -465,30 +492,13 @@ void renderLoadingScreen() {
 void doFrame(int) {
     using namespace std::chrono;
 
-    static const auto delay  = milliseconds(1000 / FPS);
-    static auto last_updated = timer_clock::now();
-    static auto then         = timer_clock::now();
-    static int frames        = 0;
-
-    // Register the next update ASAP. We want this timing to be as consistent
-    // as we can get it to be.
+    static const auto delay = milliseconds(1000 / FPS);
     glutTimerFunc(as<int>(delay.count()), doFrame, 0);
 
-    frames += 1;
-
-    auto now = timer_clock::now();
-    auto dt  = now - then;
-    then     = now;
-
-    // Keep a live, running average FPS counter.
-    if (now - last_updated > FPS_update_delay) {
-        live_fps       = frames / duration<double>(now - last_updated).count();
-        live_frametime = duration<double>(dt).count() / frames;
-        live_frames    = frames;
-
-        last_updated = now;
-        frames       = 0;
-    }
+    static auto then = timer_clock::now();
+    auto now         = timer_clock::now();
+    auto dt          = now - then;
+    then             = now;
 
     // TODO: Pass a t which changes. We're pushing out all of our precision
     // with really big numbers.
