@@ -67,7 +67,7 @@ bool Object::loadObjectFile(string filename, bool INFO, bool ERRORS) {
     return result;
 }
 
-bool Object::draw() {
+bool Object::draw() const {
     bool result = true;
 
     glPushMatrix();
