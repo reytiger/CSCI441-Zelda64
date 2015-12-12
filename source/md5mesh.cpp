@@ -30,7 +30,7 @@
  * gcc -Wall -ansi -lGL -lGLU -lglut md5anim.c md5anim.c -o md5model
  */
 
-#include "Utils.hpp"
+#include "Utils.hpp" //glChk, etc.
 
 #include <SOIL/SOIL.h>
 
@@ -43,11 +43,9 @@ using namespace std;
 #include <string.h>
 #include <math.h>
 
-#include "Shader_Utils.h"
+#include "Shader.hpp"
 #include "MD5/md5model.h"
 #include "MD5/md5mesh.h"
-
-GLuint shaderProgramHandle = -1;
 
 /* vertex array related stuff */
 int max_verts = 0;
@@ -150,47 +148,46 @@ GLuint loadTexture(string filename) {
 //  Compile and Register our Vertex and Fragment Shaders
 //
 ////////////////////////////////////////////////////////////////////////////////
-GLuint setupMD5Shaders(char *vertexShaderFilename,
-                       char *fragmentShaderFilename) {
+GLuint setupMD5Shaders(ShaderProgram &prog, const char *vertexShaderFilename,
+                       const char *fragmentShaderFilename) {
 
-    GLuint shaderProgramHandle = createShaderProgram(
-        vertexShaderFilename, fragmentShaderFilename, "MD5 Shader Program");
+    Shader vertexS, fragmentS;
+    vertexS.loadFromFile(std::string(vertexShaderFilename), GL_VERTEX_SHADER);
+    fragmentS.loadFromFile(std::string(fragmentShaderFilename),
+                           GL_FRAGMENT_SHADER);
 
-    GLuint diffusMapTexLocation
-        = glGetUniformLocation(shaderProgramHandle, "diffuseMap");
-    GLuint speculMapTexLocation
-        = glGetUniformLocation(shaderProgramHandle, "specularMap");
-    GLuint normalMapTexLocation
-        = glGetUniformLocation(shaderProgramHandle, "normalMap");
-    GLuint heightMapTexLocation
-        = glGetUniformLocation(shaderProgramHandle, "heightMap");
+    prog.create();
+    prog.attach(vertexS, fragmentS);
+    prog.link();
+
+    prog.use();
+
+    GLuint diffusMapTexLocation = prog.getUniformLocation("diffuseMap");
+    GLuint speculMapTexLocation = prog.getUniformLocation("specularMap");
+    GLuint normalMapTexLocation = prog.getUniformLocation("normalMap");
+    GLuint heightMapTexLocation = prog.getUniformLocation("heightMap");
 
     glUniform1i(diffusMapTexLocation, 0);
     glUniform1i(speculMapTexLocation, 1);
     glUniform1i(normalMapTexLocation, 2);
     glUniform1i(heightMapTexLocation, 3);
 
+    ShaderProgram::useFFS();
+
     /* return handle */
-    return shaderProgramHandle;
+    return prog.handle();
 }
 
 /**
  * Load an MD5 model from file.
  */
 int ReadMD5Model(const char *filename, struct md5_model_t *mdl) {
-    if (shaderProgramHandle == -1) {
-        // load shaders
-        shaderProgramHandle
-            = setupMD5Shaders("glsl/md5shader.v.glsl",
-                              "glsl/md5shader.f.glsl"); // setup our shaders
-        printf("\n");
-    }
 
     FILE *fp;
     char buff[512];
     int version;
     int curr_mesh = 0;
-    int i;
+    unsigned int i;
 
     int totVert    = 0;
     int totWeights = 0;
@@ -289,6 +286,8 @@ int ReadMD5Model(const char *filename, struct md5_model_t *mdl) {
                                 = loadTexture(diffuseMapFN);
                         }
 
+                        /* Disabled because it will abort when SOIL can't find
+                        the file
                         string specularMapFN = string(mesh->shader) + "_s.tga";
                         mesh->textures[1].texHandle
                             = loadTexture(specularMapFN);
@@ -297,6 +296,7 @@ int ReadMD5Model(const char *filename, struct md5_model_t *mdl) {
                             mesh->textures[1].texHandle
                                 = loadTexture(specularMapFN);
                         }
+                        */
 
                         string normalMapFN
                             = string(mesh->shader) + "_local.tga";
@@ -307,13 +307,17 @@ int ReadMD5Model(const char *filename, struct md5_model_t *mdl) {
                                 = loadTexture(normalMapFN);
                         }
 
-                        string heightMapFN          = string(mesh->shader) + "_h.tga";
+                        /* Disabled because it will abort when SOIL can't find
+                        the file
+                        string heightMapFN          = string(mesh->shader) +
+                        "_h.tga";
                         mesh->textures[3].texHandle = loadTexture(heightMapFN);
                         if (mesh->textures[3].texHandle == 0) {
                             heightMapFN = string(mesh->shader) + "_h.png";
                             mesh->textures[3].texHandle
                                 = loadTexture(heightMapFN);
                         }
+                        */
                     }
                 } else if (sscanf(buff, " numverts %d", &mesh->num_verts)
                            == 1) {
@@ -436,7 +440,7 @@ int ReadMD5Model(const char *filename, struct md5_model_t *mdl) {
  * Free resources allocated for the model.
  */
 void FreeModel(struct md5_model_t *mdl) {
-    int i;
+    unsigned int i;
 
     if (mdl->baseSkel) {
         free(mdl->baseSkel);
@@ -504,14 +508,17 @@ void PrepareMesh(const struct md5_mesh_t *mesh,
         }
 
         // TODO #1: Place final vertices into our vertex array
+        vertexArray[i][0] = finalVertex[0];
+        vertexArray[i][1] = finalVertex[1];
+        vertexArray[i][2] = finalVertex[2];
 
         // TODO #5: Place texture coordinate into texel array
+        texelArray[i][0] = mesh->vertices[i].st[0];
+        texelArray[i][1] = mesh->vertices[i].st[1];
     }
 }
 
 void DrawMesh(const struct md5_mesh_t *mesh) {
-    glUseProgram(shaderProgramHandle);
-
     glEnable(GL_TEXTURE_2D);
 
     /* Bind Diffuse Map */
@@ -532,23 +539,32 @@ void DrawMesh(const struct md5_mesh_t *mesh) {
 
 
     // TODO #2: Enable our vertex array
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
     // TODO #3: pass our vertex pointer and draw everything!
+    glVertexPointer(3, GL_FLOAT, 0, vertexArray);
+    glTexCoordPointer(2, GL_FLOAT, 0, texelArray);
+    glDrawElements(
+        GL_TRIANGLES, mesh->num_tris * 3, GL_UNSIGNED_INT, vertexIndices);
 
     // TODO #4: Disable the vertex array
+    glDisableClientState(GL_VERTEX_ARRAY);
+    glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, 0);
+
     glActiveTexture(GL_TEXTURE2);
     glBindTexture(GL_TEXTURE_2D, 0);
+
     glActiveTexture(GL_TEXTURE3);
     glBindTexture(GL_TEXTURE_2D, 0);
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D,
-                  0); // do this last so 0 is active again by default
-    glDisable(GL_TEXTURE_2D);
 
-    glUseProgram(0);
+    // do this last so 0 is active again by default
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glDisable(GL_TEXTURE_2D);
 }
 
 void AllocVertexArrays() {

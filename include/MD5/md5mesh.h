@@ -89,5 +89,8 @@ void FreeVertexArrays ();
  */
 void DrawSkeleton (const struct md5_joint_t *skeleton, int num_joints);
 
+//Shader loading
+GLuint setupMD5Shaders(ShaderProgram &prog, const char *vertexShaderFilename,
+                       const char *fragmentShaderFilename);
 
 #endif

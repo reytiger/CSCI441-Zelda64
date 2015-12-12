@@ -138,7 +138,7 @@ void Quat_slerp(const quat4_t qa, const quat4_t qb, float t, quat4_t out) {
  */
 int CheckAnimValidity(const struct md5_model_t *mdl,
                       const struct md5_anim_t *anim) {
-    int i;
+    unsigned int i;
 
     /* md5mesh and md5anim must have the same number of joints */
     if (mdl->num_joints != anim->num_joints)
@@ -256,9 +256,9 @@ int ReadMD5Anim(const char *filename, struct md5_anim_t *anim) {
     struct baseframe_joint_t *baseFrame = NULL;
     float *animFrameData                = NULL;
     int version;
-    int numAnimatedComponents;
+    unsigned int numAnimatedComponents;
     int frame_index;
-    int i;
+    unsigned int i;
 
     printf("[.md5anim]: about to read %s\n", filename);
 
@@ -401,7 +401,7 @@ int ReadMD5Anim(const char *filename, struct md5_anim_t *anim) {
  * Free resources allocated for the animation.
  */
 void FreeAnim(struct md5_anim_t *anim) {
-    int i;
+    unsigned int i;
 
     if (anim->skelFrames) {
         for (i = 0; i < anim->num_frames; ++i) {
@@ -425,9 +425,10 @@ void FreeAnim(struct md5_anim_t *anim) {
  * Smoothly interpolate two skeletons
  */
 void InterpolateSkeletons(const struct md5_joint_t *skelA,
-                          const struct md5_joint_t *skelB, int num_joints,
-                          float interp, struct md5_joint_t *out) {
-    int i;
+                          const struct md5_joint_t *skelB,
+                          unsigned int num_joints, float interp,
+                          struct md5_joint_t *out) {
+    unsigned int i;
 
     for (i = 0; i < num_joints; ++i) {
         /* Copy parent index */

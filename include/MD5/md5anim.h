@@ -80,11 +80,11 @@ int CheckAnimValidity (const struct md5_model_t *mdl, const struct md5_anim_t *a
 /**
  * Build skeleton for a given frame data.
  */
-static void BuildFrameSkeleton (const struct joint_info_t *jointInfos,
+void BuildFrameSkeleton (const struct joint_info_t *jointInfos,
                     const struct baseframe_joint_t *baseFrame,
                     const float *animFrameData,
                     struct md5_joint_t *skelFrame,
-                                int num_joints);
+                                unsigned int num_joints);
 
 /**
  * Load an MD5 animation from file.
@@ -101,7 +101,7 @@ void FreeAnim (struct md5_anim_t *anim);
  */
 void InterpolateSkeletons (const struct md5_joint_t *skelA,
                       const struct md5_joint_t *skelB,
-                      int num_joints, float interp,
+                      unsigned int num_joints, float interp,
                            struct md5_joint_t *out);
 
 /**

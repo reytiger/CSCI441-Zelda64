@@ -110,15 +110,15 @@ struct md5_model_t
     struct md5_joint_t *baseSkel;
     struct md5_mesh_t *meshes;
     
-    int num_joints;
-    int num_meshes;
+    unsigned int num_joints;
+    unsigned int num_meshes;
 };
 
 /* Animation data */
 struct md5_anim_t
 {
-    int num_frames;
-    int num_joints;
+    unsigned int num_frames;
+    unsigned int num_joints;
     int frameRate;
     
     struct md5_joint_t **skelFrames;
@@ -166,7 +166,7 @@ int ReadMD5Anim (const char *filename, struct md5_anim_t *anim);
 void FreeAnim (struct md5_anim_t *anim);
 void InterpolateSkeletons (const struct md5_joint_t *skelA,
                            const struct md5_joint_t *skelB,
-                           int num_joints, float interp,
+                           unsigned int num_joints, float interp,
                            struct md5_joint_t *out);
 void Animate (const struct md5_anim_t *anim,
               struct anim_info_t *animInfo, double dt);
