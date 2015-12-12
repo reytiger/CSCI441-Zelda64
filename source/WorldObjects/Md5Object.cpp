@@ -7,6 +7,7 @@ Md5Object::Md5Object(const std::string &modelFile, float scale) {
     m_animated = false;
     m_scale    = scale;
 
+    material(Material::WhitePlastic);
     registerUpdateFunc();
 
     loadModel(modelFile);

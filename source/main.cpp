@@ -6,6 +6,7 @@
 paone::Object levelBongo;
 paone::Object levelHyruleField;
 Md5Object *link;
+Navi navi;
 
 // This function is expected by PrettyGLUT, because I designed it to get
 // done fast, not smart. We can change this later, but this makes sure it
@@ -50,11 +51,17 @@ void initScene() {
     //     abort();
     // }
 
-    glChk();
     link = new Md5Object(
         "assets/FDL/FDL.md5mesh", "assets/FDL/FDL.md5anim", 0.1);
     glChk();
     drawn.push_back(link);
+
+    if (!navi.loadObjectFile("assets/Navi/Navi.obj")) {
+        error("Unable to load Navi from .obj");
+    } else {
+        drawn.push_back(&navi);
+        navi.follow(link);
+    }
 
     if (!levelHyruleField.loadObjectFile(
             "assets/Env/HyruleField/hyrulefeild.obj")) {

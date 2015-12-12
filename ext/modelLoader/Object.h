@@ -21,7 +21,7 @@ public:
 
     bool loadObjectFile(string filename, bool INFO = true, bool ERRORS = true);
 
-    bool draw();
+    bool draw() const;
 
     Point *getLocation();
 
