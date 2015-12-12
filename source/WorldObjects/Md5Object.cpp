@@ -108,7 +108,7 @@ void Md5Object::registerUpdateFunc() {
             InterpolateSkeletons(m_animation.skelFrames[m_anim_info.curr_frame],
                                  m_animation.skelFrames[m_anim_info.next_frame],
                                  m_animation.num_joints,
-                                 m_anim_info.last_time * m_animation.frameRate,
+                                 as<float>(m_anim_info.last_time * m_animation.frameRate),
                                  m_skeleton);
         }
     };

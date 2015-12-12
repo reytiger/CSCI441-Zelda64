@@ -52,7 +52,7 @@ void initScene() {
 
     glChk();
     link = new Md5Object(
-        "assets/FDL/FDL.md5mesh", "assets/FDL/FDL.md5anim", 0.1);
+        "assets/FDL/FDL.md5mesh", "assets/FDL/FDL.md5anim", 0.1f);
     glChk();
     drawn.push_back(link);
 

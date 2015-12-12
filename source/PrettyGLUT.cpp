@@ -39,8 +39,8 @@ GLuint fbo;
 GLuint fboTex;
 
 // Give it that... retro feel.
-size_t fbo_width  = 512;
-size_t fbo_height = fbo_width;
+GLsizei fbo_width  = 512;
+GLsizei fbo_height = fbo_width;
 
 // Things to draw
 std::vector<WorldObject *> drawn = std::vector<WorldObject *>();
@@ -254,8 +254,8 @@ void renderSkybox() {
     auto bottom = _(1, 0);
 #undef _
 
-    const auto q = 1 / 4.0;
-    const auto t = 1 / 3.0;
+    const float q = 1 / 4.0f;
+    const float t = 1 / 3.0f;
 
     glEnable(GL_TEXTURE_2D);
     glDisable(GL_LIGHTING);
