@@ -33,9 +33,11 @@ constexpr const char *windowTitle = "A little green tunic.";
 
 constexpr float FOV = 60.0;
 
-// This effectively removes any limit on rendering frames.
-constexpr size_t FPS            = 9001;
-constexpr auto FPS_update_delay = std::chrono::milliseconds(500);
+// This is really a limit on updating the scene. It's considerably higer the
+// frame rate.
+constexpr size_t FPS = 300;
+// How often is the HUD display for frame rate/time/etc updated?
+constexpr auto FPS_update_delay = std::chrono::seconds(1);
 
 extern int windowWidth;
 extern int windowHeight;
