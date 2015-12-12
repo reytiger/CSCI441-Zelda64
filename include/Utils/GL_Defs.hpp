@@ -1,6 +1,7 @@
 #pragma once
 
-#define GLEW_STATIC
+// This may or may not break linux builds.
+//#define GLEW_STATIC
 #include <GL/glew.h>
 
 #ifdef __APPLE__
@@ -13,7 +14,7 @@
 #include <GL/glu.h>
 #endif
 
-#include "SOIL.h"
+#include "SOIL/SOIL.h"
 
 #include "Utils/DebugTools.hpp"
 

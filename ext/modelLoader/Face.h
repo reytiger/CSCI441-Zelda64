@@ -2,9 +2,9 @@
 #define _GOL_FACE_H_
 
 #ifdef __APPLE__
-#include <OpenGL/glu.h>
+#include <OpenGL/glut.h>
 #else
-#include <GL/glu.h>
+#include <GL/glut.h>
 #endif
 
 #include "Material.h"

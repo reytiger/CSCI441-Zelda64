@@ -5,7 +5,6 @@ project(csci441-Graphics-Project)
 set(binary "keyToTheKingdom")
 set(S "${CMAKE_SOURCE_DIR}")
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${S}/cmake")
-set(CMAKE_COMPILER_IS_CLANGXX "${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
 
 # Some of our stuff is GCC version dependent.
 execute_process(COMMAND ${CMAKE_C_COMPILER} -dumpversion

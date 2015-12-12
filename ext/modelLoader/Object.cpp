@@ -1,10 +1,10 @@
 #ifdef __APPLE__
-#include <OpenGL/gl.h>
+#include <OpenGL/glut.h>
 #else
-#include <GL/gl.h>
+#include <GL/glut.h>
 #endif
 
-#include <SOIL.h>
+#include <SOIL/SOIL.h>
 
 #include "Object.h"
 #include "Point.h"
