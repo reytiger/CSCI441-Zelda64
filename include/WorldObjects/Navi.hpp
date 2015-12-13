@@ -1,14 +1,13 @@
 #include "WorldObjects/WorldObjModel.hpp"
 #include "WorldObjects/Lighting/Light.hpp"
 
-class Navi : public WorldObjModel
-{
-  public:
+class Navi : public WorldObjModel {
+public:
     Navi();
 
-  protected:
+protected:
     virtual void internalDraw() const override;
 
-  private:
+private:
     Light m_light;
 };

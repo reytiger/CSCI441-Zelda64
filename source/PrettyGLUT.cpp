@@ -227,11 +227,13 @@ void render() {
     ShaderProgram::useFFS();
     RenderPass::renderQuad();
 
+    // Disable BEFORE the hud to avoid "out of bounds" errno
+    glDisable(GL_TEXTURE_2D);
+
     // The HUD is separate.
     ShaderProgram::useFFS();
     renderHUD();
 
-    glDisable(GL_TEXTURE_2D);
     glChk();
 
     // push the back buffer to the screen
