@@ -21,25 +21,25 @@ FMOD::Channel *callCh  = nullptr;
 
 // Make sure navi's call comes from navi's location!
 void updateNavisCallPosition() {
-    auto pos = navi.pos();
-    auto vel = navi.vel();
-    FMOD_VECTOR posv = { pos.x, pos.y, pos.z };
-    FMOD_VECTOR velv = { vel.x, vel.y, vel.z };
+    auto pos         = navi.pos();
+    auto vel         = navi.vel();
+    FMOD_VECTOR posv = {pos.x, pos.y, pos.z};
+    FMOD_VECTOR velv = {vel.x, vel.y, vel.z};
 
     callCh->set3DAttributes(&posv, &velv);
 }
 
 // The listener follow the active camera.
 void updateListenerPosition() {
-    auto pos = activeCam->pos();
-    auto vel = activeCam->vel();
+    auto pos     = activeCam->pos();
+    auto vel     = activeCam->vel();
     auto forward = activeCam->lookDir().cart();
-    auto up = activeCam->up();
+    auto up      = activeCam->up();
 
-    FMOD_VECTOR listener_pos = { pos.x, pos.y, pos.z };
-    FMOD_VECTOR listener_vel = { vel.x, vel.y, vel.z };
-    FMOD_VECTOR listener_forward = { forward.x, forward.y, forward.z };
-    FMOD_VECTOR listener_up = { up.x, up.y, up.z };
+    FMOD_VECTOR listener_pos     = {pos.x, pos.y, pos.z};
+    FMOD_VECTOR listener_vel     = {vel.x, vel.y, vel.z};
+    FMOD_VECTOR listener_forward = {forward.x, forward.y, forward.z};
+    FMOD_VECTOR listener_up      = {up.x, up.y, up.z};
 
     sys->set3DListenerAttributes(
         0, &listener_pos, &listener_vel, &listener_forward, &listener_up);
@@ -72,7 +72,6 @@ void updateScene(double t, double dt) {
     if (keyPressed[' ']) {
         FMOD::Sound *playing = nullptr;
         callCh->getCurrentSound(&playing);
-        info("%s", playing);
         if (playing != navi_call) {
             // The internet told me to.
             // http://stackoverflow.com/a/13838022
@@ -176,7 +175,6 @@ void initFMOD() {
     themeCh->setPaused(false);
 
     callCh->set3DMinMaxDistance(15.0f, 1e3f);
-
 }
 
 int main(int argc, char **argv) {
