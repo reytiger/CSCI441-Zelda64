@@ -47,7 +47,7 @@ std::vector<WorldObject *> drawn = std::vector<WorldObject *>();
 std::vector<RenderPass> renderPasses;
 
 // extern paone::Object levelBongo;
-extern paone::Object levelHyruleField;
+extern WorldObjModel levelHyruleField;
 
 // Call this after the swap buffer call to update the FPS, etc. counter.
 // See: https://www.opengl.org/wiki/Performance#Measuring_Performance

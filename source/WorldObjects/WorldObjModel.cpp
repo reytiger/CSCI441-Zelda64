@@ -1,5 +1,9 @@
 #include "WorldObjects/WorldObjModel.hpp"
 
+
+WorldObjModel::WorldObjModel() { m_material = Material::WhitePlastic; }
+
+
 bool WorldObjModel::loadObjectFile(const std::string &filename) {
     return m_obj.loadObjectFile(filename);
 }

@@ -5,8 +5,7 @@
 
 #include <fstream>
 
-paone::Object levelBongo;
-paone::Object levelHyruleField;
+WorldObjModel levelHyruleField;
 Navi navi;
 Md5Object *link = nullptr;
 

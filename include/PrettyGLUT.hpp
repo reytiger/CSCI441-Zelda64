@@ -19,9 +19,6 @@ extern FreeCamera freecam;
 
 extern Camera *activeCam;
 
-extern paone::Object venus;
-extern paone::Object temple;
-
 extern double live_fps;
 extern double live_frametime;
 extern int live_frames;
@@ -55,8 +52,5 @@ void initOpenGL(int *argcp, char **argv);
 void start();
 
 using Texture = GLint;
-
-extern paone::Object levelBongo;
-extern paone::Object levelHyruleField;
 
 extern std::vector<RenderPass> renderPasses;

@@ -8,6 +8,7 @@
 
 class WorldObjModel : public WorldObject {
 public:
+    WorldObjModel();
     bool loadObjectFile(const std::string &filename);
 
 protected:

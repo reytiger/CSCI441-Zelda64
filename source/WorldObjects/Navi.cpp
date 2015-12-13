@@ -3,6 +3,8 @@
 
 
 Navi::Navi() {
+    // not sure if this needs to be on before doing other light calls
+    glEnable(GL_LIGHTING);
     m_light.enable();
 
     m_pos.y = 10.f;
@@ -15,6 +17,7 @@ Navi::Navi() {
     // attach the light to Navi's position
     m_light.follow(this);
 
+    m_material = Material::WhitePlastic;
     // update function
     auto f = [&](double t, double dt) {
         moveByX(0.1 * cos(t));
@@ -31,6 +34,7 @@ void Navi::internalDraw() const {
     glDisable(GL_CULL_FACE);
     glScalef(0.1, 0.1, 0.1);
 
+    glEnable(GL_LIGHTING);
     WorldObjModel::internalDraw();
     m_light.draw();
 

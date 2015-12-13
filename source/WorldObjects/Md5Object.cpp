@@ -45,6 +45,7 @@ void Md5Object::internalDraw() const {
 
     glPushMatrix();
     glDisable(GL_CULL_FACE);
+    glEnable(GL_LIGHTING);
     glRotatef(-90.f, 1.0, 0.0, 0.0); // orient models along Y instead of Z
     glScalef(m_scale, m_scale, m_scale);
     for (unsigned int i = 0; i < m_model.num_meshes; ++i) {
