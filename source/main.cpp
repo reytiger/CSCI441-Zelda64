@@ -138,14 +138,14 @@ void initFMOD() {
     FMOD::System_Create(&sys);
     sys->init(100, FMOD_INIT_NORMAL, nullptr);
 
-    sys->createStream("assets/audio/hyrulefield-theme.mp3",
+    sys->createStream("assets/audio/HyruleField.mp3",
                       FMOD_LOOP_NORMAL | FMOD_3D,
                       nullptr,
                       &hyrule_theme);
     sys->playSound(hyrule_theme, nullptr, true, &themeCh);
 
     sys->createSound(
-        "assets/audio/hey-listen.mp3", FMOD_3D, nullptr, &navi_call);
+        "assets/audio/Navi,heylisten.mp3", FMOD_3D, nullptr, &navi_call);
 
     themeCh->setVolume(1.0f);
     themeCh->set3DMinMaxDistance(5.0f, 1e3f);
