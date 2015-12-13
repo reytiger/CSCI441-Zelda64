@@ -138,14 +138,22 @@ void initFMOD() {
     FMOD::System_Create(&sys);
     sys->init(100, FMOD_INIT_NORMAL, nullptr);
 
-    sys->createStream("assets/audio/HyruleField.mp3",
-                      FMOD_LOOP_NORMAL | FMOD_3D,
-                      nullptr,
-                      &hyrule_theme);
+    FMOD_RESULT res;
+
+    res = sys->createStream("assets/audio/HyruleField.mp3",
+                            FMOD_LOOP_NORMAL | FMOD_3D,
+                            nullptr,
+                            &hyrule_theme);
+    if (res != FMOD_OK) {
+        fatal("Error opening audio file for FMOD.");
+    }
     sys->playSound(hyrule_theme, nullptr, true, &themeCh);
 
-    sys->createSound(
+    res = sys->createSound(
         "assets/audio/Navi,heylisten.mp3", FMOD_3D, nullptr, &navi_call);
+    if (res != FMOD_OK) {
+        fatal("Error opening audio file for FMOD.");
+    }
 
     themeCh->setVolume(1.0f);
     themeCh->set3DMinMaxDistance(5.0f, 1e3f);
@@ -158,10 +166,11 @@ int main(int argc, char **argv) {
     errno = 0;
     srand(static_cast<unsigned int>(time(nullptr)));
 
+    initFMOD();
+
     initOpenGL(&argc, argv);
     printOpenGLInformation();
 
-    initFMOD();
 
     initScene();
 
