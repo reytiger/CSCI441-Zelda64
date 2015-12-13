@@ -120,7 +120,7 @@ void renderHUD() {
     // Frame time
     pos.y -= lineSpacing;
     std::string units = "??";
-    auto frametime = live_frametime;
+    auto frametime    = live_frametime;
     if (frametime < 1e-6) {
         units = "ns";
         frametime *= 1e9;
@@ -197,14 +197,13 @@ void render() {
         }
 
         ShaderProgram::useFFS();
-        glDisable(GL_LIGHTING);
+        glEnable(GL_LIGHTING);
         glDisable(GL_CULL_FACE);
 
         // levelBongo.draw();
         levelHyruleField.draw();
 
         glEnable(GL_CULL_FACE);
-        glEnable(GL_LIGHTING);
 
         glChk();
     }
@@ -677,11 +676,10 @@ void initGLUT(int *argcp, char **argv) {
 
     // Lighting
     glEnable(GL_LIGHTING);
-    glEnable(GL_CULL_FACE);
+    glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+    glEnable(GL_COLOR_MATERIAL);
 
     glShadeModel(GL_FLAT);
-
-    glDisable(GL_COLOR_MATERIAL);
 
     initSkybox();
 }

@@ -18,34 +18,14 @@ FMOD::Sound *navi_call    = nullptr;
 FMOD::Channel *themeCh = nullptr;
 FMOD::Channel *callCh  = nullptr;
 
-// This function is expected by PrettyGLUT, because I designed it to get
-// done fast, not smart. We can change this later, but this makes sure it
-// builds.
-// It takes in t and dt, the time and time since the last updateScene was
-// called.
-void updateScene(double t, double dt) {
-    // Even though they're rendered, the cameras are NOT in the drawn list, so
-    // we have to update them manually, if we want them updated at all.
-    activeCam->update(t, dt);
-    activeCam->doWASDControls(2.0, keyPressed, true);
+// Make sure navi's call comes from navi's location!
+void updateNavisCallPosition() {
+    auto pos         = navi.pos();
+    auto vel         = navi.vel();
+    FMOD_VECTOR posv = {pos.x, pos.y, pos.z};
+    FMOD_VECTOR velv = {vel.x, vel.y, vel.z};
 
-    for (WorldObject *wo : drawn) {
-        wo->update(t, dt);
-    }
-
-    // TODO: Make this positional.
-    if (keyPressed[' ']) {
-        FMOD::Sound *playing = nullptr;
-        callCh->getCurrentSound(&playing);
-        if (playing != navi_call) {
-            // The internet told me to.
-            // http://stackoverflow.com/a/13838022
-            sys->playSound(navi_call, nullptr, true, &callCh);
-            // Make Navi much louder than the music.
-            callCh->setVolume(5.0f);
-            callCh->setPaused(false);
-        }
-    }
+    callCh->set3DAttributes(&posv, &velv);
 }
 
 // The listener follow the active camera.
@@ -65,6 +45,41 @@ void updateListenerPosition() {
 
     // Move the theme music to the listener's position too!
     themeCh->set3DAttributes(&listener_pos, &listener_vel);
+}
+
+// This function is expected by PrettyGLUT, because I designed it to get
+// done fast, not smart. We can change this later, but this makes sure it
+// builds.
+// It takes in t and dt, the time and time since the last updateScene was
+// called.
+void updateScene(double t, double dt) {
+    // Even though they're rendered, the cameras are NOT in the drawn list, so
+    // we have to update them manually, if we want them updated at all.
+    activeCam->update(t, dt);
+    activeCam->doWASDControls(2.0, keyPressed, true);
+
+    for (WorldObject *wo : drawn) {
+        wo->update(t, dt);
+    }
+
+    // Keep FMOD's internal state up to date.
+    updateListenerPosition();
+    updateNavisCallPosition();
+
+    sys->update();
+
+    if (keyPressed[' ']) {
+        FMOD::Sound *playing = nullptr;
+        callCh->getCurrentSound(&playing);
+        if (playing != navi_call) {
+            // The internet told me to.
+            // http://stackoverflow.com/a/13838022
+            sys->playSound(navi_call, nullptr, true, &callCh);
+            // Make Navi much louder than the music.
+            callCh->setVolume(5.0f);
+            callCh->setPaused(false);
+        }
+    }
 }
 
 RenderPass loadRenderPass(const std::string &name) {
@@ -89,6 +104,14 @@ RenderPass loadRenderPass(const std::string &name) {
 }
 
 void initScene() {
+    glChk();
+
+    static Light sunlight;
+    sunlight.enable();
+    // Roughly the location of the sun in the skybox. The 0.0 makes it
+    // directional.
+    sunlight.moveTo(Vec(433.8, 975.6, -559.2, 0.0));
+    drawn.push_back(&sunlight);
     glChk();
 
     // if

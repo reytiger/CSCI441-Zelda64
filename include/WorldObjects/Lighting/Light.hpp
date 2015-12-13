@@ -22,6 +22,8 @@ public:
     void diffuse(const float *colorv);
     void specular(const float *colorv);
 
+    GLint handle() const { return m_lightid; }
+
 protected:
     // These are the defaults OpenGL uses.
     // See:
