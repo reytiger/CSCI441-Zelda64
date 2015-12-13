@@ -1,7 +1,6 @@
 #include "PrettyGLUT.hpp"
 #include "WorldObjects.hpp"
 
-// #include "../ext/fmod/inc/fmod.hpp"
 #include "fmod.hpp"
 
 #include <fstream>
@@ -15,10 +14,10 @@ Md5Object *link = nullptr;
 FMOD::System *sys = nullptr;
 
 FMOD::Sound *hyrule_theme = nullptr;
-FMOD::Sound *hyrule_shout = nullptr;
+FMOD::Sound *navi_call    = nullptr;
 
 FMOD::Channel *themeCh = nullptr;
-FMOD::Channel *shoutCh = nullptr;
+FMOD::Channel *callCh  = nullptr;
 
 // This function is expected by PrettyGLUT, because I designed it to get
 // done fast, not smart. We can change this later, but this makes sure it
@@ -34,41 +33,39 @@ void updateScene(double t, double dt) {
     for (WorldObject *wo : drawn) {
         wo->update(t, dt);
     }
+
+    // TODO: Make this positional.
+    if (keyPressed[' ']) {
+        FMOD::Sound *playing = nullptr;
+        callCh->getCurrentSound(&playing);
+        if (playing != navi_call) {
+            // The internet told me to.
+            // http://stackoverflow.com/a/13838022
+            sys->playSound(navi_call, nullptr, true, &callCh);
+            // Make Navi much louder than the music.
+            callCh->setVolume(5.0f);
+            callCh->setPaused(false);
+        }
+    }
 }
 
-void updateSource() {
-    // I would like to find the active camera and follow it
-    // auto pos = activeHero->pos();
-    // auto vel = activeHero->vel();
-    auto pos = Vec(0, 0, 0);
-    auto vel = Vec(0, 0, 0);
+// The listener follow the active camera.
+void updateListenerPosition() {
+    auto pos     = activeCam->pos();
+    auto vel     = activeCam->vel();
+    auto forward = activeCam->lookDir().cart();
+    auto up      = activeCam->up();
 
-    FMOD_VECTOR themePos = {pos.x, pos.y, pos.z};
-    FMOD_VECTOR themeVel = {vel.x, vel.y, vel.z};
+    FMOD_VECTOR listener_pos     = {pos.x, pos.y, pos.z};
+    FMOD_VECTOR listener_vel     = {vel.x, vel.y, vel.z};
+    FMOD_VECTOR listener_forward = {forward.x, forward.y, forward.z};
+    FMOD_VECTOR listener_up      = {up.x, up.y, up.z};
 
-    // themeCh->set3DAttributes(&themePos, &themeVel);
-}
+    sys->set3DListenerAttributes(
+        0, &listener_pos, &listener_vel, &listener_forward, &listener_up);
 
-void initFMOD() {
-    FMOD::System_Create(&sys);
-    sys->init(100, FMOD_INIT_NORMAL, nullptr);
-
-    // // In their tongue, he is Dovahkiin... DRAGONBORN!
-    // sys->createStream("assets/audio/skyrim-theme.mp3",
-    //                   FMOD_LOOP_NORMAL | FMOD_3D,
-    //                   nullptr,
-    //                   &skyrim_theme);
-    // sys->playSound(skyrim_theme, nullptr, true, &themeCh);
-
-    // // Do not mess with Dovahkiin.
-    // sys->createSound(
-    //     "assets/audio/skyrim-shout.mp3", FMOD_3D, nullptr, &skyrim_shout);
-
-    // themeCh->setVolume(1.0f);
-    // themeCh->set3DMinMaxDistance(5.0f, 1e3f);
-    // themeCh->setPaused(false);
-
-    // shoutCh->set3DMinMaxDistance(15.0f, 1e3f);
+    // Move the theme music to the listener's position too!
+    themeCh->set3DAttributes(&listener_pos, &listener_vel);
 }
 
 RenderPass loadRenderPass(const std::string &name) {
@@ -95,7 +92,8 @@ RenderPass loadRenderPass(const std::string &name) {
 void initScene() {
     glChk();
 
-    // if (!levelBongo.loadObjectFile("assets/Env/HyruleField/hyrulefeild.obj"))
+    // if
+    // (!levelBongo.loadObjectFile("assets/Env/HyruleField/hyrulefeild.obj"))
     // {
     //     fatal("Error loading object file %s",
     //     "assets/Env/HyruleField/hyrulefeild.obj");
@@ -136,13 +134,34 @@ void initScene() {
     // renderPasses.push_back(loadRenderPass("inverted"));
 }
 
+void initFMOD() {
+    FMOD::System_Create(&sys);
+    sys->init(100, FMOD_INIT_NORMAL, nullptr);
+
+    sys->createStream("assets/audio/hyrulefield-theme.mp3",
+                      FMOD_LOOP_NORMAL | FMOD_3D,
+                      nullptr,
+                      &hyrule_theme);
+    sys->playSound(hyrule_theme, nullptr, true, &themeCh);
+
+    sys->createSound(
+        "assets/audio/hey-listen.mp3", FMOD_3D, nullptr, &navi_call);
+
+    themeCh->setVolume(1.0f);
+    themeCh->set3DMinMaxDistance(5.0f, 1e3f);
+    themeCh->setPaused(false);
+
+    callCh->set3DMinMaxDistance(15.0f, 1e3f);
+}
+
 int main(int argc, char **argv) {
     errno = 0;
     srand(static_cast<unsigned int>(time(nullptr)));
 
-    initFMOD();
     initOpenGL(&argc, argv);
     printOpenGLInformation();
+
+    initFMOD();
 
     initScene();
 
