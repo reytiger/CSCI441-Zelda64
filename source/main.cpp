@@ -107,6 +107,14 @@ RenderPass loadRenderPass(const std::string &name) {
 void initScene() {
     glChk();
 
+    static Light sunlight;
+    sunlight.enable();
+    // Roughly the location of the sun in the skybox. The 0.0 makes it
+    // directional.
+    sunlight.moveTo(Vec(433.8, 975.6, -559.2, 0.0));
+    drawn.push_back(&sunlight);
+    glChk();
+
     // if
     // (!levelBongo.loadObjectFile("assets/Env/HyruleField/hyrulefeild.obj"))
     // {

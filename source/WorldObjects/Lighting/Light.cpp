@@ -14,7 +14,7 @@ void Light::update(double t, double dt) {
     WorldObject::update(t, dt);
     glChk();
 
-    float lpos[4] = {(float)pos().x, (float)pos().y, (float)pos().z};
+    float lpos[4] = {(float)pos().x, (float)pos().y, (float)pos().z, pos().w};
     glLightfv(m_lightid, GL_POSITION, lpos);
     glChk();
 
