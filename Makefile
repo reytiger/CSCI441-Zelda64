@@ -1,4 +1,6 @@
 
+FMOD_ROOT ?= $(HOME)/programs/fmod_studio
+
 # Windows builds
 ifeq ($(OS), Windows_NT)
 	GENERATOR ?= "MinGW Makefiles"
@@ -27,10 +29,10 @@ $(BUILD_DIR):
 		cmake -G $(GENERATOR) -Wno-dev \
 		-DUSE_CLANG_FORMAT=OFF \
 		-DCMAKE_BUILD_TYPE=Release \
-		-DCMAKE_INCLUDE_PATH=$(INCLUDE_PATH) \
-		-DCMAKE_LIBRARY_PATH=$(LIBRARY_PATH) \
-		-DSOIL_INCLUDE_DIR=$(HOME)/LIBS/include/SOIL \
-		-DSOIL_LIBRARY=$(HOME)/LIBS/lib/libSOIL.a \
+		-DSOIL_INCLUDE_DIR=$(HOME)/include \
+		-DSOIL_LIBRARY=$(HOME)/lib/libSOIL.a \
+		-DFMOD_INCLUDE_DIRS=$(FMOD_ROOT)/api/lowlevel/inc \
+		-DFMOD_LIBRARY=$(FMOD_ROOT)/api/lowlevel/lib/x86_64/libfmodL.so \
 		..
 
 clean:

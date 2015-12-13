@@ -25,7 +25,9 @@ include_directories("${SOIL_INCLUDE_DIR}")
 find_package(GLEW REQUIRED)
 include_directories("${GLEW_INCLUDE_DIR}")
 
-# TODO: Add FMOD back, but use a more up-to-date FindFMOD.cmake.
+# FMOD
+find_package(FMOD REQUIRED)
+include_directories("${FMOD_INCLUDE_DIRS}")
 
 ## External libraries
 
@@ -120,7 +122,7 @@ target_link_libraries(${binary}
                       "${GLUT_LIBRARIES}"
                       "${GLEW_LIBRARIES}"
                       "${SOIL_LIBRARIES}"
-
+                      "${FMOD_LIBRARIES}"
                       # Dr Paone's wavfront model loader.
                       modelLoader)
 
