@@ -2,7 +2,6 @@
 #include "Utils.hpp"
 
 #include "Cameras.hpp"
-#include "PacmanGame.hpp"
 #include "RenderPass.hpp"
 #include "Shader.hpp"
 #include "WorldObjects.hpp"
