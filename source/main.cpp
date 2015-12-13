@@ -78,6 +78,12 @@ void updateScene(double t, double dt) {
             // Make Navi much louder than the music.
             callCh->setVolume(5.0f);
             callCh->setPaused(false);
+
+            // Lazy man's debugging.
+            info("Camera position: %s\n"
+                 "Camera view:     %s",
+                 activeCam->pos(),
+                 activeCam->lookDir());
         }
     }
 }
@@ -144,6 +150,9 @@ void initScene() {
     // Camera
     // TODO: Why is this here?
     activeCam->radius(150.0);
+    // Hard coded position. Just something other than a weird looking pit.
+    activeCam->moveTo(Vec(19.4112, 2.85548, -13.1717));
+    activeCam->lookInDir(VecPolar(-2.76918, -0.21, 1));
 
     // Init render passes
 
