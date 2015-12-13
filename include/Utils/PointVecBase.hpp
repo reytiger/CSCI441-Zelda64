@@ -25,11 +25,15 @@ struct Vec {
 
     template <typename X, typename Y>
     Vec(X x, Y y)
-        : x(as<float>(x)), y(as<float>(y)), z(0.0f) {}
+        : x(as<float>(x)), y(as<float>(y)), z(0.0f), w(1.0f) {}
 
     template <typename X, typename Y, typename Z>
     Vec(X x, Y y, Z z)
-        : x(as<float>(x)), y(as<float>(y)), z(as<float>(z)) {}
+        : x(as<float>(x)), y(as<float>(y)), z(as<float>(z)), w(1.0f) {}
+
+    template <typename X, typename Y, typename Z, typename W>
+    Vec(X x, Y y, Z z, W w)
+        : x(as<float>(x)), y(as<float>(y)), z(as<float>(z)), w(w) {}
 
     VecPolar polar() const;
 
@@ -72,7 +76,8 @@ struct VecPolar {
         float x = r * sin(theta) * cos(phi);
         float y = r * sin(phi);
         float z = r * cos(theta) * cos(phi);
-        return Vec(x, y, z);
+        float w = 0.0f;
+        return Vec(x, y, z, w);
     }
     operator Vec() const { return cart(); }
 };

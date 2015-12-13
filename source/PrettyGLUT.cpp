@@ -7,7 +7,6 @@
 // in main.cpp.
 void updateScene(double t, double dt);
 
-Texture grass;
 Texture skybox;
 Texture loading;
 
@@ -34,7 +33,7 @@ int leftMouse         = 0;
 GLint modifiersButton = 0;
 bool keyPressed[256]  = {};
 
-// Multipass shenanigans.
+// Multi-pass shenanigans.
 GLuint fbo;
 GLuint fboTex;
 
@@ -50,7 +49,7 @@ std::vector<RenderPass> renderPasses;
 // extern paone::Object levelBongo;
 extern paone::Object levelHyruleField;
 
-// Call this after the swapbuffer call to update the FPS, etc. counter.
+// Call this after the swap buffer call to update the FPS, etc. counter.
 // See: https://www.opengl.org/wiki/Performance#Measuring_Performance
 void updateFrameCounter() {
     using namespace std::chrono;
@@ -78,6 +77,7 @@ void updateFrameCounter() {
 
 // TODO: Make this stroke.
 void drawText(const std::string &text, Vec pos, Color color) {
+    glDisable(GL_LIGHTING);
     glColor3fv(color.v);
     glRasterPos2d(pos.x, pos.y);
     pushMatrixAnd([&]() {
@@ -97,7 +97,7 @@ void renderHUD() {
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    // Make sure everything is drawn infront of everything.
+    // Make sure everything is drawn in front of everything.
     glTranslatef(0.0, 0.0, 1.0);
 
     // These two come from us using GLUT_BITMAP_9_BY_15 in drawText().
@@ -113,7 +113,7 @@ void renderHUD() {
     static const size_t lineSpacing = charHeight;
 
     // FPS
-    auto white = Color(1.0, 1.0, 1.0);
+    static const auto white = Color(1.0, 1.0, 1.0);
     auto pos = Vec(windowWidth - pixelsFromRight, windowHeight - lineSpacing);
     drawText(tfm::format("%*.1f FPS", numLength, live_fps), pos, white);
 
@@ -389,12 +389,6 @@ void renderSkybox() {
 }
 
 void printOpenGLInformation() {
-    GLint attribs = 0;
-    glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &attribs);
-
-    GLint lights = 0;
-    glGetIntegerv(GL_MAX_LIGHTS, &lights);
-
     info(
         // We don't want to break this string across lines.
         // clang-format off
@@ -405,16 +399,11 @@ void printOpenGLInformation() {
          "|   OpenGL Version:  %50s |\n"
          "|   OpenGL Renderer: %50s |\n"
          "|   OpenGL Vendor:   %50s |\n"
-         "|-----------------------------------------------------------------------|\n"
-         "|   Max Vert Attrib: %50s |\n"
-         "|   Max GL Lights:   %50s |\n"
         "\\-----------------------------------------------------------------------/\n",
         // clang-format on
         glGetString(GL_VERSION),
         glGetString(GL_RENDERER),
-        glGetString(GL_VENDOR),
-        attribs,
-        lights);
+        glGetString(GL_VENDOR));
 }
 
 void loadLoadingScreen() {
@@ -487,6 +476,28 @@ void renderLoadingScreen() {
     });
     glChk();
 }
+
+void initSkybox() {
+    skybox = SOIL_load_OGL_texture("assets/textures/clouds-skybox.jpg",
+                                   SOIL_LOAD_AUTO,
+                                   SOIL_CREATE_NEW_ID,
+                                   SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y
+                                       | SOIL_FLAG_NTSC_SAFE_RGB
+                                       | SOIL_FLAG_COMPRESS_TO_DXT);
+    glChk();
+    {
+        glBindTexture(GL_TEXTURE_2D, skybox);
+        glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+    }
+    glChk();
+}
+
 
 //
 // It's all callbacks from here.
@@ -671,6 +682,8 @@ void initGLUT(int *argcp, char **argv) {
     glShadeModel(GL_FLAT);
 
     glDisable(GL_COLOR_MATERIAL);
+
+    initSkybox();
 }
 
 void initOpenGL(int *argcp, char **argv) {

@@ -5,8 +5,8 @@
 
 paone::Object levelBongo;
 paone::Object levelHyruleField;
-Md5Object *link;
 Navi navi;
+Md5Object *link = nullptr;
 
 // This function is expected by PrettyGLUT, because I designed it to get
 // done fast, not smart. We can change this later, but this makes sure it
@@ -46,10 +46,21 @@ RenderPass loadRenderPass(const std::string &name) {
 }
 
 void initScene() {
+    glChk();
+
     // if (!levelBongo.loadObjectFile("assets/Env/HyruleField/hyrulefeild.obj"))
     // {
-    //     abort();
+    //     fatal("Error loading object file %s",
+    //     "assets/Env/HyruleField/hyrulefeild.obj");
     // }
+    // glChk();
+
+    if (!levelHyruleField.loadObjectFile(
+            "assets/Env/HyruleField/hyrulefeild.obj")) {
+        fatal("Error loading object file %s",
+              "assets/Env/HyruleField/hyrulefeild.obj");
+    }
+    glChk();
 
     link = new Md5Object(
         "assets/FDL/FDL.md5mesh", "assets/FDL/FDL.md5anim", 0.1f);
@@ -63,14 +74,11 @@ void initScene() {
         navi.follow(link);
     }
 
-    if (!levelHyruleField.loadObjectFile(
-            "assets/Env/HyruleField/hyrulefeild.obj")) {
-        abort();
-    }
-    glChk();
-
     // Camera
+    // TODO: Why is this here?
     activeCam->radius(150.0);
+
+    // Init render passes
 
     // All three of these approaches came from his blog:
     // http://www.johndcook.com/blog/2009/08/24/algorithms-convert-color-grayscale/
@@ -81,46 +89,6 @@ void initScene() {
     // renderPasses.push_back(loadRenderPass("inverted"));
 }
 
-void initTextures() {
-    grass = SOIL_load_OGL_texture("assets/textures/minecraft.jpg",
-                                  SOIL_LOAD_AUTO,
-                                  SOIL_CREATE_NEW_ID,
-                                  SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y
-                                      | SOIL_FLAG_NTSC_SAFE_RGB
-                                      | SOIL_FLAG_COMPRESS_TO_DXT);
-    glChk();
-    {
-        glBindTexture(GL_TEXTURE_2D, grass);
-        glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    }
-    glChk();
-
-    skybox = SOIL_load_OGL_texture("assets/textures/clouds-skybox.jpg",
-                                   SOIL_LOAD_AUTO,
-                                   SOIL_CREATE_NEW_ID,
-                                   SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y
-                                       | SOIL_FLAG_NTSC_SAFE_RGB
-                                       | SOIL_FLAG_COMPRESS_TO_DXT);
-    glChk();
-    {
-        glBindTexture(GL_TEXTURE_2D, skybox);
-        glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-    }
-    glChk();
-}
-
 int main(int argc, char **argv) {
     errno = 0;
     srand(static_cast<unsigned int>(time(nullptr)));
@@ -128,7 +96,6 @@ int main(int argc, char **argv) {
     initOpenGL(&argc, argv);
     printOpenGLInformation();
 
-    initTextures();
     initScene();
 
     start();

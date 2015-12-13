@@ -2,7 +2,6 @@
 #include "Utils.hpp"
 
 #include "Cameras.hpp"
-#include "PacmanGame.hpp"
 #include "RenderPass.hpp"
 #include "Shader.hpp"
 #include "WorldObjects.hpp"
@@ -33,8 +32,8 @@ constexpr const char *windowTitle = "A little green tunic.";
 
 constexpr float FOV = 60.0;
 
-// This is really a limit on updating the scene. It's considerably higer the
-// frame rate.
+// This is really a limit on updating the scene. It's considerably higher than
+// the actual frame rate.
 constexpr size_t FPS = 300;
 // How often is the HUD display for frame rate/time/etc updated?
 constexpr auto FPS_update_delay = std::chrono::seconds(1);
@@ -56,10 +55,6 @@ void initOpenGL(int *argcp, char **argv);
 void start();
 
 using Texture = GLint;
-
-extern Texture grass;
-extern Texture skybox;
-extern Texture loading;
 
 extern paone::Object levelBongo;
 extern paone::Object levelHyruleField;
