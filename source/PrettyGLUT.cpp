@@ -120,7 +120,7 @@ void renderHUD() {
     // Frame time
     pos.y -= lineSpacing;
     std::string units = "??";
-    auto frametime    = live_frametime;
+    auto frametime = live_frametime;
     if (frametime < 1e-6) {
         units = "ns";
         frametime *= 1e9;
