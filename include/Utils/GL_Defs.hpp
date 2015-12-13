@@ -1,6 +1,6 @@
 #pragma once
 
-// This may or may not break linux builds.
+// Removing this define might break linux builds.
 //#define GLEW_STATIC
 #include <GL/glew.h>
 
