@@ -141,7 +141,6 @@ void initScene() {
     drawn.push_back(link);
     link->setUpdateFunc([=](double t, double dt) {
         link->doWASDControls(10.0, keyPressed, true);
-        // link->update(t, dt);
     });
 
     if (!navi.loadObjectFile("assets/Navi/Navi.obj")) {

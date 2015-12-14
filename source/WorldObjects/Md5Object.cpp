@@ -133,6 +133,16 @@ void Md5Object::update(double t, double dt) {
             as<float>(m_anim_info.last_time * m_animation.frameRate),
             m_skeleton);
     }
-    // auto f = [&](double t, double dt) {
-    // };
+    if (!m_follow) {
+        m_pos += dt * m_vel;
+    }
+    m_pos -= m_old_follow_pos;
+    if (m_update) {
+        m_update(t, dt);
+    }
+    if (m_follow) {
+        m_vel = m_follow->vel();
+        m_pos += m_follow->pos();
+        m_old_follow_pos = m_follow->pos();
+    }
 }
