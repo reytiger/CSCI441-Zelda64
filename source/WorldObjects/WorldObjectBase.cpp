@@ -25,6 +25,10 @@ void WorldObject::follow(WorldObject *wo) {
     }
 }
 
+// void WorldObject::follow(Md5Object *wo) {
+//     info("following md5");
+// }
+
 void WorldObject::draw() const {
     if (this->visible()) {
         m_material.set();

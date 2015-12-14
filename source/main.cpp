@@ -154,6 +154,8 @@ void initScene() {
     activeCam->moveTo(Vec(19.4112, 2.85548, -13.1717));
     activeCam->lookInDir(VecPolar(-2.76918, -0.21, 1));
 
+    arcballcam.follow(link);
+
     // Init render passes
 
     // All three of these approaches came from his blog:

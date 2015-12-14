@@ -16,6 +16,7 @@ extern std::vector<WorldObject *> drawn;
 
 // Cameras
 extern FreeCamera freecam;
+extern ArcBallCamera arcballcam;
 
 extern Camera *activeCam;
 

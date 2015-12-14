@@ -583,7 +583,19 @@ void normalKeysDown(unsigned char key, int, int) {
     switch (key) {
     case 27: // escape
         exit(0);
+        break;
+    case 99:
+        if (activeCam == &freecam)
+        {
+            activeCam = &arcballcam;
+            info("Switched to ArcBallCamera");
+        } else if (activeCam == &arcballcam) {
+            activeCam = &freecam;
+            info("Switched to FreeCamera");
+        }
+        break;
     }
+
 }
 
 void normalKeysUp(unsigned char key, int, int) {
