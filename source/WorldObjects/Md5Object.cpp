@@ -118,3 +118,21 @@ void Md5Object::registerUpdateFunc() {
 
     setUpdateFunc(f);
 }
+
+void Md5Object::update(double t, double dt) {
+    // handle updating the skeleton for animation
+    if (m_animated) {
+        // get current and next frames
+        Animate(&m_animation, &m_anim_info, dt);
+
+        // interpolate the two frames' skeletons
+        InterpolateSkeletons(
+            m_animation.skelFrames[m_anim_info.curr_frame],
+            m_animation.skelFrames[m_anim_info.next_frame],
+            m_animation.num_joints,
+            as<float>(m_anim_info.last_time * m_animation.frameRate),
+            m_skeleton);
+    }
+    // auto f = [&](double t, double dt) {
+    // };
+}

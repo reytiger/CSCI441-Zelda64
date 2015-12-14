@@ -139,6 +139,10 @@ void initScene() {
         "assets/FDL/FDL.md5mesh", "assets/FDL/FDL.md5anim", 0.1f);
     glChk();
     drawn.push_back(link);
+    link->setUpdateFunc([=](double t, double dt) {
+        link->doWASDControls(10.0, keyPressed, true);
+        // link->update(t, dt);
+    });
 
     if (!navi.loadObjectFile("assets/Navi/Navi.obj")) {
         error("Unable to load Navi from .obj");

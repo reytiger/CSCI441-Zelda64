@@ -15,6 +15,8 @@ public:
               float scale);
     ~Md5Object();
 
+    void update(double t, double dt) override;
+
 protected:
     virtual void internalDraw() const override;
 
@@ -30,4 +32,6 @@ private:
 
     bool m_animated;
     float m_scale;
+
+
 };
