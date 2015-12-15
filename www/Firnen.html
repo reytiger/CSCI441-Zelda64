@@ -1,0 +1,153 @@
+<!-- /*
+ *  CSCI 441, Computer Graphics, Fall 2015
+ *
+ *  Author: Nico Pampe
+ *  Professor: Dr. Jeffrey Paone
+ *  
+ *  Description:
+ *      This file is the Website template. There is an images dir that should be with this file. 
+ *      The goal of this html file is to display all the projects we have worked on in Computer Graphics.
+ *
+ */ -->
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+  <head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+	<script type="text/javascript">
+    
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-20808187-2']);
+      _gaq.push(['_trackPageview']);
+    
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    
+    </script>
+	
+	<title>CSCI 441 - Computer Graphics - <?php echo $title; ?></title>
+
+   	<style type="text/css">
+		ul.navigate { list-style-type:none; }
+
+		bodyclass { font-size: 13px; color: #c0c0c0; font-family: Arial, Helvetica, sans-serif; }
+
+td {color: #002b5b; font-family: Arial, Helvetica, sans-serif;}
+
+a {color: #006400; font-weight:bold; text-decoration:none;}
+
+a:hover, #more-articles:hover {color: #ffffff; text-decoration:underline;}
+
+h1 { font-family: Arial, Helvetica, sans-serif; color: #c0c0c0; }
+h2 { font-family: Arial, Helvetica, sans-serif; color: #c0c0c0; }
+h3 { font-family: Arial, Helvetica, sans-serif; color: #002b5b; }
+
+p { line-height:1.5; font-size: 14px; font-family: Arial, Helvetica, sans-serif; text-align:justify; }
+
+img { border:0 }
+
+body {background: #002b5b;}
+
+td.header { text-align:center; border-style:solid none solid none; border-color:#c0c0c0; border-width:2px; background-color:#c0c0c0;}
+
+.header a { color: #006400; }
+.header a:hover { color: #ffffff; text-decoration:none; }
+
+td.mainContent { background-color:#ffffff; color:#002b5b; font-family: Arial, Helvetica, sans-serif; padding:15px; vertical-align:top; line-height:1.5;}
+
+.mainContent a:hover { color: #002b5b; text-decoration:none; }
+
+li { text-align:justify; }
+
+	</style>
+  </head>
+  
+  <body class="body class">
+<div style="text-align:center; width:800px; margin:auto;"><a name="top"></a>
+
+<table border="0" cellpadding="2" cellspacing="2" width="800">
+<tr>
+	<td style="vertical-align:middle; text-align:center; height:150px;" colspan=2>
+		<h1>CSCI 441 - Computer Graphics</h1>
+		<h2>Fall 2015</h2>
+	</td>
+</tr>
+<tr><td class="header" style="height:30px;" colspan="2">
+| &nbsp;
+&nbsp; <a href="../../index.php">Home</a> &nbsp; | 
+&nbsp; <a href="../../syllabus.php">Syllabus</a> &nbsp;| 
+&nbsp; <a href="../../assignments.php">Assignments</a> &nbsp;| 
+&nbsp; <a href="../../leaderboard.php">Leaderboard</a> &nbsp;| 
+&nbsp; <a href="../../schedule.php">Schedule</a> &nbsp;| 
+&nbsp; <a href="../../resources.php">Resources</a> &nbsp; 
+&nbsp;|
+
+</td></tr>
+
+<tr><td class="mainContent" colspan="2">
+
+
+
+<!--  THIS IS AN HTML COMMENT -->
+
+<!-- Change "YOUR HERO NAME" to...your hero's name! -->
+<h3> "Firnen" </h3>
+
+<!-- The line below will display an image -->
+<!-- Place your screenshot into the images folder, and then update the filename below -->
+<img src="images/HyralField.png">
+<img src="images/InHyral.png">
+<p>Final project! Worked on a team with Chris Butler and Kevin Carbaugh to recreate scenes from "Legend of Zelda, Ocarina of Time." We ended up having a sweet product! The most challenging part was the rigging and skinning done in blender and exporting the data to a md5mesh to load a mesh with animation.</p>
+<hr>
+<img src="images/run.png">
+<p class="run">Worked on getting a particel system of bad guys to spawn around the hero. If any of the objects move off the world surface, they fall to their deaths! The bad guys flock to the hero.</p>
+<hr>
+<img src="images/fountain.png">
+<p class="Founatain">Look at the cool particel system! We made a fountain using a new tecnique learned in class, call a particel system. Bassicly, a bunch of objects are created that all live in the system. Each have some kind of random asspect that create a sweet visual effect. They can be used for fire, smoke, clouds, hair, ect. This list is huge!</p>
+<hr>
+<img src="images/shadow.png">
+<p class="VertexShader">For assignment 5, we created a shadowy figure. The model is created using a vertex and fragment shader.</p>
+<hr>
+<img src="images/StormCloaks.png">
+<p class="GuildWars">Midterm project. Worked in a guild with Incallidus to create a amazing world.</p>
+<img src="images/Akkkin.png">
+<p class="Akkkin">After my long travels, I found a small creature trapped. After I saved the small animal, it began flying around my head, explaining that I am now friend due to this kind deed. She introduced herself as Akkkin, the dragon of wits and knowledge. I'm glad, the lands here are foren, there are no trees or bushes and the hills no longer have a kind shape.</p>
+<hr>
+<img src="images/movingControlPoint.png">
+<p class="Lab03">We learned how to use Bezier Curves! Calculating the curves involve a really cool equation or a simple recursive trace.</p>
+<hr>
+<img src="images/InTheWoods.png">
+<p class="3DHero">Created a 3D world for my hero to run around in. He found a simple cart that helps him navigate the difficult terrain.</p>
+<hr>
+<img src="images/sq1_Playing.png" width="600">
+<p class="2DVideoGame">Run! Don't get hit by the falling stone. How many can you hit with your mighty battle axes before a blow to the skull?</p>
+<img src="images/sq1_GameOver.png" width="600">
+<hr>
+<img src="images/ItsDangerousTakethis.png">
+<p class="HeroInAction">In due time, I shall learn how to use my fathers sword. </p>
+<hr>
+<img src="images/FIRNEN.png"><br>
+<p class="FIRNEN">My name is Firnen. My flag shall hang above all those who threaten my lands!   </p>
+<hr>
+<img src="images/mines.png">
+
+
+</td></tr>
+
+<tr>
+<td class="header" style="height:30px" colspan="2">
+<div style="text-align:left; padding-left:25px; padding-right:475px; font-style:italic; display:inline;"></div>
+<div style="text-align:right; padding-right:25px; display:inline;"><a href="#top">[Top]</a></div>
+</td>
+</tr>
+
+</table>
+
+<br><br>
+
+</div>
+</body>
+</html>
