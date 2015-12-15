@@ -71,6 +71,14 @@ void ShaderProgram::attachUniform(const std::string &name, float value) {
     });
 }
 
+void ShaderProgram::attachUniform(const std::string &name, GLint value) {
+    usingProgram([&name, &value](const ShaderProgram &self) {
+        auto loc = self.getUniformLocation(name);
+        glUniform1i(loc, value);
+        glChk();
+    });
+}
+
 void ShaderProgram::attachUniform(const std::string &name, Vec value) {
     usingProgram([&name, &value](const ShaderProgram &self) {
         auto loc = self.getUniformLocation(name);
