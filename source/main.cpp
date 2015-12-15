@@ -113,6 +113,8 @@ RenderPass loadRenderPass(const std::string &name) {
     program.attach(vert, frag);
     program.link();
 
+    program.attachUniform("fbo", 0);
+
     RenderPass pass;
     pass.program(program);
 
