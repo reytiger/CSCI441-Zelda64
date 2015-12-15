@@ -29,6 +29,8 @@ int windowHeight = 1024;
 
 Color colorClear = Color(48, 24, 96);
 
+ShaderProgram wigglyShader;
+
 // Input states
 Vec mouse             = Vec();
 int leftMouse         = 0;
@@ -50,6 +52,7 @@ std::vector<RenderPass> renderPasses;
 
 // extern paone::Object levelBongo;
 extern WorldObjModel levelHyruleField;
+extern WorldObjModel kingRed;
 
 // Call this after the swap buffer call to update the FPS, etc. counter.
 // See: https://www.opengl.org/wiki/Performance#Measuring_Performance
@@ -184,6 +187,8 @@ void render() {
         glLoadIdentity();
         activeCam->adjustGLU();
 
+        wigglyShader.use();
+
         pushMatrixAnd([&]() {
             auto scale = 1000.0f;
             glScalef(scale, scale, scale);
@@ -204,6 +209,11 @@ void render() {
 
         // levelBongo.draw();
         levelHyruleField.draw();
+        pushMatrixAnd([&]() {
+            glTranslatef(-5, 0, 0);
+            // glScalef(0.005, 0.005, 0.005);
+            kingRed.draw();
+        });
 
         glEnable(GL_CULL_FACE);
 

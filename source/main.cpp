@@ -6,6 +6,7 @@
 #include <fstream>
 
 WorldObjModel levelHyruleField;
+WorldObjModel kingRed;
 Navi navi;
 Md5Object *link = nullptr;
 
@@ -68,6 +69,8 @@ void updateScene(double t, double dt) {
     // Keep FMOD's internal state up to date.
     updateListenerPosition();
     updateNavisCallPosition();
+
+    kingRed.shader().attachUniform("time", t);
 
     sys->update();
 
@@ -138,9 +141,28 @@ void initScene() {
     }
     glChk();
 
+    if(!kingRed.loadObjectFile(
+            "assets/KingOfRedLions/boat.obj")) {
+        fatal("Error loading object file %s", "assets/KingOfRedLions/boat.obj");
+    }
+    glChk();
+
     link = new Md5Object(
         "assets/FDL/FDL.md5mesh", "assets/FDL/FDL.md5anim", 0.1f);
     glChk();
+
+    Shader vert;
+    Shader frag;
+    vert.loadFromFile("glsl/wiggly.v.glsl", GL_VERTEX_SHADER);
+    frag.loadFromFile("glsl/pass_through.f.glsl", GL_FRAGMENT_SHADER);
+    
+    ShaderProgram wiggly;
+    wiggly.create();
+    wiggly.attach(vert, frag);
+    wiggly.link();
+    glChk();
+
+
     drawn.push_back(link);
 
     if (!navi.loadObjectFile("assets/Navi/Navi.obj")) {
@@ -149,6 +171,8 @@ void initScene() {
         drawn.push_back(&navi);
         navi.follow(link);
     }
+
+    kingRed.shader(wiggly);    
 
     // Camera
     // Hard coded position. Just something other than a weird looking pit.
@@ -165,6 +189,8 @@ void initScene() {
     // renderPasses.push_back(loadRenderPass("average"));
     // renderPasses.push_back(loadRenderPass("lightness"));
     // renderPasses.push_back(loadRenderPass("luminosity"));
+
+    // renderPasses.push_back(loadRenderPass("wiggly"));
 
     // renderPasses.push_back(loadRenderPass("inverted"));
 }
