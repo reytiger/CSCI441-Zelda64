@@ -3,6 +3,8 @@
 #include "Cameras.hpp"
 #include "Shader.hpp"
 
+#include <algorithm>
+
 // We need to know about this. but it's entirely game logic so it's defined
 // in main.cpp.
 void updateScene(double t, double dt);
@@ -104,9 +106,8 @@ void renderHUD() {
     static const size_t charWidth  = 9;
     static const size_t charHeight = 15;
 
-    // 10 digits seems reasonable for "What's the largest number we ever hope to
-    // see?".
-    static const size_t numLength = 10;
+    // What's the largest number we ever hope to see?
+    static const size_t numLength = 12;
     static const size_t pixelsFromRight
         = (numLength + std::string(" ms / frame").size() + 1) * charWidth;
 
@@ -119,7 +120,7 @@ void renderHUD() {
 
     // Frame time
     pos.y -= lineSpacing;
-    std::string units = "??";
+    std::string units = " s";
     auto frametime = live_frametime;
     if (frametime < 1e-6) {
         units = "ns";
@@ -142,7 +143,8 @@ void renderHUD() {
 
     pos.y -= lineSpacing;
     auto dims = tfm::format("%d x %d", fbo_width, fbo_height);
-    pos.x += (numLength - dims.size()) * charWidth;
+    pos.x += std::min(as<size_t>(0), numLength - dims.size()) * charWidth;
+
     drawText(tfm::format("%s resolution", dims), pos, white);
 
     glEnable(GL_LIGHTING);
