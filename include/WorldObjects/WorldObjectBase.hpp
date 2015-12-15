@@ -126,8 +126,7 @@ protected:
 
     bool m_visible = true;
 
-    // ==== Protected Virtual Methods
-    // ===========================================
+    // ==== Protected Virtual Methods ==========================================
 
     // How the object is rendered. TODO: Take in a Renderer of some sort?
     virtual void internalDraw() const = 0;
