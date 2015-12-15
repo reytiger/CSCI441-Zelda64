@@ -100,6 +100,7 @@ void updateScene(double t, double dt) {
 }
 
 RenderPass loadRenderPass(const std::string &name) {
+    info("Loading shader '%s'", name);
     Shader vert;
     vert.loadFromFile(tfm::format("glsl/%s/vert.glsl", name), GL_VERTEX_SHADER);
 
