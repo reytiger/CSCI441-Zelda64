@@ -8,7 +8,6 @@ Md5Object::Md5Object(const std::string &modelFile, float scale) {
     m_scale    = scale;
 
     material(Material::WhitePlastic);
-    registerUpdateFunc();
 
     loadModel(modelFile);
     glChk();
@@ -20,8 +19,6 @@ Md5Object::Md5Object(const std::string &modelFile,
     m_skeleton = NULL;
     m_animated = false;
     m_scale    = scale;
-
-    registerUpdateFunc();
 
     loadModel(modelFile);
     glChk();
@@ -46,6 +43,7 @@ void Md5Object::internalDraw() const {
     glPushMatrix();
     glDisable(GL_CULL_FACE);
     glEnable(GL_LIGHTING);
+    glTranslatef(pos().x, pos().y, pos().z);
     glRotatef(-90.f, 1.0, 0.0, 0.0); // orient models along Y instead of Z
     glScalef(m_scale, m_scale, m_scale);
     for (unsigned int i = 0; i < m_model.num_meshes; ++i) {
@@ -99,27 +97,9 @@ bool Md5Object::loadAnimation(const std::string &filename) {
     return true;
 }
 
-void Md5Object::registerUpdateFunc() {
-    auto f = [&](double t, double dt) {
-        // handle updating the skeleton for animation
-        if (m_animated) {
-            // get current and next frames
-            Animate(&m_animation, &m_anim_info, dt);
-
-            // interpolate the two frames' skeletons
-            InterpolateSkeletons(
-                m_animation.skelFrames[m_anim_info.curr_frame],
-                m_animation.skelFrames[m_anim_info.next_frame],
-                m_animation.num_joints,
-                as<float>(m_anim_info.last_time * m_animation.frameRate),
-                m_skeleton);
-        }
-    };
-
-    setUpdateFunc(f);
-}
-
 void Md5Object::update(double t, double dt) {
+    WorldObject::update(t, dt);
+
     // handle updating the skeleton for animation
     if (m_animated) {
         // get current and next frames
@@ -132,17 +112,5 @@ void Md5Object::update(double t, double dt) {
             m_animation.num_joints,
             as<float>(m_anim_info.last_time * m_animation.frameRate),
             m_skeleton);
-    }
-    if (!m_follow) {
-        m_pos += dt * m_vel;
-    }
-    m_pos -= m_old_follow_pos;
-    if (m_update) {
-        m_update(t, dt);
-    }
-    if (m_follow) {
-        m_vel = m_follow->vel();
-        m_pos += m_follow->pos();
-        m_old_follow_pos = m_follow->pos();
     }
 }

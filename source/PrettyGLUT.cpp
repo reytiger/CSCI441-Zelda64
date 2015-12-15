@@ -543,7 +543,7 @@ void mouseMotion(int x, int y) {
 
         // Arcball feels more natural with the y inverted and more fudge.
         if (dynamic_cast<ArcBallCamera *>(activeCam)) {
-            fudge = 0.005f;
+            fudge = 0.0025f;
         }
 
         mouse.x = as<float>(x);
@@ -584,9 +584,9 @@ void normalKeysDown(unsigned char key, int, int) {
     case 27: // escape
         exit(0);
         break;
-    case 99:
-        if (activeCam == &freecam)
-        {
+    case 'C':
+    case 'c':
+        if (activeCam == &freecam) {
             activeCam = &arcballcam;
             info("Switched to ArcBallCamera");
         } else if (activeCam == &arcballcam) {

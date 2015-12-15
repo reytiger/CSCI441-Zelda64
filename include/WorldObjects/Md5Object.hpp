@@ -23,7 +23,6 @@ protected:
 private:
     bool loadModel(const std::string &filename);
     bool loadAnimation(const std::string &filename);
-    void registerUpdateFunc();
 
     struct md5_model_t m_model;
     struct md5_anim_t m_animation;

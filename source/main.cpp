@@ -57,6 +57,9 @@ void updateScene(double t, double dt) {
     // we have to update them manually, if we want them updated at all.
     activeCam->update(t, dt);
     activeCam->doWASDControls(2.0, keyPressed, true);
+    if (activeCam == &arcballcam) {
+        link->doWASDControls(10.0, keyPressed, true);
+    }
 
     for (WorldObject *wo : drawn) {
         wo->update(t, dt);
@@ -139,9 +142,6 @@ void initScene() {
         "assets/FDL/FDL.md5mesh", "assets/FDL/FDL.md5anim", 0.1f);
     glChk();
     drawn.push_back(link);
-    link->setUpdateFunc([=](double t, double dt) {
-        link->doWASDControls(10.0, keyPressed, true);
-    });
 
     if (!navi.loadObjectFile("assets/Navi/Navi.obj")) {
         error("Unable to load Navi from .obj");
@@ -151,12 +151,11 @@ void initScene() {
     }
 
     // Camera
-    // TODO: Why is this here?
-    activeCam->radius(150.0);
     // Hard coded position. Just something other than a weird looking pit.
     activeCam->moveTo(Vec(19.4112, 2.85548, -13.1717));
     activeCam->lookInDir(VecPolar(-2.76918, -0.21, 1));
 
+    arcballcam.radius(15.0);
     arcballcam.follow(link);
 
     // Init render passes
