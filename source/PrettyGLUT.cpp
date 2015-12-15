@@ -4,6 +4,7 @@
 #include "Shader.hpp"
 
 #include <algorithm>
+#include <fstream>
 
 // We need to know about this. but it's entirely game logic so it's defined
 // in main.cpp.
@@ -39,6 +40,20 @@ bool keyPressed[256]  = {};
 GLuint fbo;
 constexpr size_t fboTexCount    = 4;
 GLuint fboTextures[fboTexCount] = {};
+
+static GLenum buffers[] = {
+    GL_COLOR_ATTACHMENT0,
+    GL_COLOR_ATTACHMENT1,
+    GL_COLOR_ATTACHMENT2,
+    GL_COLOR_ATTACHMENT3,
+    GL_COLOR_ATTACHMENT4,
+    GL_COLOR_ATTACHMENT5,
+    GL_COLOR_ATTACHMENT6,
+    GL_COLOR_ATTACHMENT7,
+    GL_COLOR_ATTACHMENT8,
+    GL_COLOR_ATTACHMENT9,
+};
+static_assert(fboTexCount <= 10, "render::buffers is not large enough.");
 
 // Give it that... retro feel.
 GLsizei fbo_width  = 512;
@@ -171,19 +186,6 @@ void resize(int w, int h) {
 
 void render() {
     glChk();
-    static GLenum buffers[] = {
-        GL_COLOR_ATTACHMENT0,
-        GL_COLOR_ATTACHMENT1,
-        GL_COLOR_ATTACHMENT2,
-        GL_COLOR_ATTACHMENT3,
-        GL_COLOR_ATTACHMENT4,
-        GL_COLOR_ATTACHMENT5,
-        GL_COLOR_ATTACHMENT6,
-        GL_COLOR_ATTACHMENT7,
-        GL_COLOR_ATTACHMENT8,
-        GL_COLOR_ATTACHMENT9,
-    };
-    static_assert(fboTexCount <= 10, "render::buffers is not large enough.");
 
     glClearColor(0.0, 0.0, 0.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -623,6 +625,41 @@ void nextShader() {
     }
 }
 
+void saveFrame(GLenum buffer, const std::string &suffix) {
+    if (buffer > GL_COLOR_ATTACHMENT0 && buffer - GL_COLOR_ATTACHMENT0 < 10) {
+        info("Saving image from buffer GL_COLOR_ATTACHMENT%d.",
+             buffer - GL_COLOR_ATTACHMENT0);
+    } else {
+        info("Saving image from buffer #%d.", buffer);
+    }
+
+    glPixelStorei(GL_PACK_ALIGNMENT, 1);
+    glNamedFramebufferReadBuffer(fbo, buffer);
+    glChk();
+
+    std::vector<GLubyte> bytes(3 * fbo_width * fbo_height);
+    glReadPixels(
+        0, 0, fbo_width, fbo_height, GL_RGB, GL_UNSIGNED_BYTE, bytes.data());
+    glChk();
+
+    std::ofstream out;
+
+    // Write out as a PPM.
+    auto now = timer_clock::now();
+    out.open(tfm::format("image-%s_%s.ppm", 0.0, suffix));
+    // clang-format off
+    out << "P6\n"
+        << fbo_width << " " << fbo_height << "\n"
+        << 255 << std::endl;
+    // clang-format on
+    for (int row = 0; row < fbo_height; row += 1) {
+        for (int col = 0; col < fbo_width; col += 1) {
+            out << as<unsigned>(bytes[fbo_width * row + col]) << " ";
+        }
+        out << std::endl;
+    }
+}
+
 void normalKeysDown(unsigned char key, int, int) {
     keyPressed[key] = true;
 
@@ -640,6 +677,12 @@ void normalKeysDown(unsigned char key, int, int) {
             info("Switched to FreeCamera");
         }
         break;
+    case '+':
+        saveFrame(GL_FRONT, "front");
+        saveFrame(buffers[0], "0");
+        saveFrame(buffers[1], "1");
+        saveFrame(buffers[2], "2");
+        saveFrame(buffers[3], "3");
     // 0 turns off all passes.
     case '0':
         passIdx = -1;
