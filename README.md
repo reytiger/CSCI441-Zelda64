@@ -17,6 +17,8 @@ Q and E = move the camera or hero up or down.
 
 C = changes the active camera. The two cameras are either a free camera or an arcballcam. 
 
+0, 1, 2 = Change the currently selected fragment shader. 
+
 ESP = closes the program. 
 
 ========
