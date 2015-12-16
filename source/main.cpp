@@ -8,7 +8,7 @@
 
 WorldObjModel level;
 WorldObjModel kingRed;
-Navi navi;
+Navi *navi = nullptr;
 Md5Object *link = nullptr;
 
 // FMOD
@@ -22,8 +22,8 @@ FMOD::Channel *callCh  = nullptr;
 
 // Make sure navi's call comes from navi's location!
 void updateNavisCallPosition() {
-    auto pos         = navi.pos();
-    auto vel         = navi.vel();
+    auto pos         = navi->pos();
+    auto vel         = navi->vel();
     FMOD_VECTOR posv = {pos.x, pos.y, pos.z};
     FMOD_VECTOR velv = {vel.x, vel.y, vel.z};
 
@@ -136,9 +136,14 @@ void initScene() {
     sunlight.enable();
     // Roughly the location of the sun in the skybox. The 0.0 makes it
     // directional.
+    
+    //reduce the intensity to make Navi's effect more noticable
+    Color c(0.6, 0.6, 0.6);
+    sunlight.diffuse(&c.v[0]);
+    sunlight.specular(&c.v[0]);
+
     sunlight.moveTo(Vec(433.8, 975.6, -559.2, 0.0));
-    drawn.push_back(&sunlight);
-    glChk();
+    drawn.push_back(&sunlight); glChk();
 
     // Loading other maps should be easy, but we've had issues.
     std::string levelPath = "assets/Env/HyruleField/hyrulefeild.obj";
@@ -171,11 +176,12 @@ void initScene() {
 
     drawn.push_back(link);
 
-    if (!navi.loadObjectFile("assets/Navi/Navi.obj")) {
+    navi = new Navi;
+    if (!navi->loadObjectFile("assets/Navi/Navi.obj")) {
         error("Unable to load Navi from .obj");
     } else {
-        drawn.push_back(&navi);
-        navi.follow(link);
+        drawn.push_back(navi);
+        navi->follow(link);
     }
 
     kingRed.shader(wiggly);

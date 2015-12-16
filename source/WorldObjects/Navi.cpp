@@ -7,13 +7,16 @@ Navi::Navi() {
     glEnable(GL_LIGHTING);
     m_light.enable();
 
+
     m_pos.y = 1.2f;
     m_pos.z = -0.5f;
     // setup light colors
     Color c(0.39, 0.525, 0.73);
     m_light.diffuse(&c.v[0]);
-    m_light.ambient(&c.v[0]);
     m_light.specular(&c.v[0]);
+
+    //attenuate so it doesn't illuinate the whole scene
+    glLightf(m_light.handle(), GL_LINEAR_ATTENUATION, 0.4);
 
     m_scale = 0.02;
 
@@ -36,9 +39,9 @@ void Navi::internalDraw() const {
     // want to see Navi from all angles
     glDisable(GL_CULL_FACE);
 
-    glEnable(GL_LIGHTING);
+    //glEnable(GL_LIGHTING);
     WorldObjModel::internalDraw();
-    // m_light.draw();
+    m_light.draw();
 
     glEnable(GL_CULL_FACE);
     glPopMatrix();
