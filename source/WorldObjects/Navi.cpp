@@ -38,7 +38,7 @@ void Navi::internalDraw() const {
 
     glEnable(GL_LIGHTING);
     WorldObjModel::internalDraw();
-    m_light.draw();
+    // m_light.draw();
 
     glEnable(GL_CULL_FACE);
     glPopMatrix();

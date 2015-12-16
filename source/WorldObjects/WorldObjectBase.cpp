@@ -5,13 +5,13 @@ void WorldObject::update(double t, double dt) {
         m_pos += dt * m_vel;
     }
     m_pos -= m_old_follow_pos;
-    if (m_update) {
-        m_update(t, dt);
-    }
     if (m_follow) {
         m_vel = m_follow->vel();
         m_pos += m_follow->pos();
         m_old_follow_pos = m_follow->pos();
+    }
+    if (m_update) {
+        m_update(t, dt);
     }
 }
 
