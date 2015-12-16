@@ -197,6 +197,8 @@ void initScene() {
     renderPasses.push_back(loadRenderPass("average"));
     renderPasses.push_back(loadRenderPass("lightness"));
     renderPasses.push_back(loadRenderPass("luminosity"));
+
+    renderPasses.push_back(loadRenderPass("dot-pos"));
 }
 
 void initFMOD() {
@@ -236,6 +238,7 @@ int main(int argc, char **argv) {
     initOpenGL(&argc, argv);
     printOpenGLInformation();
 
+    glutFullScreen();
 
     initScene();
 
