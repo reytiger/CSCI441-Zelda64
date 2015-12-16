@@ -6,6 +6,18 @@ set(binary "keyToTheKingdom")
 set(S "${CMAKE_SOURCE_DIR}")
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${S}/cmake")
 
+option(USE_XINPUT "Build with support for Xbox 360 controllers" OFF)
+if("${USE_XINPUT}")
+  add_definitions("-DUSE_XINPUT")
+  set(XINPUT_LIBS "Xinput.lib")
+else()
+  set(XINPUT_LIBS "")
+endif()
+
+option(USE_CLANG_FORMAT
+    "Use clang-format to automatically format code before building."
+    ON)
+
 # Some of our stuff is GCC version dependent.
 execute_process(COMMAND ${CMAKE_C_COMPILER} -dumpversion
                 OUTPUT_VARIABLE GCC_VERSION)
@@ -123,7 +135,7 @@ target_link_libraries(${binary}
                       "${GLEW_LIBRARIES}"
                       "${SOIL_LIBRARIES}"
                       "${FMOD_LIBRARIES}"
-                      Xinput.lib
+                      "${XINPUT_LIBS}"
                       # Dr Paone's wavfront model loader.
                       modelLoader)
 
@@ -133,10 +145,6 @@ add_custom_target("Copy_Asset_Files" ALL
 add_custom_target("Copy_Shaders" ALL
     COMMAND cmake -E copy_directory "${S}/glsl/" "${CMAKE_BINARY_DIR}/glsl/")
 
-# Only Chris uses CMake, so we might as well have this on by default.
-option(USE_CLANG_FORMAT
-    "Use clang-format to automatically format code before building."
-    ON)
 if("${USE_CLANG_FORMAT}")
     # TODO: Maybe use git-clang-format?
     # I'm not entirely sure what the difference is.

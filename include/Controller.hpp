@@ -3,7 +3,7 @@
 
 #include "PrettyGLUT.hpp"
 
-#ifdef _WIN32
+#ifdef USE_XINPUT
 
 #include <XInput.h>
 
@@ -11,7 +11,14 @@
 // This effectively translates XInput to ASCII keyboar inputs.
 static inline void checkControllerInput(bool pressed[256]) {
     XINPUT_STATE input;
+    ZeroMemory(&input, sizeof(input));
     XInputGetState(0, &input);
+
+    if (XInputGetState(0, &input) != ERROR_SUCCESS) {
+        // No controller or there was an error connecting.
+        // Bail.
+        return;
+    }
 
     // The thumb sticks can be nonbinary, but we don't care. Just make
     // sure they're out of their deadzones.
