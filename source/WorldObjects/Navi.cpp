@@ -15,7 +15,7 @@ Navi::Navi() {
     m_light.diffuse(c.v);
     m_light.specular(c.v);
 
-    //attenuate so it doesn't illuinate the whole scene
+    // attenuate so it doesn't illuinate the whole scene
     glLightf(m_light.handle(), GL_LINEAR_ATTENUATION, 1.4);
 
     m_scale = 0.02;
@@ -40,10 +40,10 @@ void Navi::internalDraw() const {
     // want to see Navi from all angles
     glDisable(GL_CULL_FACE);
 
-    //glEnable(GL_LIGHTING);
+    // glEnable(GL_LIGHTING);
     WorldObjModel::internalDraw();
 
-    //since light position is tranformed by modelview matrix
+    // since light position is tranformed by modelview matrix
     m_light.updatePosition();
 
     glEnable(GL_CULL_FACE);
