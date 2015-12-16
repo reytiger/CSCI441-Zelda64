@@ -12,8 +12,8 @@ Navi::Navi() {
     m_pos.z = -0.5f;
     // setup light colors
     Color c(0.39, 0.525, 0.73);
-    m_light.diffuse(&c.v[0]);
-    m_light.specular(&c.v[0]);
+    m_light.diffuse(c.v);
+    m_light.specular(c.v);
 
     //attenuate so it doesn't illuinate the whole scene
     glLightf(m_light.handle(), GL_LINEAR_ATTENUATION, 0.4);
@@ -24,13 +24,14 @@ Navi::Navi() {
     m_light.follow(this);
 
     m_material = Material::WhitePlastic;
-    // update function
-    auto f = [&](double t, double dt) {
-        moveByX(0.01f * cos(t));
-        moveByZ(0.01f * sin(t));
-        m_light.update(t, dt);
-    };
-    setUpdateFunc(f);
+}
+
+
+void Navi::update(double t, double dt) {
+    WorldObject::update(t, dt);
+    moveByX(0.01f * cos(t));
+    moveByZ(0.01f * sin(t));
+    m_light.update(t, dt);
 }
 
 
@@ -41,7 +42,9 @@ void Navi::internalDraw() const {
 
     //glEnable(GL_LIGHTING);
     WorldObjModel::internalDraw();
-    m_light.draw();
+
+    //since light position is tranformed by modelview matrix
+    m_light.updatePosition();
 
     glEnable(GL_CULL_FACE);
     glPopMatrix();

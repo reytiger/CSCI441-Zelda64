@@ -139,8 +139,8 @@ void initScene() {
     
     //reduce the intensity to make Navi's effect more noticable
     Color c(0.6, 0.6, 0.6);
-    sunlight.diffuse(&c.v[0]);
-    sunlight.specular(&c.v[0]);
+    sunlight.diffuse(c.v);
+    sunlight.specular(c.v);
 
     sunlight.moveTo(Vec(433.8, 975.6, -559.2, 0.0));
     drawn.push_back(&sunlight); glChk();

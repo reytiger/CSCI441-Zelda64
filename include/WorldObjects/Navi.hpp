@@ -4,6 +4,7 @@
 class Navi : public WorldObjModel {
 public:
     Navi();
+    virtual void update(double t, double dt) override;
 
 protected:
     virtual void internalDraw() const override;

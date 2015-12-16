@@ -28,6 +28,14 @@ void Light::update(double t, double dt) {
     glChk();
 }
 
+
+void Light::updatePosition() const {
+    float lpos[4] = {(float)pos().x, (float)pos().y, (float)pos().z, pos().w};
+    glLightfv(m_lightid, GL_POSITION, lpos);
+    glChk();
+}
+
+
 void Light::internalDraw() const {
     auto mat = Material::WhiteRubber;
     mat.emission(m_diffuse);
