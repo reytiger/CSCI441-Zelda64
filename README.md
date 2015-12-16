@@ -1,6 +1,7 @@
 # CSCI441-Zelda64
 Computer Graphics final project
 Contributors: Chris Butler, Kevin Carbaugh, Nico Pampe
+
 =======
 
 This final was an open ended project where students can create a world through GLUT, Glew, and OpenGL. We were to follow several requirements for the project. Different types of shaders were needed such as a fragment color shader or blur shader. In addition, a vertex shader was needed. With these shaders, the world needed several lights and an animated object that the user can control.
@@ -19,8 +20,9 @@ Please don't hesitate to email us if there are issues building. We'd hate to los
 
 Also, Nico uplaoded the full source code.
 
+Controls
 ========
-Controls:
+
 WASD      Move the camera or hero around in the world, depending on which one is active.
 Q, E      Move the camera or hero up or down.
 C         Changes the active camera. The two cameras are either a free camera or an arcballcam.
@@ -39,14 +41,14 @@ y                         Shift through shaders
 Start                     Switch camera
 Back/Select               Closes the program.
 
-========
 Ester eggs!
+========
 Hit space/A for an inspirational quote!
 
 Every 30 seconds, the King of Red Lions moves somewhere random in the field. Can you find him before his vertex shader takes him over?
 
-=======
 Who did what?
+=======
 
 Kevin
 -----
@@ -56,3 +58,8 @@ Nico
 
 Chris
 -----
+	Multi-pass rendering
+	Code architecture
+	Fragment shaders for the post-processing
+	Controller support
+	Being unreasonably strict about code formatting etc.
