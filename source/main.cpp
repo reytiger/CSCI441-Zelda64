@@ -130,10 +130,8 @@ void initScene() {
     drawn.push_back(&sunlight);
     glChk();
 
-    std::string levelPath = "assets/Env/Kokiri Forest/Kokiri Forest.obj";
-    // std::string levelPath = "assets/Env/Bongo Bongo/bongo bongo room.obj";
-    // std::string levelPath = "assets/Env/HyruleField/hyrulefeild.obj";
-
+    // Loading other maps should be easy, but we've had issues.
+    std::string levelPath = "assets/Env/HyruleField/hyrulefeild.obj";
     if (!level.loadObjectFile(levelPath)) {
         glChk();
         fatal("Error loading object file %s", levelPath);
