@@ -44,15 +44,28 @@ static inline void checkControllerInput(bool pressed[256]) {
     pressed[' '] = (input.Gamepad.wButtons & XINPUT_GAMEPAD_A) != 0;
 
     // Switch Cam
-    static bool pressOnCoolDown;
-    if (!pressOnCoolDown
+    static bool pressOnCoolDownCam;
+    if (!pressOnCoolDownCam
         && (input.Gamepad.wButtons & XINPUT_GAMEPAD_START) != 0) {
-        pressOnCoolDown = true;
-        glutTimerFunc(500, [](int) { pressOnCoolDown = false; }, 0);
+        pressOnCoolDownCam = true;
+        glutTimerFunc(500, [](int) { pressOnCoolDownCam = false; }, 0);
         // This is declared in PrettyGLUT.cpp. Trust me. I wouldn't lie to you,
         // would I?
         void normalKeysDown(unsigned char key, int, int);
         normalKeysDown('c', 0, 0);
+    }
+
+    // Switch Shaders
+    static bool pressOnCoolDownShader;
+    if (!pressOnCoolDownShader
+        && (input.Gamepad.wButtons & XINPUT_GAMEPAD_Y) != 0) {
+        pressOnCoolDownShader = true;
+        glutTimerFunc(200, [](int) { pressOnCoolDownShader = false; }, 0);
+        // This is declared in PrettyGLUT.cpp. Trust me. I wouldn't lie to you,
+        // would I?
+        void normalKeysDown(unsigned char key, int, int);
+        void nextShader();
+        nextShader();
     }
 
     if ((input.Gamepad.wButtons & XINPUT_GAMEPAD_BACK) != 0) {
@@ -90,8 +103,7 @@ static inline void checkControllerInput(bool pressed[256]) {
         // Different controls, different fudge factor.
         fudge *= 3.0f;
 
-        Vec dist = Vec(dx, dy);
-        info("%s", dist);
+        Vec dist    = Vec(dx, dy);
         auto radius = activeCam->radius();
         if (dy > 0) {
             radius = radius - fudge * dist.norm();

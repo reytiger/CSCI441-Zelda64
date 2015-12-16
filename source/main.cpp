@@ -61,9 +61,10 @@ void updateScene(double t, double dt) {
     // Even though they're rendered, the cameras are NOT in the drawn list, so
     // we have to update them manually, if we want them updated at all.
     activeCam->update(t, dt);
-    activeCam->doWASDControls(4.20f, keyPressed, true);
     if (activeCam == &arcballcam) {
         link->doWASDControls(10.0f, keyPressed, true);
+    } else {
+        activeCam->doWASDControls(4.20f, keyPressed, true);
     }
 
     for (WorldObject *wo : drawn) {
@@ -86,7 +87,7 @@ void updateScene(double t, double dt) {
             // http://stackoverflow.com/a/13838022
             sys->playSound(navi_call, nullptr, true, &callCh);
             // Make Navi much louder than the music.
-            callCh->setVolume(5.0f);
+            callCh->setVolume(10.0f);
             callCh->setPaused(false);
 
             // Lazy man's debugging.
@@ -117,6 +118,15 @@ RenderPass loadRenderPass(const std::string &name) {
     glChk();
 
     return pass;
+}
+
+void hideKingRed(int) {
+    float theta = getRand(0, 2 * PI);
+    float phi   = getRand(0, 1.0 * PI / 180);
+    float r     = getRand(65, 85);
+    kingRed.moveTo(VecPolar(theta, phi, r).cart());
+    info("King Red has hidden!");
+    glutTimerFunc(30000, hideKingRed, 0);
 }
 
 void initScene() {
@@ -169,6 +179,7 @@ void initScene() {
     }
 
     kingRed.shader(wiggly);
+    glutTimerFunc(30000, hideKingRed, 0);
 
     // Camera
     // Hard coded position. Just something other than a weird looking pit.
@@ -179,14 +190,13 @@ void initScene() {
     arcballcam.follow(link);
 
     // Init render passes
+    renderPasses.push_back(loadRenderPass("inverted"));
 
     // All three of these approaches came from his blog:
     // http://www.johndcook.com/blog/2009/08/24/algorithms-convert-color-grayscale/
-    // renderPasses.push_back(loadRenderPass("average"));
-    // renderPasses.push_back(loadRenderPass("lightness"));
-    // renderPasses.push_back(loadRenderPass("luminosity"));
-
-    // renderPasses.push_back(loadRenderPass("inverted"));
+    renderPasses.push_back(loadRenderPass("average"));
+    renderPasses.push_back(loadRenderPass("lightness"));
+    renderPasses.push_back(loadRenderPass("luminosity"));
 }
 
 void initFMOD() {

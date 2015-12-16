@@ -29,8 +29,6 @@ int windowHeight = 1024;
 
 Color colorClear = Color(48, 24, 96);
 
-ShaderProgram wigglyShader;
-
 // Input states
 Vec mouse             = Vec();
 int leftMouse         = 0;
@@ -49,6 +47,8 @@ GLsizei fbo_height = fbo_width;
 std::vector<WorldObject *> drawn = std::vector<WorldObject *>();
 
 std::vector<RenderPass> renderPasses;
+
+int passIdx = -1;
 
 extern WorldObjModel level;
 extern WorldObjModel kingRed;
@@ -186,8 +186,6 @@ void render() {
         glLoadIdentity();
         activeCam->adjustGLU();
 
-        wigglyShader.use();
-
         pushMatrixAnd([&]() {
             auto scale = 1000.0f;
             glScalef(scale, scale, scale);
@@ -222,8 +220,8 @@ void render() {
     glBindTexture(GL_TEXTURE_2D, fboTex);
     glChk();
 
-    for (auto &pass : renderPasses) {
-        pass.render();
+    if (passIdx >= 0) {
+        renderPasses[passIdx].render();
     }
 
     glPopAttrib();
@@ -587,6 +585,13 @@ void mouseMotion(int x, int y) {
     }
 }
 
+void nextShader() {
+    passIdx += 1;
+    if (passIdx >= renderPasses.size()) {
+        passIdx = -1;
+    }
+}
+
 void normalKeysDown(unsigned char key, int, int) {
     keyPressed[key] = true;
 
@@ -604,6 +609,19 @@ void normalKeysDown(unsigned char key, int, int) {
             info("Switched to FreeCamera");
         }
         break;
+    // 0 turns off all passes.
+    case '0':
+        passIdx = -1;
+    }
+
+    // '1' turns off the 1st pass (idx 0), '2' the second, etc.
+    if ('1' <= key && key <= '9') {
+        int idx = key - '1';
+        if (idx < renderPasses.size()) {
+            passIdx = idx;
+        } else {
+            passIdx = -1;
+        }
     }
 }
 
