@@ -26,6 +26,8 @@ C         Changes the active camera. The two cameras are either a free camera or
 
 Esc       Closes the program.
 
+Ctrl + Left mouse button controls the zoom level in arcball camera mode
+
 On the controller, we have:
 
 Left stick                Move
