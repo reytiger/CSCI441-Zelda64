@@ -50,6 +50,10 @@ Who did what?
 
 Kevin
 -----
+MD5 model rigging and animation
+Wavefront object integration
+Navi's dynamic light source
+
 
 Nico
 ----
