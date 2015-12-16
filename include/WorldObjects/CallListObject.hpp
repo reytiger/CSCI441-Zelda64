@@ -10,7 +10,7 @@ public:
     ~CallListObject();
     CallListObject() = default;
     CallListObject(const CallListObject &) = default;
-    CallListObject &operator=(CallListObject &&other);
+    CallListObject &operator               =(CallListObject &&other);
 
     // 'count' is how many CallLists are create
     // 'makeit' is a function taking a single GLuint (the return value of

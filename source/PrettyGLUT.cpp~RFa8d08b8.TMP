@@ -50,7 +50,8 @@ std::vector<WorldObject *> drawn = std::vector<WorldObject *>();
 
 std::vector<RenderPass> renderPasses;
 
-extern WorldObjModel level;
+// extern paone::Object levelBongo;
+extern WorldObjModel levelHyruleField;
 extern WorldObjModel kingRed;
 
 // Call this after the swap buffer call to update the FPS, etc. counter.
@@ -123,7 +124,7 @@ void renderHUD() {
     // Frame time
     pos.y -= lineSpacing;
     std::string units = " s";
-    auto frametime    = live_frametime;
+    auto frametime = live_frametime;
     if (frametime < 1e-6) {
         units = "ns";
         frametime *= 1e9;
@@ -206,7 +207,8 @@ void render() {
         glEnable(GL_LIGHTING);
         glDisable(GL_CULL_FACE);
 
-        level.draw();
+        // levelBongo.draw();
+        levelHyruleField.draw();
         pushMatrixAnd([&]() {
             glTranslatef(-5, 0, 0);
             // glScalef(0.005, 0.005, 0.005);
@@ -605,6 +607,7 @@ void normalKeysDown(unsigned char key, int, int) {
         }
         break;
     }
+
 }
 
 void normalKeysUp(unsigned char key, int, int) {
