@@ -61,9 +61,9 @@ void updateScene(double t, double dt) {
     // Even though they're rendered, the cameras are NOT in the drawn list, so
     // we have to update them manually, if we want them updated at all.
     activeCam->update(t, dt);
-    activeCam->doWASDControls(4.20, keyPressed, true);
+    activeCam->doWASDControls(4.20f, keyPressed, true);
     if (activeCam == &arcballcam) {
-        link->doWASDControls(10.0, keyPressed, true);
+        link->doWASDControls(10.0f, keyPressed, true);
     }
 
     for (WorldObject *wo : drawn) {
