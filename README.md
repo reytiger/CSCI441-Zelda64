@@ -1,8 +1,6 @@
 # CSCI441-Zelda64
-Computer Graphics final project
-Contributors: Chris Butler, Kevin Carbaugh, Nico Pampe
-
-=======
+### Computer Graphics final project
+### Contributors: Chris Butler, Kevin Carbaugh, Nico Pampe
 
 This final was an open ended project where students can create a world through GLUT, Glew, and OpenGL. We were to follow several requirements for the project. Different types of shaders were needed such as a fragment color shader or blur shader. In addition, a vertex shader was needed. With these shaders, the world needed several lights and an animated object that the user can control.
 
@@ -62,8 +60,8 @@ Nico
 
 Chris
 -----
-	Multi-pass rendering
-	Code architecture
-	Fragment shaders for the post-processing
-	Controller support
-	Being unreasonably strict about code formatting etc.
+1. Multi-pass rendering
+2. Code architecture
+3. Fragment shaders for the post-processing
+4. Controller support
+5. Being unreasonably strict about code formatting etc.
