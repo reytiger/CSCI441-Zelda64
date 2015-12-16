@@ -96,6 +96,8 @@ public:
     void hide() { m_visible = false; }
     void show() { m_visible = true; }
 
+    void setScale(float scale) { m_scale = scale; }
+
 protected:
     UpdateFunc m_update;
 
@@ -109,6 +111,8 @@ protected:
     Vec m_pos;
     Vec m_up = Vec(0.0, 1.0, 0.0);
     Vec m_vel;
+
+    float m_scale = 1.f;
 
     // The direction the object is "looking" in. Like a rotation.
     // m_arc.r isn't used and should be assumed 1.0.

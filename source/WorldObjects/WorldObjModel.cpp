@@ -12,6 +12,7 @@ void WorldObjModel::internalDraw() const {
 
     pushMatrixAnd([&]() {
         glTranslatef(m_pos.x, m_pos.y, m_pos.z);
+        glScalef(m_scale, m_scale, m_scale);
         m_obj.draw();
     });
 }
