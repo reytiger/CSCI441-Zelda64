@@ -4,6 +4,7 @@
 #include "Shader.hpp"
 
 #include <algorithm>
+#include <fstream>
 
 // We need to know about this. but it's entirely game logic so it's defined
 // in main.cpp.
@@ -37,7 +38,22 @@ bool keyPressed[256]  = {};
 
 // Multi-pass shenanigans.
 GLuint fbo;
-GLuint fboTex;
+constexpr size_t fboTexCount    = 4;
+GLuint fboTextures[fboTexCount] = {};
+
+static GLenum buffers[] = {
+    GL_COLOR_ATTACHMENT0,
+    GL_COLOR_ATTACHMENT1,
+    GL_COLOR_ATTACHMENT2,
+    GL_COLOR_ATTACHMENT3,
+    GL_COLOR_ATTACHMENT4,
+    GL_COLOR_ATTACHMENT5,
+    GL_COLOR_ATTACHMENT6,
+    GL_COLOR_ATTACHMENT7,
+    GL_COLOR_ATTACHMENT8,
+    GL_COLOR_ATTACHMENT9,
+};
+static_assert(fboTexCount <= 10, "render::buffers is not large enough.");
 
 // Give it that... retro feel.
 GLsizei fbo_width  = 512;
@@ -153,31 +169,39 @@ void renderHUD() {
 }
 
 void resize(int w, int h) {
+    glChk();
     windowWidth  = w;
     windowHeight = h;
 
     // update the viewport to fill the window
     glViewport(0, 0, w, h);
+    glChk();
 
     // update the projection matrix with the new window properties
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     gluPerspective(FOV, aspectRatio(), 0.1, 1e6);
+    glChk();
 }
 
 void render() {
-    glDrawBuffer(GL_BACK);
+    glChk();
 
     glClearColor(0.0, 0.0, 0.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     resize(windowWidth, windowHeight);
 
+    glChk();
+
     // Render to our texture.
     glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glDrawBuffers(fboTexCount, buffers);
+    glChk();
 
     glPushAttrib(GL_VIEWPORT_BIT);
     glViewport(0, 0, fbo_width, fbo_height);
+    glChk();
     {
         glClearColor(colorClear.r, colorClear.g, colorClear.b, colorClear.a);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -212,12 +236,14 @@ void render() {
         });
 
         glEnable(GL_CULL_FACE);
-
         glChk();
     }
 
     glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, fboTex);
+    for (size_t i = 0; i < fboTexCount; i += 1) {
+        glActiveTexture(GL_TEXTURE0 + i);
+        glBindTexture(GL_TEXTURE_2D, fboTextures[i]);
+    }
     glChk();
 
     if (passIdx >= 0) {
@@ -227,7 +253,11 @@ void render() {
     glPopAttrib();
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, fboTextures[0]);
+
     // Render the quad with our texture.
+    glDrawBuffer(GL_BACK);
     glClearColor(0.0, 0.0, 0.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -245,7 +275,10 @@ void render() {
 
     // push the back buffer to the screen
     glutSwapBuffers();
+    glChk();
+
     updateFrameCounter();
+    glChk();
 }
 
 
@@ -592,6 +625,41 @@ void nextShader() {
     }
 }
 
+void saveFrame(GLenum buffer, const std::string &suffix) {
+    if (buffer > GL_COLOR_ATTACHMENT0 && buffer - GL_COLOR_ATTACHMENT0 < 10) {
+        info("Saving image from buffer GL_COLOR_ATTACHMENT%d.",
+             buffer - GL_COLOR_ATTACHMENT0);
+    } else {
+        info("Saving image from buffer #%d.", buffer);
+    }
+
+    glPixelStorei(GL_PACK_ALIGNMENT, 1);
+    glReadBuffer(buffer);
+    glChk();
+
+    std::vector<GLubyte> bytes(3 * fbo_width * fbo_height);
+    glReadPixels(
+        0, 0, fbo_width, fbo_height, GL_RGB, GL_UNSIGNED_BYTE, bytes.data());
+    glChk();
+
+    std::ofstream out;
+
+    // Write out as a PPM.
+    auto now = timer_clock::now();
+    out.open(tfm::format("image-%s_%s.ppm", 0.0, suffix));
+    // clang-format off
+    out << "P6\n"
+        << fbo_width << " " << fbo_height << "\n"
+        << 255 << std::endl;
+    // clang-format on
+    for (int row = 0; row < fbo_height; row += 1) {
+        for (int col = 0; col < fbo_width; col += 1) {
+            out << as<unsigned>(bytes[fbo_width * row + col]) << " ";
+        }
+        out << std::endl;
+    }
+}
+
 void normalKeysDown(unsigned char key, int, int) {
     keyPressed[key] = true;
 
@@ -609,6 +677,12 @@ void normalKeysDown(unsigned char key, int, int) {
             info("Switched to FreeCamera");
         }
         break;
+    case '+':
+        saveFrame(GL_FRONT, "front");
+        saveFrame(buffers[0], "0");
+        saveFrame(buffers[1], "1");
+        saveFrame(buffers[2], "2");
+        saveFrame(buffers[3], "3");
     // 0 turns off all passes.
     case '0':
         passIdx = -1;
@@ -638,6 +712,7 @@ void initFBO() {
 
     glGenFramebuffers(1, &fbo);
     glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    info("Generated Framebuffer %s", fbo);
     glChk();
 
     GLuint renderbuff;
@@ -651,39 +726,62 @@ void initFBO() {
         GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, renderbuff);
     glChk();
 
-    glGenTextures(1, &fboTex);
-    glBindTexture(GL_TEXTURE_2D, fboTex);
-    glChk();
+    glGenTextures(fboTexCount, fboTextures);
 
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glChk();
+    for (size_t i = 0; i < fboTexCount; i += 1) {
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, fboTextures[i]);
+        glChk();
 
-    glTexImage2D(GL_TEXTURE_2D,
-                 0,
-                 GL_RGBA,
-                 fbo_width,
-                 fbo_height,
-                 0,
-                 GL_RGBA,
-                 GL_UNSIGNED_BYTE,
-                 NULL);
-    glChk();
-    glFramebufferTexture2D(
-        GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, fboTex, 0);
-    glChk();
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glChk();
+
+        glTexImage2D(GL_TEXTURE_2D,
+                     0,
+                     GL_RGBA,
+                     fbo_width,
+                     fbo_height,
+                     0,
+                     GL_RGBA,
+                     GL_UNSIGNED_BYTE,
+                     NULL);
+        glChk();
+
+        glFramebufferTexture2D(GL_FRAMEBUFFER,
+                               GL_COLOR_ATTACHMENT0,
+                               GL_TEXTURE_2D,
+                               fboTextures[i],
+                               0);
+        glChk();
+    }
     GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 
     // Unbind everything.
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glDisable(GL_TEXTURE_2D);
 
-    if (status == GL_FRAMEBUFFER_COMPLETE) {
+    switch (status) {
+    case GL_FRAMEBUFFER_COMPLETE:
         info("Framebuffer initialized completely!");
-    } else {
-        info("Framebuffer FAILED TO INITIALIZE COMPLETELY.");
+        break;
+    case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
+        fatal("Framebuffer failed to initialize completely! "
+              "GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT");
+        break;
+    case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:
+        fatal("Framebuffer failed to initialize completely! "
+              "GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT");
+        break;
+    case GL_FRAMEBUFFER_UNSUPPORTED:
+        fatal("Framebuffer failed to initialize completely! "
+              "GL_FRAMEBUFFER_UNSUPPORTED");
+        break;
+    default:
+        fatal("Framebuffer FAILED TO INITIALIZE COMPLETELY.");
+        break;
     }
 }
 

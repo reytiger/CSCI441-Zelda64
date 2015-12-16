@@ -48,6 +48,7 @@ public:
     GLint getUniformLocation(const std::string &name) const;
 
     void attachUniform(const std::string &name, float value);
+    void attachUniform(const std::string &name, GLint value);
     void attachUniform(const std::string &name, Vec value);
 
 private:

@@ -8,7 +8,7 @@
 
 WorldObjModel level;
 WorldObjModel kingRed;
-Navi *navi = nullptr;
+Navi *navi      = nullptr;
 Md5Object *link = nullptr;
 
 // FMOD
@@ -100,6 +100,7 @@ void updateScene(double t, double dt) {
 }
 
 RenderPass loadRenderPass(const std::string &name) {
+    info("Loading shader '%s'", name);
     Shader vert;
     vert.loadFromFile(tfm::format("glsl/%s/vert.glsl", name), GL_VERTEX_SHADER);
 
@@ -111,6 +112,8 @@ RenderPass loadRenderPass(const std::string &name) {
     program.create();
     program.attach(vert, frag);
     program.link();
+
+    program.attachUniform("fbo", 0);
 
     RenderPass pass;
     pass.program(program);
@@ -136,14 +139,15 @@ void initScene() {
     sunlight.enable();
     // Roughly the location of the sun in the skybox. The 0.0 makes it
     // directional.
-    
-    //reduce the intensity to make Navi's effect more noticable
+
+    // reduce the intensity to make Navi's effect more noticable
     Color c(0.6, 0.6, 0.6);
     sunlight.diffuse(c.v);
     sunlight.specular(c.v);
 
     sunlight.moveTo(Vec(433.8, 975.6, -559.2, 0.0));
-    drawn.push_back(&sunlight); glChk();
+    drawn.push_back(&sunlight);
+    glChk();
 
     // Loading other maps should be easy, but we've had issues.
     std::string levelPath = "assets/Env/HyruleField/hyrulefeild.obj";
