@@ -123,6 +123,7 @@ target_link_libraries(${binary}
                       "${GLEW_LIBRARIES}"
                       "${SOIL_LIBRARIES}"
                       "${FMOD_LIBRARIES}"
+                      Xinput.lib
                       # Dr Paone's wavfront model loader.
                       modelLoader)
 

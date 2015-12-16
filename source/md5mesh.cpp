@@ -278,7 +278,7 @@ int ReadMD5Model(const char *filename, struct md5_model_t *mdl) {
 
                     /* there was a shader name */
                     if (j > 0) {
-                        string diffuseMapFN         = string(mesh->shader) + ".tga";
+                        string diffuseMapFN = string(mesh->shader) + ".tga";
                         mesh->textures[0].texHandle = loadTexture(diffuseMapFN);
                         if (mesh->textures[0].texHandle == 0) {
                             diffuseMapFN = string(mesh->shader) + ".png";
@@ -568,7 +568,7 @@ void DrawMesh(const struct md5_mesh_t *mesh) {
 }
 
 void AllocVertexArrays() {
-    vertexArray   = (vec3_t *)malloc(sizeof(vec3_t) * max_verts);
+    vertexArray = (vec3_t *)malloc(sizeof(vec3_t) * max_verts);
     vertexIndices = (GLuint *)malloc(sizeof(GLuint) * max_tris * 3);
 
     texelArray = (vec2_t *)malloc(sizeof(vec2_t) * max_verts);
