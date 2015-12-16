@@ -57,6 +57,10 @@ Navi's dynamic light source
 
 Nico
 ----
+FMOD
+Vertex shader.
+Link WASD controls.
+MD5 model rigging and animation (attempted)
 
 Chris
 -----
