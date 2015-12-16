@@ -634,7 +634,7 @@ void saveFrame(GLenum buffer, const std::string &suffix) {
     }
 
     glPixelStorei(GL_PACK_ALIGNMENT, 1);
-    glNamedFramebufferReadBuffer(fbo, buffer);
+    glReadBuffer(buffer);
     glChk();
 
     std::vector<GLubyte> bytes(3 * fbo_width * fbo_height);
