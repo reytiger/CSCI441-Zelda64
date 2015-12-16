@@ -123,7 +123,7 @@ RenderPass loadRenderPass(const std::string &name) {
 void hideKingRed(int) {
     float theta = getRand(0, 2 * PI);
     float phi   = getRand(0, 1.0 * PI / 180);
-    float r     = getRand(65, 85);
+    float r = getRand(65, 85);
     kingRed.moveTo(VecPolar(theta, phi, r).cart());
     info("King Red has hidden!");
     glutTimerFunc(30000, hideKingRed, 0);
