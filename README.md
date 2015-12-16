@@ -16,7 +16,7 @@ If you build this on Windows, you can use the xbox controller by setting USE_XIN
 
 Please don't hesitate to email us if there are issues building. We'd hate to lose points over that.
 
-Also, Nico uplaoded the full source code.
+Also, Chris uplaoded the full source code.
 
 Controls
 ========
