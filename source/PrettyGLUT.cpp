@@ -718,7 +718,7 @@ void initGLUT(int *argcp, char **argv) {
     glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
     glEnable(GL_COLOR_MATERIAL);
 
-    glShadeModel(GL_FLAT);
+    glShadeModel(GL_SMOOTH);
 
     initSkybox();
 }

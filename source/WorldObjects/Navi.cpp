@@ -16,7 +16,7 @@ Navi::Navi() {
     m_light.specular(c.v);
 
     //attenuate so it doesn't illuinate the whole scene
-    glLightf(m_light.handle(), GL_LINEAR_ATTENUATION, 0.4);
+    glLightf(m_light.handle(), GL_LINEAR_ATTENUATION, 1.4);
 
     m_scale = 0.02;
 
