@@ -5,6 +5,16 @@
 
 #include <algorithm>
 
+// NVidia's drivers (e.g. for Optimus) look for this symbol.
+// If it's 1, then they use the high performance GPU.
+// If it's 0, they do not.
+// Go babygo!
+extern "C"
+#ifdef _WIN32
+_declspec(dllexport)
+#endif
+unsigned long long NvOptimusEnablement = 0x01;
+
 // We need to know about this. but it's entirely game logic so it's defined
 // in main.cpp.
 void updateScene(double t, double dt);
