@@ -1,3 +1,4 @@
+#include "Controller.hpp"
 #include "PrettyGLUT.hpp"
 #include "WorldObjects.hpp"
 
@@ -5,7 +6,7 @@
 
 #include <fstream>
 
-WorldObjModel levelHyruleField;
+WorldObjModel level;
 WorldObjModel kingRed;
 Navi navi;
 Md5Object *link = nullptr;
@@ -54,10 +55,13 @@ void updateListenerPosition() {
 // It takes in t and dt, the time and time since the last updateScene was
 // called.
 void updateScene(double t, double dt) {
+    // The Controller fakes keyboard input, so make sure to do it first!
+    checkControllerInput(keyPressed);
+
     // Even though they're rendered, the cameras are NOT in the drawn list, so
     // we have to update them manually, if we want them updated at all.
     activeCam->update(t, dt);
-    activeCam->doWASDControls(2.0, keyPressed, true);
+    activeCam->doWASDControls(4.20, keyPressed, true);
     if (activeCam == &arcballcam) {
         link->doWASDControls(10.0, keyPressed, true);
     }
@@ -70,7 +74,7 @@ void updateScene(double t, double dt) {
     updateListenerPosition();
     updateNavisCallPosition();
 
-    kingRed.shader().attachUniform("time", t);
+    kingRed.shader().attachUniform("time", as<float>(t));
 
     sys->update();
 
@@ -126,23 +130,17 @@ void initScene() {
     drawn.push_back(&sunlight);
     glChk();
 
-    // if
-    // (!levelBongo.loadObjectFile("assets/Env/HyruleField/hyrulefeild.obj"))
-    // {
-    //     fatal("Error loading object file %s",
-    //     "assets/Env/HyruleField/hyrulefeild.obj");
-    // }
-    // glChk();
+    std::string levelPath = "assets/Env/Kokiri Forest/Kokiri Forest.obj";
+    // std::string levelPath = "assets/Env/Bongo Bongo/bongo bongo room.obj";
+    // std::string levelPath = "assets/Env/HyruleField/hyrulefeild.obj";
 
-    if (!levelHyruleField.loadObjectFile(
-            "assets/Env/HyruleField/hyrulefeild.obj")) {
-        fatal("Error loading object file %s",
-              "assets/Env/HyruleField/hyrulefeild.obj");
+    if (!level.loadObjectFile(levelPath)) {
+        glChk();
+        fatal("Error loading object file %s", levelPath);
     }
     glChk();
 
-    if(!kingRed.loadObjectFile(
-            "assets/KingOfRedLions/boat.obj")) {
+    if (!kingRed.loadObjectFile("assets/KingOfRedLions/boat.obj")) {
         fatal("Error loading object file %s", "assets/KingOfRedLions/boat.obj");
     }
     glChk();
@@ -155,7 +153,7 @@ void initScene() {
     Shader frag;
     vert.loadFromFile("glsl/wiggly.v.glsl", GL_VERTEX_SHADER);
     frag.loadFromFile("glsl/pass_through.f.glsl", GL_FRAGMENT_SHADER);
-    
+
     ShaderProgram wiggly;
     wiggly.create();
     wiggly.attach(vert, frag);
@@ -172,7 +170,7 @@ void initScene() {
         navi.follow(link);
     }
 
-    kingRed.shader(wiggly);    
+    kingRed.shader(wiggly);
 
     // Camera
     // Hard coded position. Just something other than a weird looking pit.
@@ -189,8 +187,6 @@ void initScene() {
     // renderPasses.push_back(loadRenderPass("average"));
     // renderPasses.push_back(loadRenderPass("lightness"));
     // renderPasses.push_back(loadRenderPass("luminosity"));
-
-    // renderPasses.push_back(loadRenderPass("wiggly"));
 
     // renderPasses.push_back(loadRenderPass("inverted"));
 }

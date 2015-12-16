@@ -31,6 +31,4 @@ private:
 
     bool m_animated;
     float m_scale;
-
-
 };
