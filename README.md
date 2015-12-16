@@ -42,3 +42,15 @@ Ester eggs!
 Hit space/A for an inspirational quote!
 
 Every 30 seconds, the King of Red Lions moves somewhere random in the field. Can you find him before his vertex shader takes him over?
+
+=======
+Who did what?
+
+Kevin
+-----
+
+Nico
+----
+
+Chris
+-----
